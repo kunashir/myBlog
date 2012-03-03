@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Реестр перевозок</title>
+		<title>MyBlog</title>
 		<%= stylesheet_link_tag   'screen.css', 
 				:media	=> 'screen, projection' %>
 		<%= stylesheet_link_tag   'print.css',	
@@ -10,13 +10,8 @@
 		<%= csrf_meta_tags %>
 	</head>
 	<body>
-		<div calss="container">
-			<%= render 'layouts/header' %>
-			<section class="round">
-				<%= yield %>
-			</section>
-			<%= render 'layouts/footer' %>
-		</div>
+
+		<%= yield %>
 
 	</body>
 </html>
