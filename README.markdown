@@ -2,7 +2,7 @@
 
 It will simple blog and it have next function:
 	* user
-	* blogs
-	* blogs tags
-	* comments to blogs
+	* transport
+	* 
+	* 
 	[ Korolev Alexander]
