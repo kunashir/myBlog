@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
-<<<<<<< HEAD
-		<title>Мой блог | <%= @title %> </title>
-=======
-		<title>Реестр перевозок</title>
->>>>>>> upstream/roster
-		<%= stylesheet_link_tag   'screen.css', 
-				:media	=> 'screen, projection' %>
-		<%= stylesheet_link_tag   'print.css',	
-				:media	=> 'print' %>
-		<%= javascript_include_tag "application" %>
+		<title>Реестр перевозок | <%= @title %> </title>
+
+    <%= render 'layouts/stylesheets' %>
 		<%= csrf_meta_tags %>
 	</head>
 	<body>
-		<div calss="container">
-			<%= render 'layouts/header' %>
+		<div class="container">
+			<%= render 'layouts/header' %>  
 			<section class="round">
 				<%= yield %>
 			</section>

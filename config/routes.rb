@@ -1,8 +1,12 @@
 MyBlog::Application.routes.draw do
-  get "pages/home"
 
-  get "pages/contact"
 
+  match '/signup',  :to => 'users#new'
+	match '/contact', :to => 'pages#contact'
+  match '/help',    :to => 'pages#help'
+  #match '/home', :to => 'pages#home'
+  
+  root :to => 'pages#home'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
