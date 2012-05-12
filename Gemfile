@@ -8,15 +8,19 @@ gem 'rails', '3.1.1'
 gem 'sqlite3'
 gem 'jquery-rails'
 gem	'compass', ">= 0.11.7"
+gem 'gravatar_image_tag', '1.0.0.pre2'
+gem 'will_paginate', '3.0.pre2'
 
 
 group	:development do
 	gem	'rspec-rails', '2.6.1'
+  gem 'annotate', '~>2.4.1.beta'
 end
 
 group	:test do
 	gem	'rspec-rails',	'2.6.1'
 	gem	'webrat',		'0.7.1'
+  gem 'factory_girl_rails', '1.0'
 end
 
 # Gems used only for assets and not required

@@ -4,9 +4,21 @@
 	<nav class = "round">
     	<ul>
     		<li><%= link_to "Главная", root_path %></li>
+        
+         <% if signed_in? %>
+          <li><%= link_to "Заявки", transportations_path %></li>
+          <li><%= link_to "Компании", companies_path %></li>
+          <li><%= link_to "Пользователи", users_path %></li>
+          <li><%= link_to "Профиль", current_user %></li>
+          
+        <% end %>	    	
+        
         <li><%= link_to "Помощь", help_path %></li>
-        <li><%= link_to "Регистрация", '#' %></li>
-	    	
+        <% if signed_in? %>
+        <li><%= link_to "Выход", signout_path, :method => :delete %></li>
+        <% else %>
+        <li><%= link_to "Вход", signin_path %></li>
+        <% end %>	    	
 		</ul>
 	</nav>
 </header>

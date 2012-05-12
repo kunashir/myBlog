@@ -1,0 +1,8 @@
+<h1>Редактировать заявку:</h1>
+<%= form_for(@transportation) do |f| %>
+<%= render 'fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Сохранить" %>
+  </div>
+<% end %>
+ 

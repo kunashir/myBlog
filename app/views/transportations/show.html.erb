@@ -1,0 +1,111 @@
+Заявка № <%= @transportation.num %> | <%= link_to "Редактировать", edit_transportation_path(@transportation) %>
+<table  class="profile" summary="Profile information">
+  <tr>
+    <td>
+     <strong>Дата перевозки:</strong>
+    </td>
+    <td>
+     <%= @transportation.date %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Время погрузки:</strong>
+    </td>
+    <td>
+     <%= @transportation.time %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Склад погрузки:</strong>
+    </td>
+    <td>
+     <%= @transportation.storage_source %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Склад доставки:</strong>
+    </td>
+    <td>
+     <%= @transportation.storage_dist %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Комментарий:</strong>
+    </td>
+    <td>
+     <%= @transportation.comment %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Тип транспортного средства:</strong>
+    </td>
+    <td>
+     <%= @transportation.type_transp %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Тоннаж:</strong>
+    </td>
+    <td>
+     <%= @transportation.weight %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Тип кузова:</strong>
+    </td>
+    <td>
+     <%= @transportation.carcase %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Нач. сумма:</strong>
+    </td>
+    <td>
+     <%= @transportation.start_sum %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Шаг торгов:</strong>
+    </td>
+    <td>
+     <%= @transportation.step %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Тек. сумма:</strong>
+    </td>
+    <td>
+     <%= @transportation.cur_sum %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>ТЭК:</strong>
+    </td>
+    <td>
+     <%= @transportation.company.name %>
+    </td>
+  </tr>
+   <tr>
+    <td>
+     <strong>Менеджер:</strong>
+    </td>
+    <td>
+     <%= @transportation.user.name %>
+    </td>
+  </tr>
+</table>
+  
+  
+  
+

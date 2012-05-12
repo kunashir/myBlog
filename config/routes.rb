@@ -1,9 +1,20 @@
 MyBlog::Application.routes.draw do
+  #get "companies/new"
 
+  #get "transportations/new"
 
+  resources :users
+  resources :sessions, :only => [:new, :create, :destroy]
+  resources :transportations #, :only => [:new, :create, :index ]
+  resources :companies
+  
   match '/signup',  :to => 'users#new'
 	match '/contact', :to => 'pages#contact'
   match '/help',    :to => 'pages#help'
+  match '/signin',  :to => 'sessions#new'
+  match '/signout', :to => 'sessions#destroy'
+  match '/index',   :to => 'transportations#index'
+  
   #match '/home', :to => 'pages#home'
   
   root :to => 'pages#home'

@@ -2,4 +2,6 @@
 <h1>ООО "Рошен"</h1>
 <p>Заявки на перевозки </p>
 
+<% if ! signed_in? %>
 <%= link_to "Зарегистрируйтесь для работы!", signup_path, :class => "signup_button round" %>
+<% end %>

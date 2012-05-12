@@ -1,0 +1,47 @@
+
+
+  <%= render 'shared/error_messages', :object => f.object %>
+  <div class="field">
+    <%= f.label :date, "Дата перевозки:" %><br />
+    <%= f.text_field :date %>
+  </div>
+  <div class="field">
+    <%= f.label :time, "Время погрузки" %><br />
+    <%= f.text_field :time %>
+  </div>
+  <div class="field">
+    <%= f.label :storage_source, "Склад погрузки" %><br />
+    <%= f.text_field :storage_source %>
+  </div>
+  <div class="field">
+    <%= f.label :storage_dist, "Склад доставки:" %><br />
+    <%= f.text_field :storage_dist %>
+  </div>
+  <div class="field">
+    <%= f.label :comment, "Комментарий:" %><br />
+    <%= f.text_field :comment %>
+  </div>
+   <div class="field">
+    <%= f.label :type_transp, "Тип транспортного средства:" %><br />
+    <%= f.text_field :type_transp %>
+  </div>
+  <div class="field">
+    <%= f.label :weight, "Тоннаж:" %><br />
+    <%= f.text_field :weight %>
+  </div>
+   <div class="field">
+    <%= f.label :carcase, "Тип кузова:" %><br />
+    <%= f.text_field :carcase %>
+  </div>
+   <div class="field">
+    <%= f.label :start_sum, "Нач. сумма:" %><br />
+    <%= f.text_field :start_sum %>
+  </div>
+   <div class="field">
+    <%= f.label :step, "Шаг:" %><br />
+    <%= f.text_field :step %>
+  </div>
+  
+  
+  
+

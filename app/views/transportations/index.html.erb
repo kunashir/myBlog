@@ -1,0 +1,30 @@
+<% if manager? %>
+  <li><%= link_to "Добавить заявку", new_transportation_path %></li>
+<% end %>	 
+<h1>Заявки на перевозку:</h1>
+<table class="transp">
+  <tr>
+    <td class = "tr">п/п</td>
+    <td class = "tr">Дата рейса</td>
+    <td class = "tr">Дата погрзуки</td>
+    <td class = "tr">Склад погрузки</td>
+    <td class = "tr">Склад выгрзуки</td>
+    <td class = "tr">Тоннаж</td>
+    <td class = "tr">Примечание</td>
+    <td class = "tr">Тип тр. средства</td>
+    <td class = "tr">Тип кузова</td>
+    <td class = "tr">Нач. сумма за лот(руб.)</td>
+    <td class = "tr">Лучшее предложение за лот (руб.)</td>
+    <td class = "tr">Шаг цены для лота</td>
+    <% if manager? or is_admin? %>
+      <td class = "tr">ТЭК</td>
+    <% else %>	  
+      <td class = "tr">Сделать ставку</td>
+    <% end %>	  
+  </tr>
+  <%= will_paginate %>
+  
+    <%= render @transportations %>
+  
+  <%= will_paginate %>
+ </table>

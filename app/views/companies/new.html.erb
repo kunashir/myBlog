@@ -1,0 +1,7 @@
+<h1>Добавление компании:</h1>
+<%= form_for(@company) do |f| %>
+<%= render 'fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Добавить" %>
+  </div>
+<% end %>

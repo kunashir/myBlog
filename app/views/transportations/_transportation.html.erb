@@ -1,0 +1,25 @@
+<tr class ="tr">
+  <td class = "tr"><%= link_to transportation.num, transportation %></td> 
+  <td class = "tr"><%= transportation.date %></td> 
+  <td class = "tr"><%= to_time(transportation.time) %></td> 
+  <td class = "tr"><%= transportation.storage_source %></td> 
+  <td class = "tr"><%= transportation.storage_dist %></td> 
+  <td class = "tr"><%= transportation.weight %></td> 
+  <td class = "tr"><%= transportation.comment %></td> 
+  <td class = "tr"><%= transportation.type_transp %></td> 
+  
+  <td class = "tr"><%= transportation.carcase %></td> 
+  <td class = "tr"><%= transportation.start_sum %></td> 
+  <% if transportation.company == current_user.company %>
+    <td class = "tr"><%= transportation.cur_sum %><%= link_to track_logo %></td> 
+  <% else %>
+    <td class = "tr"><%= transportation.cur_sum %></td> 
+  <% end %>
+  <td class = "tr"><%= transportation.step %></td> 
+  <% if manager? or is_admin? %>
+      <td class = "tr"><%= transportation.company.nil? ? "" : transportation.company.name %></td>
+  <% else %>
+      <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
+                                            :title  => "KO" %> </td>
+  <% end %>	  
+</tr>  

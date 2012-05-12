@@ -11,6 +11,46 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20120512110143) do
+
+  create_table "companies", :force => true do |t|
+    t.string   "name"
+    t.integer  "inn"
+    t.boolean  "is_freighter"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "transportations", :force => true do |t|
+    t.integer  "num"
+    t.date     "date"
+    t.time     "time"
+    t.string   "storage_source"
+    t.string   "storage_dist"
+    t.string   "comment"
+    t.string   "type_transp"
+    t.decimal  "weight"
+    t.string   "carcase"
+    t.integer  "start_sum"
+    t.integer  "cur_sum"
+    t.integer  "step"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "company_id"
+    t.decimal  "volume"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "encrypted_password"
+    t.string   "salt"
+    t.boolean  "admin"
+    t.boolean  "nmanager"
+    t.integer  "company_id"
+  end
 
 end

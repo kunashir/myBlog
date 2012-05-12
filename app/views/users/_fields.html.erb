@@ -1,0 +1,25 @@
+
+
+  
+  <div class="field">
+    <%= f.label :name, "Имя(логин):" %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :company, "Компания:" %><br />
+    <%= f.collection_select :company_id, Company.all, :id, :name %>
+  </div>
+  <div class="field">
+    <%= f.label :password, "Пароль:" %><br />
+    <%= f.password_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation, "Подтверждение пароля:" %><br />
+    <%= f.password_field :password_confirmation %>
+  </div>
+  
+
