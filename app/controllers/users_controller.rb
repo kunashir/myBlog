@@ -13,6 +13,7 @@ class UsersController < ApplicationController
   def new
     @user   = User.new
     @title  = "Регистрация"
+    save_location #сохраним локация из которой вызов на создание 
   end
   
   def show

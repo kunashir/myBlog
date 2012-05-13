@@ -17,7 +17,9 @@ class CompaniesController < ApplicationController
       # Обработка успешного сохранения.
      
       flash[:success] = "Компания успешно добавлена"
-      redirect_to companies_path
+      #redirect_to companies_path
+      
+      redirect_back_or companies_path
     else
       @title = "Список компаний:"
       render 'new'

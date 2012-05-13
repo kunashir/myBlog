@@ -1,5 +1,8 @@
 
-
+ <div class="field">
+    <%= f.label :company, "Компания (выберите из списка или добавте новую):" %><br />
+    <%= f.collection_select :company_id, Company.all, :id, :name %><li><%= link_to "Добавить компанию", new_company_path %></li>
+  </div>
   
   <div class="field">
     <%= f.label :name, "Имя(логин):" %><br />
@@ -8,10 +11,6 @@
   <div class="field">
     <%= f.label :email %><br />
     <%= f.text_field :email %>
-  </div>
-  <div class="field">
-    <%= f.label :company, "Компания:" %><br />
-    <%= f.collection_select :company_id, Company.all, :id, :name %>
   </div>
   <div class="field">
     <%= f.label :password, "Пароль:" %><br />
