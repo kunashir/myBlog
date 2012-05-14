@@ -67,7 +67,11 @@ private
     if Transportation.last().nil?
       return 0
     end
-    return  0 unless !Transportation.last().num.nil?
+    if Transportation.last().num.nil? 
+      return 0
+    else
+      return Transportation.last().num
+    end
   end
 
 end
