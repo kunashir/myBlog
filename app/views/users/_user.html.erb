@@ -5,5 +5,12 @@
   <% if current_user.admin? %>
     | <%= link_to "Удалить", user, :method =>  :delete, :confirm => "Вы уверены?",
                                             :title  => "Удалить #{user.name}" %>
+    <% if user.is_block? %>
+    | <%= link_to "Разблокировать", user, :method =>  :put, :confirm => "Вы уверены?",
+                                            :title  => "Разблокировать #{user.name}" %>
+    <% else %>
+    | <%= link_to "Заблокировать", user, :method =>  :put, :confirm => "Вы уверены?",
+                                            :title  => "Заблокировать #{user.name}"%>
+    <% end %>
   <% end %>
 </li> 

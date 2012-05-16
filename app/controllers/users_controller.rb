@@ -2,7 +2,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
   before_filter :correсt_user,  :only => [:edit, :update]
-  before_filter :admin_user,    :only => :destroy
+  before_filter :admin_user,    :only => [:destroy, :update ]
   
   def destroy
     User.find(params[:id]).destroy
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   def new
     @user   = User.new
     @title  = "Регистрация"
-    save_location #сохраним локация из которой вызов на создание 
+  #  save_location #сохраним локация из которой вызов на создание 
   end
   
   def show
@@ -41,13 +41,29 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    if @user.update_attributes(params[:user])
-      flash[:success] = "Профиль обновлен."
-      redirect_to @user
-    else
-      @title = "Изменить профиль"
-      render 'edit'
-    end
+    if @user != current_user and is_admin? 
+      @user.is_block = !@user.is_block
+      if @user.toggle! :is_block # (params[:is_block], false) # => @user.is_block)
+        flash[:success] = "Профиль обновлен."
+        redirect_to users_path
+        
+      else
+        @title = "Изменить профиль"
+        render 'edit'
+        
+      end
+
+
+   else
+      if @user.update_attributes(params[:user])
+        flash[:success] = "Профиль обновлен."
+        redirect_to @user
+      else
+        @title = "Изменить профиль"
+        render 'edit'
+      end
+    end 
+
   end
   
   def index
@@ -62,7 +78,7 @@ private
   
   def correсt_user
     @user = User.find(params[:id])
-    redirect_to(root_path) unless current_user?(@user)
+    redirect_to(root_path) unless (current_user?(@user) or is_admin?)
   end
   
   def admin_user

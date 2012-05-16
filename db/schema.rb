@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120512110143) do
+ActiveRecord::Schema.define(:version => 20120515065003) do
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -34,20 +34,16 @@ ActiveRecord::Schema.define(:version => 20120512110143) do
     t.integer  "start_sum"
     t.integer  "cur_sum"
     t.integer  "step"
-    t.integer  "manager_id"
-    t.integer  "carrier_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "company_id"
     t.decimal  "volume"
   end
 
-  add_index "transportations", ["date"], :name => "index_transportations_on_date"
-
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
-    t.string   "company"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "encrypted_password"
@@ -55,8 +51,7 @@ ActiveRecord::Schema.define(:version => 20120512110143) do
     t.boolean  "admin"
     t.boolean  "nmanager"
     t.integer  "company_id"
+    t.boolean  "is_block",           :default => true
   end
-
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
 
 end

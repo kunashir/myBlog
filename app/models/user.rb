@@ -12,7 +12,7 @@
 
 class User < ActiveRecord::Base
   attr_accessor   :password
-  attr_accessible :name, :email, :company_id, :password, :password_confirmation
+  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :is_block
   
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   validates :password,  :presence => true, :confirmation  => true,
                         :length   => { :within => 6..40}
                         
-  before_save :encrypt_password
+ before_save :encrypt_password
   
   def has_password?(submitted_password)
     encrypted_password == encrypt(submitted_password)
@@ -45,8 +45,11 @@ class User < ActiveRecord::Base
   
   private
    def encrypt_password
-      self.salt = make_salt if new_record?
-      self.encrypted_password = encrypt(password)
+      #if !is_admin?
+        self.salt = make_salt if new_record?
+        self.encrypted_password = encrypt(password)
+      #end
+      
     end
 
     def encrypt(string)

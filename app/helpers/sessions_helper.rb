@@ -30,7 +30,7 @@ module SessionsHelper
   end
   
   def save_location
-	store_location
+   # store_location
   end
   
   def current_user?(user)
@@ -50,6 +50,11 @@ module SessionsHelper
   def is_admin?
     current_user.admin?
   end
+  
+  def is_block_user?
+    current_user.is_block?
+  end
+  
 private
   def user_from_remember_token
     User.authenticate_with_salt(*remember_token)

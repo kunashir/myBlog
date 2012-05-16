@@ -9,6 +9,10 @@ class TransportationsController < ApplicationController
   
   def index
     @title = "Список заявок:"
+    if is_block_user?
+      flash[:error] = "У Вас нет прав для просмотра заявок!"
+      redirect_back_or current_user
+    end
     @transportations  = Transportation.paginate(:page =>  params[:page])
   end
   

@@ -3,5 +3,6 @@
 <p>Заявки на перевозки </p>
 
 <% if ! signed_in? %>
-<%= link_to "Зарегистрируйтесь для работы!", signup_path, :class => "signup_button round" %>
+<%= link_to "Регистрация!", signup_path, :class => "signup_button round" %><br>
+<%= link_to "Вход!", signin_path, :class => "signup_button round" %>
 <% end %>
