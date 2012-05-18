@@ -12,12 +12,14 @@
 
 class User < ActiveRecord::Base
   attr_accessor   :password
-  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :is_block
+  attr_accessible :name, :email, :company_id, :password, :password_confirmation
   
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
   
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  
+  
   
   validates :name,    :presence => true, :length =>  { :maximum => 50}
   validates :email,   :presence => true, :format =>  { :with => email_regex },
@@ -42,14 +44,18 @@ class User < ActiveRecord::Base
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user : nil
   end
+
   
   private
    def encrypt_password
-      #if !is_admin?
+      if !self.get_special_save
         self.salt = make_salt if new_record?
-        self.encrypted_password = encrypt(password)
-      #end
-      
+        return self.encrypted_password = encrypt(password)
+      end
+      if self.get_special_save
+        @special_saving = false
+      end
+      return true
     end
 
     def encrypt(string)

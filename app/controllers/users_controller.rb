@@ -42,9 +42,11 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user != current_user and is_admin? 
-      @user.is_block = !@user.is_block
+    #  debbuger
+      # @user.is_block = !@user.is_block
+      #@user.set_special_save
       if @user.toggle! :is_block # (params[:is_block], false) # => @user.is_block)
-        flash[:success] = "Профиль обновлен."
+        flash[:success] = "Статус пользователя " + @user.name + " обновлен."
         redirect_to users_path
         
       else
