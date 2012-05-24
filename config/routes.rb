@@ -1,4 +1,8 @@
 MyBlog::Application.routes.draw do
+  #get "drivers/new"
+
+  #get "avtos/new"
+
   #get "companies/new"
 
   #get "transportations/new"
@@ -7,6 +11,8 @@ MyBlog::Application.routes.draw do
   resources :sessions, :only => [:new, :create, :destroy]
   resources :transportations #, :only => [:new, :create, :index ]
   resources :companies
+  resources :avtos  
+  resources :drivers
   
   match '/signup',  :to => 'users#new'
 	match '/contact', :to => 'pages#contact'
@@ -14,6 +20,9 @@ MyBlog::Application.routes.draw do
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
   match '/index',   :to => 'transportations#index'
+  #спец. роутинг для подтверждения заявки
+  match 'transportations/:id/confirmation', :to => 'transportations#confirmation'
+  match 'transportations/:id/edit_conf', :to => 'transportations#edit_conf'
   
   #match '/home', :to => 'pages#home'
   

@@ -1,0 +1,7 @@
+<h1>Добавление водителя:</h1>
+<%= form_for(@driver) do |f| %>
+<%= render 'fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Добавить" %>
+  </div>
+<% end %>

@@ -1,7 +1,12 @@
 <% if manager? %>
   <li><%= link_to "Добавить заявку", new_transportation_path %></li>
 <% end %>	 
-<h1>Заявки на перевозку:</h1>
+<h1>Заявки на перевозку:<%= @day %></h1>
+<%= form_tag( transportations_path, :method => "get") do %>
+  <%= label_tag(:q, "Дата для отбора:") %>
+  <%= datepicker_input :date, :cur_date, :dateFormat => "yy-mm-dd" %>
+  <%= submit_tag("Отобрать") %>
+<% end %>
 <table class="transp">
   <tr>
     <td class = "tr">п/п</td>

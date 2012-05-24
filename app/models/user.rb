@@ -45,17 +45,24 @@ class User < ActiveRecord::Base
     (user && user.salt == cookie_salt) ? user : nil
   end
 
+  def save_without_callbacks ( use )
+    @use_callback = use
+  end
+  
+  def show_save_type
+    if !@use_callback
+      return "Use callback"
+    end
+    return "Callback off"
+  end
   
   private
    def encrypt_password
-      if !self.get_special_save
+     if !@use_callback
         self.salt = make_salt if new_record?
         return self.encrypted_password = encrypt(password)
-      end
-      if self.get_special_save
-        @special_saving = false
-      end
-      return true
+     end
+     return true
     end
 
     def encrypt(string)

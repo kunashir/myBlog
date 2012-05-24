@@ -1,9 +1,9 @@
 
 
-  <%= render 'shared/error_messages', :object => f.object %>
+  
   <div class="field">
     <%= f.label :date, "Дата перевозки:" %><br />
-    <%= f.text_field :date %>
+    <%= f.datepicker :date, :dateFormat => "yy-mm-dd" %>
   </div>
   <div class="field">
     <%= f.label :time, "Время погрузки" %><br />

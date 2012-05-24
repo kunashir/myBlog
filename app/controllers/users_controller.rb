@@ -36,6 +36,10 @@ class UsersController < ApplicationController
   
   def edit
     @user = User.find(params[:id])
+    if @user != current_user
+      flash[:error] = "Нельзя редактировать профиль другого пользователя"
+      redirect_to users_path
+    end
     @title = "Изменить профиль"
   end
   
@@ -43,9 +47,10 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if @user != current_user and is_admin? 
     #  debbuger
-      # @user.is_block = !@user.is_block
+      #@user.is_block = !@user.is_block
       #@user.set_special_save
-      if @user.toggle! :is_block # (params[:is_block], false) # => @user.is_block)
+      @user.save_without_callbacks true
+      if @user.toggle! :is_block
         flash[:success] = "Статус пользователя " + @user.name + " обновлен."
         redirect_to users_path
         

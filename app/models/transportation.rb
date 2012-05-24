@@ -3,6 +3,8 @@ class Transportation < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :company
+  belongs_to :avto
+  belongs_to :driver
   #validates :user_id, :presence => true
   validates :date,    :presence => true
   validates :time,    :presence => true
@@ -14,4 +16,12 @@ class Transportation < ActiveRecord::Base
   validates :start_sum, :presence => true
   validates :step, :presence => true
   default_scope :order  =>  'transportations.date DESC' #показываем самые свежие
+  
+  def self.transportation_for_date(some_date)
+    if some_date.to_s.empty?
+      Transportation.all
+    else
+      Transportation.where("date = ?", some_date)
+    end
+  end
 end

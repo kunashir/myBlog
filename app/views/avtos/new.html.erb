@@ -1,0 +1,7 @@
+<h1>Добавление машины:</h1>
+<%= form_for(@avto) do |f| %>
+<%= render 'fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Добавить" %>
+  </div>
+<% end %>

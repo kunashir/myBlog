@@ -20,7 +20,11 @@
   <% if manager? or is_admin? %>
       <td class = "tr"><%= transportation.company.nil? ? "" : transportation.company.name %></td>
   <% else %>
-      <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
+      <% if Time.zone.now.localtime.hour < 14 %>
+        <td class = "tr">Торги начнуться в 14:00 МСК</td>
+      <% else %>
+        <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
                                             :title  => "KO" %> </td>
+      <% end %>
   <% end %>	  
 </tr>  

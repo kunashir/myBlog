@@ -1,0 +1,17 @@
+<h1>Подвижной парк компании:</h1>
+<li><%= link_to "Добавить машину", new_avto_path %></li>
+<table class="transp">
+  <tr>
+    <td class = "tr">Марка тягача</td>
+    <td class = "tr">Тип кузова</td>
+    <td class = "tr">Номер тягача</td>
+    <td class = "tr">Номер пп</td>
+      
+  </tr>
+
+<%= will_paginate %>
+<ul class="users">
+  <%= render @avtos %>
+</ul>
+<%= will_paginate %>
+</table>

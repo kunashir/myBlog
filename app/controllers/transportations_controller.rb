@@ -7,13 +7,20 @@ class TransportationsController < ApplicationController
     
   end
   
-  def index
-    @title = "Список заявок:"
+  def index 
+       
+    begin
+      @day = params[:date][:cur_date]
+      
+    rescue
+     @day = Date.current
+    end
+    @title = "Список заявок:"  + @day.to_s
     if is_block_user?
       flash[:error] = "У Вас нет прав для просмотра заявок!"
       redirect_back_or current_user
     end
-    @transportations  = Transportation.paginate(:page =>  params[:page])
+    @transportations  = Transportation.transportation_for_date(@day).paginate(:page =>  params[:page])
   end
   
   def create
@@ -49,10 +56,14 @@ class TransportationsController < ApplicationController
   def update
     @transportation = Transportation.find(params[:id])
     if !manager? and !is_admin? #если не менеджер и не админ занчит делали ставку
-      #params[:company] = current_user.company
+      
+      if Time.zone.now.localtime.hour < 14 
+        flash[:error] = "Торги еще не открыты!"
+        redirect_to transportations_path
+      end
       @transportation.company = current_user.company
       @transportation.cur_sum = (@transportation.cur_sum.nil? ? @transportation.start_sum : @transportation.cur_sum) - @transportation.step #params[:cur_sum]
-      if @transportation.update_attributes(params[:user])
+      if @transportation.update_attributes(params[:user]) 
         flash[:success] = "Ваша ставка принята."
       else
         @title = "Error"
@@ -61,6 +72,15 @@ class TransportationsController < ApplicationController
     end  
   
   end
+  
+  def confirmation #save transp. confimation (update)
+  
+  end
+  
+  def edit_conf #show page for edit conf
+  
+  end
+  
   
 private
   def authenticate

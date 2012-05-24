@@ -1,0 +1,16 @@
+<h1>Водители компании:</h1>
+<li><%= link_to "Добавить водителя", new_driver_path %></li>
+<table class="transp">
+  <tr>
+    <td class = "tr">ФИО</td>
+    <td class = "tr">Док. удостверяющий личность, кем и когда выдан</td>
+      
+  </tr>
+
+<%= will_paginate %>
+<ul class="users">
+  <%= render @drivers %>
+</ul>
+<%= will_paginate %>
+</table>
+ 
