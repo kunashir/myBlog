@@ -1,7 +1,7 @@
 
  <div class="field">
     <%= f.label :company, "Компания (выберите из списка или добавте новую):" %><br />
-    <%= f.collection_select :company_id, Company.all, :id, :name %><li><%= link_to "Добавить компанию", new_company_path %></li>
+    <%= f.collection_select :company_id, Company.all, :id, :name %> <li><%= link_to "Добавить компанию", new_company_path %></li>
   </div>
   
   <div class="field">

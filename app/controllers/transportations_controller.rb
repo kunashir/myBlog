@@ -74,11 +74,19 @@ class TransportationsController < ApplicationController
   end
   
   def confirmation #save transp. confimation (update)
-  
+    @transportation = Transportation.find(params[:id])
+    @transportation.avto   = Avto.find(params[:transportation][:avto_id])
+    @transportation.driver = Driver.find(params[:transportation][:driver_id])
+    if @transportation.save!
+      flash[:success] = "Подтверждение сохранено"
+    else
+      flash[:error] = "Ошибка сохранения"
+    end
+    redirect_to transportations_path
   end
   
   def edit_conf #show page for edit conf
-  
+    @transportation = Transportation.find(params[:id])
   end
   
   
