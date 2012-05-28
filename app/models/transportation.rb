@@ -24,4 +24,11 @@ class Transportation < ActiveRecord::Base
       Transportation.where("date = ?", some_date)
     end
   end
+  
+  def is_active?
+    if ( self.avto_id.nil? or self.driver_id.nil?)
+      return true
+    end
+    return false
+  end
 end

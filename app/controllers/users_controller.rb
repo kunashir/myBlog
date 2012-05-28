@@ -2,7 +2,8 @@
 class UsersController < ApplicationController
   before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
   before_filter :correсt_user,  :only => [:edit, :update]
-  before_filter :admin_user,    :only => [:destroy, :update ]
+  before_filter :admin_user,    :only => [:destroy ]
+  #after_filter  :admin_user,    :only => [:update ]
   
   def destroy
     User.find(params[:id]).destroy
@@ -44,11 +45,9 @@ class UsersController < ApplicationController
   end
   
   def update
+    logger.debug
     @user = User.find(params[:id])
-    if @user != current_user and is_admin? 
-    #  debbuger
-      #@user.is_block = !@user.is_block
-      #@user.set_special_save
+    if (@user != current_user) and (is_admin? )
       @user.save_without_callbacks true
       if @user.toggle! :is_block
         flash[:success] = "Статус пользователя " + @user.name + " обновлен."
@@ -62,7 +61,8 @@ class UsersController < ApplicationController
 
 
    else
-      if @user.update_attributes(params[:user])
+      @user.save_without_callbacks false
+      if @user.update_attributes!(params[:user])
         flash[:success] = "Профиль обновлен."
         redirect_to @user
       else
@@ -86,9 +86,10 @@ private
   def correсt_user
     @user = User.find(params[:id])
     redirect_to(root_path) unless (current_user?(@user) or is_admin?)
+   
   end
   
   def admin_user
-    redirect_to(root_path) unless current_user.admin?
+    #redirect_to(root_path) unless current_user.admin?
   end
 end
