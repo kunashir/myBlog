@@ -1,0 +1,8 @@
+<h1> <%= @client.name %>  </h1>
+<li><%= link_to "Добавить склад", new_storage_path %></li>
+Склады:
+<% @client.storages do |storage| %>
+    <li>
+      <%= storage.name %>
+    </li>
+<% end %>

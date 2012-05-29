@@ -6,6 +6,24 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
 //= require jquery-ui
-$("input.date_picker").datepicker();
+// $("input.date_picker").datepicker();
+
+//(function($) {
+  //$("#datepicker").datepicker();
+  ////$("#datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+//}
+//)(jQuery);
+
+//$(function($) {
+    //$( "#datepicker" ).datepicker();
+		//$( "#datepicker" ).datepicker("option", "dateFormat", "yy-mm-dd");
+	//})(jQuery);;
+
+(function($) {
+  $(document).ready(function() {
+    $( "#datepicker" ).datepicker({
+      dateFormat: 'yy-mm-dd'
+    });
+  });
+})(jQuery);

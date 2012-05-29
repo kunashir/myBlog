@@ -93,7 +93,9 @@
      <strong>ТЭК:</strong>
     </td>
     <td>
-     <%= @transportation.company.name %>
+      <% if !@transportation.company.nil? %>
+        <%= @transportation.company.name %>
+      <% end %>
     </td>
   </tr>
    <tr>

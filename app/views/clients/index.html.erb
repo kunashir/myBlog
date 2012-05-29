@@ -1,0 +1,11 @@
+<h1>Клиенты:</h1>
+<li><%= link_to "Добавить клиента", new_client_path %></li>
+
+<%= will_paginate %>
+<ul class="users">
+  <%= render @clients %>
+</ul>
+<%= will_paginate %>
+
+ 
+ 

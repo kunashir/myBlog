@@ -1,0 +1,7 @@
+<h1>Добавление склада:</h1>
+<%= form_for(@storage) do |f| %>
+<%= render 'fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Добавить" %>
+  </div>
+<% end %>

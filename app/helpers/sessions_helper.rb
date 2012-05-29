@@ -55,6 +55,14 @@ module SessionsHelper
     current_user.is_block?
   end
   
+  def set_cur_client(client)
+    session[:cur_client] = client
+  end
+  
+  def get_cur_client
+    session[:cur_client]
+  end
+  
 private
   def user_from_remember_token
     User.authenticate_with_salt(*remember_token)

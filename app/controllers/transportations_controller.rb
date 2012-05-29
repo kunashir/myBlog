@@ -10,7 +10,7 @@ class TransportationsController < ApplicationController
   def index 
        
     begin
-      @day = params[:date][:cur_date]
+      @day = params[:datepicker]
       
     rescue
      @day = Date.current

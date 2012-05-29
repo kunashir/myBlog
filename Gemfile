@@ -10,13 +10,8 @@ gem 'jquery-rails'
 gem	'compass', ">= 0.11.7"
 gem 'gravatar_image_tag', '1.0.0.pre2'
 gem 'will_paginate', '3.0.pre2'
-gem 'jquery_datepicker'
+#gem 'jquery_datepicker'
 
-
-group :deployment do
-  gem 'pg', '0.13.2'
-  gem 'postgres-pr'
-end
 
 group	:development do
 	gem	'rspec-rails', '2.6.1'
