@@ -36,24 +36,26 @@
         $("#transportation_client_id").change(
          function() 
          {
+              
               $("#transportation_storage_id").html("<option>Загрзука...</option>");
               $.ajax(
               {
-                type: "POST",
+                type: "GET",
                 url:  "/transportations/-1/get_storage",
                 data: "client=" + $(this).val(),
-                dataType: "json"
-                error:  function (XMLHttpRequest, textStatus, errorThrow)
+                dataType: "text",
+                error:  function(XMLHttpRequest, textStatus, errorThrown)
                 {
                   alert("Ошибка получения списка складов");
                 },
-                success:  function (result)
+                success:  function(result)
                 {
+                  //alert (result);
                   $("#transportation_storage_id").html(result);
                 }
                   
-          }
-      );
+              });
+        });
     });
   })(jQuery);
       
