@@ -1,5 +1,5 @@
   <div class="field">
-    <%= f.label :date, "Номер распряжения:" %><br />
+    <%= f.label :date, "Номер распоряжения:" %><br />
     <%= f.text_field :num %>
   </div>
   <div class="field">
@@ -22,10 +22,7 @@
     <%= f.label :comment, "Комментарий:" %><br />
     <%= f.text_field :comment %>
   </div>
-   <div class="field">
-    <%= f.label :type_transp, "Тип транспортного средства:" %><br />
-    <%= f.text_field :type_transp %>
-  </div>
+
   <div class="field">
     <%= f.label :weight, "Тоннаж:" %><br />
     <%= f.text_field :weight %>
@@ -36,7 +33,7 @@
   </div>
    <div class="field">
     <%= f.label :carcase, "Тип кузова:" %><br />
-    <%= f.text_field :carcase %>
+    <%= f.select :carcase, options_for_select([['Реф', 'Реф'], ['Термос', 'Термос'], ['Тент', 'Тент'] ], 2) %>
   </div>
    <div class="field">
     <%= f.label :start_sum, "Нач. сумма:" %><br />

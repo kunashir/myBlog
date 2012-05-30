@@ -9,10 +9,10 @@ class StoragesController < ApplicationController
     @storage = Storage.new(params[:storage])
     @storage.client_id = get_cur_client
     if @storage.save!
-      flash[:success] = "Новый клиент добавлен!"
-      redirect_to storages_path 
+      flash[:success] = "Новый склад добавлен!"
+      redirect_to get_cur_client 
     else
-      @title = "Добавление клиента"
+      @title = "Добавление склада клиента"
       render 'new'
     end
   end

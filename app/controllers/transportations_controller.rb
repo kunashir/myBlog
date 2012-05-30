@@ -55,7 +55,7 @@ class TransportationsController < ApplicationController
 
   def update
     @transportation = Transportation.find(params[:id])
-    if !manager? and !is_admin? #если не менеджер и не админ занчит делали ставку
+    if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
       if Time.zone.now.localtime.hour < 14 
         flash[:error] = "Торги еще не открыты!"
@@ -69,6 +69,14 @@ class TransportationsController < ApplicationController
         @title = "Error"
       end
      redirect_to @transportation
+    else
+      if @transportation.update_attributes!(params[:transportation])
+        flash[:success] = "Заявка обновлен."
+        redirect_to @transportation
+      else
+        @title = "Изменить заявку"
+        render 'edit'
+      end
     end  
   
   end
