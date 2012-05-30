@@ -27,3 +27,34 @@
     });
   });
 })(jQuery);
+
+(function($) 
+{
+  $(document).ready(
+    function() 
+    {
+        $("#transportation_client_id").change(
+         function() 
+         {
+              $("#transportation_storage_id").html("<option>Загрзука...</option>");
+              $.ajax(
+              {
+                type: "POST",
+                url:  "/transportations/-1/get_storage",
+                data: "client=" + $(this).val(),
+                dataType: "json"
+                error:  function (XMLHttpRequest, textStatus, errorThrow)
+                {
+                  alert("Ошибка получения списка складов");
+                },
+                success:  function (result)
+                {
+                  $("#transportation_storage_id").html(result);
+                }
+                  
+          }
+      );
+    });
+  })(jQuery);
+      
+    

@@ -27,13 +27,14 @@ class TransportationsController < ApplicationController
     ls = lastNum
     @transportation = Transportation.new(params[:transportation])
     @transportation.user = current_user
-    @transportation.num = ls + 1
+    # @transportation.num = ls + 1
     if @transportation.save
       # Обработка успешного сохранения.
      
       flash[:success] = "Заявка успешно добавлена"
       redirect_to :index
     else
+      flash[:success] = "Проверте данные!"
       @title = "Добавление заявки на перевозку"
       render 'new'
     end
@@ -71,7 +72,7 @@ class TransportationsController < ApplicationController
      redirect_to @transportation
     else
       if @transportation.update_attributes!(params[:transportation])
-        flash[:success] = "Заявка обновлен."
+        flash[:success] = "Заявка обновлена."
         redirect_to @transportation
       else
         @title = "Изменить заявку"
@@ -97,6 +98,18 @@ class TransportationsController < ApplicationController
     @transportation = Transportation.find(params[:id])
   end
   
+  def get_storage
+    if (params[:id] == -1)
+      @transportation = Transportation.new()
+    end
+    client = Client.find(params[:client])
+    list_storage = Storage.where("client_id=?", client);
+    @html_select_tag = ""
+    list_storage.each do |storage|
+      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.city+"</option>"
+    end
+    render :text =>@html_select_tag, :layout => false
+  end
   
 private
   def authenticate

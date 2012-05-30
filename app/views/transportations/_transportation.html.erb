@@ -3,7 +3,8 @@
   <td class = "tr"><%= transportation.date %></td> 
   <td class = "tr"><%= to_time(transportation.time) %></td> 
   <td class = "tr"><%= transportation.storage_source %></td> 
-  <td class = "tr"><%= transportation.storage_dist %></td> 
+  <td class = "tr"><%= transportation.client.name if !transportation.client.nil? %></td> 
+  <td class = "tr"><%= transportation.storage %></td> 
   <td class = "tr"><%= transportation.weight %></td> 
   <td class = "tr"><%= transportation.volume %></td> 
   <td class = "tr"><%= transportation.comment %></td> 

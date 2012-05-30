@@ -15,8 +15,12 @@
     <%= f.text_field :storage_source %>
   </div>
   <div class="field">
+    <%= f.label :client, "Клиент:" %><br />
+    <%= f.collection_select :client_id, Client.all, :id, :name %> 
+  </div>
+  <div class="field">
     <%= f.label :storage_dist, "Склад доставки:" %><br />
-    <%= f.text_field :storage_dist %>
+    <select id="transportation_storage_id"><option>Выберите с начала клиента</option></select>
   </div>
   <div class="field">
     <%= f.label :comment, "Комментарий:" %><br />
