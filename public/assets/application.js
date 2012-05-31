@@ -21432,3 +21432,36 @@ $.effects.transfer = function(o) {
     });
   });
 })(jQuery);
+
+(function($) 
+{
+  $(document).ready(
+    function() 
+    {
+        $("#transportation_client_id").change(
+         function() 
+         {
+              
+              $("#transportation_storage_id").html("<option>Загрзука...</option>");
+              $.ajax(
+              {
+                type: "GET",
+                url:  "/transportations/-1/get_storage",
+                data: "client=" + $(this).val(),
+                dataType: "text",
+                error:  function(XMLHttpRequest, textStatus, errorThrown)
+                {
+                  alert("Ошибка получения списка складов");
+                },
+                success:  function(result)
+                {
+                  //alert (result);
+                  $("#transportation_storage_id").html(result);
+                }
+                  
+              });
+        });
+    });
+  })(jQuery);
+      
+    

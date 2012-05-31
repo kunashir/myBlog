@@ -13,7 +13,7 @@
      <strong>Время погрузки:</strong>
     </td>
     <td>
-     <%= @transportation.time %>
+     <%= to_time(@transportation.time) %>
     </td>
   </tr>
   <tr>
@@ -26,10 +26,18 @@
   </tr>
   <tr>
     <td>
+     <strong>Клиент:</strong>
+    </td>
+    <td>
+     <%= @transportation.client.name unless @transportation.client.nil? %>
+    </td>
+  </tr>
+  <tr>
+    <td>
      <strong>Склад доставки:</strong>
     </td>
     <td>
-     <%= @transportation.storage_dist %>
+     <%= @transportation.storage.city unless @transportation.storage.nil? %>
     </td>
   </tr>
   <tr>
