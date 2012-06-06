@@ -3,7 +3,7 @@
 Склады:
 <% @client.storages.each do |storage| %>
     <li>
-      <%= storage.city %>
+      <%= storage.city.name unless storage.city.nil? %>
     </li>
 <% end %>
 

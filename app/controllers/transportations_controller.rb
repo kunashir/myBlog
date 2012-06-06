@@ -1,12 +1,26 @@
 #coding: utf-8
 class TransportationsController < ApplicationController
  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+#=====================================================================
   def new
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
-    
+    if !params[:id].nil? #ввод копированием 
+		transportation_source = Transportation.find(params[:id])
+		@transportation.client 			= transportation_source.client
+		@transportation.storage_source 	= transportation_source.storage_source
+		@transportation.storage 		= transportation_source.storage
+		@transportation.weight 			= transportation_source.weight
+		@transportation.date 			= transportation_source.date
+		@transportation.volume 			= transportation_source.volume
+		@transportation.carcase 		= transportation_source.carcase
+		@transportation.start_sum 		= transportation_source.start_sum
+		@transportation.step 			= transportation_source.step
+		@transportation.comment			= transportation_source.comment
+	end
   end
-  
+
+#=====================================================================
   def index 
        
     begin
@@ -22,7 +36,7 @@ class TransportationsController < ApplicationController
     end
     @transportations  = Transportation.transportation_for_date(@day).paginate(:page =>  params[:page])
   end
-  
+#=====================================================================  
   def create
     ls = lastNum
     @transportation = Transportation.new(params[:transportation])
@@ -40,20 +54,21 @@ class TransportationsController < ApplicationController
     end
   end
   
+#=====================================================================
   def show
     @transportation   = Transportation.find(params[:id])
     @title  = "Заявка # " # + @transportation.num.to_str
   end
-  
+#=====================================================================
    def edit
     @transportation = Transportation.find(params[:id])
-    if @transportation.user != current_user or !is_admin?
+    if (@transportation.user != current_user) or (!is_admin?)
       flash[:error] = "Вы не можете редактировать данную заявку"
       redirect_to transportations_path
     end
     @title = "Изменить заявку "
   end
-
+#=====================================================================
   def update
     @transportation = Transportation.find(params[:id])
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
@@ -81,7 +96,8 @@ class TransportationsController < ApplicationController
     end  
   
   end
-  
+
+#=====================================================================  
   def confirmation #save transp. confimation (update)
     @transportation = Transportation.find(params[:id])
     @transportation.avto   = Avto.find(params[:transportation][:avto_id])
@@ -93,11 +109,14 @@ class TransportationsController < ApplicationController
     end
     redirect_to transportations_path
   end
-  
+
+#=====================================================================  
+
   def edit_conf #show page for edit conf
     @transportation = Transportation.find(params[:id])
   end
-  
+
+#=====================================================================  
   def get_storage
     if (params[:id] == -1)
       @transportation = Transportation.new()
@@ -106,16 +125,32 @@ class TransportationsController < ApplicationController
     list_storage = Storage.where("client_id=?", client);
     @html_select_tag = ""
     list_storage.each do |storage|
-      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.city+"</option>"
+      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.city.name+"</option>"
     end
     render :text =>@html_select_tag, :layout => false
   end
-  
+
+#=====================================================================
+  def copy
+	@title = "Ввод копированием"
+	transportation_source = Transportation.find(params[:id])
+    if !manager?
+      flash[:error] = "Вы не можете вводить заявки"
+      redirect_to transportations_path
+    end
+    #@title = "Изменить заявку "
+    @transportation	= Transportation.new
+    @transportation = transportation_source
+    #render :new
+  end
+
 private
+
+#=====================================================================
   def authenticate
     deny_access unless signed_in?
   end
-  
+#=====================================================================
   def lastNum
     if Transportation.last().nil?
       return 0

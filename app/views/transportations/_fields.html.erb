@@ -21,7 +21,7 @@
   <div class="field">
     <%= f.label :storage_dist, "Склад доставки:" %><br />
    
-    <%= f.collection_select :storage_id, Storage.where("client_id=?", ( @transportation.client.nil? ? 1 : @transportation.client)), :id, :city %> 
+    <%= f.collection_select :storage_id, Storage.where("client_id=?", ( @transportation.client.nil? ? 1 : @transportation.client)), :id, :name %> 
   </div>
   <div class="field">
     <%= f.label :comment, "Комментарий:" %><br />

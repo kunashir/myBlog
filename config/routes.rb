@@ -29,7 +29,8 @@ MyBlog::Application.routes.draw do
   #спец. роутинг для подтверждения заявки
   match 'transportations/:id/confirmation', :to => 'transportations#confirmation'
   match 'transportations/:id/edit_conf',    :to => 'transportations#edit_conf'
-  match 'transportations/:id/get_storage',      :to => 'transportations#get_storage'
+  match 'transportations/:id/get_storage',  :to => 'transportations#get_storage'
+  match	'transportations/:id/copy',			:to	=>	'transportations#new'
   
   
   #match '/home', :to => 'pages#home'

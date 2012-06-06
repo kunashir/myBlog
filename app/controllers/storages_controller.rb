@@ -8,6 +8,8 @@ class StoragesController < ApplicationController
    def create
     @storage = Storage.new(params[:storage])
     @storage.client = get_cur_client
+    city  = City.find(params[:storage][:city_id])
+    @storage.name = city.name
     if @storage.save!
       flash[:success] = "Новый склад добавлен!"
       redirect_to get_cur_client 

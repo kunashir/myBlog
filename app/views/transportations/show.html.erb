@@ -104,7 +104,7 @@
      <strong>Менеджер:</strong>
     </td>
     <td>
-     <%= @transportation.user.name %>
+     <%= @transportation.user.name unless @transportation.user.nil? %>
     </td>
   </tr>
 </table>
