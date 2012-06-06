@@ -16,8 +16,12 @@ class Client < ActiveRecord::Base
       if st.nil?
         st = Storage.new do |s|
           s.client  = Client.find(client)
-          s.city    = City.where("name LIKE ?", "#{storage}%").first
-          
+          city    = City.where("name LIKE ?", "#{storage}%").first
+          if city.nil?
+            city  = City.new(:name => storage)
+            city.save!
+          end
+          s.city = city
         end
         st.save!
       end
