@@ -37,10 +37,12 @@ class Client < ActiveRecord::Base
       /(\W+),(\W+)\s/ =~ line
       client_name  = $1
       city_storage = $2
-      if m_hash.has_key?(client_name)
-        m_hash[client_name][m_hash[client_name].count] = city_storage
-      else
-        m_hash[client_name] = Array.new(1, city_storage)
+      if !client_name.blank? 
+        if m_hash.has_key?(client_name)
+          m_hash[client_name][m_hash[client_name].count] = city_storage
+        else
+          m_hash[client_name] = Array.new(1, city_storage)
+        end
       end
     end
     keys = m_hash.keys

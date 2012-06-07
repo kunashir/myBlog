@@ -1,5 +1,9 @@
 <% if manager? %>
   <li><%= link_to "Добавить заявку", new_transportation_path %></li>
+  <% if manager? or is_admin? %>
+    <br>
+    <li><%= link_to "Пакетная загрузка", transportations_path+"/-1/packet" %></li>
+  <% end %>
 <% end %>	 
 <h1>Заявки на перевозку:<%= @day %></h1>
 <%= form_tag( transportations_path, :method => "get") do %>

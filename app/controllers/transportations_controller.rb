@@ -132,8 +132,8 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def copy
-	@title = "Ввод копированием"
-	transportation_source = Transportation.find(params[:id])
+    @title = "Ввод копированием"
+    transportation_source = Transportation.find(params[:id])
     if !manager?
       flash[:error] = "Вы не можете вводить заявки"
       redirect_to transportations_path
@@ -144,6 +144,22 @@ class TransportationsController < ApplicationController
     #render :new
   end
 
+#=====================================================================
+  def packet_loading
+    @title = "Пакетная загрузка"
+  end
+
+#=====================================================================
+  def load
+    @title = "Пакетная загрузка"
+      if Transportation.load_from_file(params[:file], current_user)
+        render :text => "Загрузка закончена", :layout => false
+      else
+        render :text => "Ошибка", :layout => false
+      end
+  end
+  
+  
 private
 
 #=====================================================================

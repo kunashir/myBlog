@@ -38,7 +38,7 @@
   </div>
    <div class="field">
     <%= f.label :carcase, "Тип кузова:" %><br />
-    <%= f.select :carcase, options_for_select([['Реф', 'Реф'], ['Термос', 'Термос'], ['Тент', 'Тент'] ], 2) %>
+    <%= f.select :carcase, options_for_select([['реф', 'реф'], ['термос', 'термос'], ['тент', 'тент'] ], @transportation.carcase) %>
   </div>
    <div class="field">
     <%= f.label :start_sum, "Нач. сумма:" %><br />

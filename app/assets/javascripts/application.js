@@ -59,4 +59,29 @@
     });
   })(jQuery);
       
-    
+(function($) {
+  $(document).ready(function() {
+    $("#load_tr").click(
+      function()
+      {
+        $.ajax(
+        {
+          type: "GET",
+          url:  "/transportations/-1/load",
+          data: "file=" + $("#user_file").val(),
+          dataType: "text",
+          error: function(XMLHttpRequest, textStatus, errorThrown)
+          {
+            $("#show_res").html("ОШИБКА: загрзука завершилась аварийно!")
+          },
+          success:  function(result)
+          {
+             //alert (result);
+             $("#show_res").html(result);
+          }
+          
+          
+        });
+  });
+});
+})(jQuery);    

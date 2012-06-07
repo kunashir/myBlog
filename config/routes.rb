@@ -31,6 +31,8 @@ MyBlog::Application.routes.draw do
   match 'transportations/:id/edit_conf',    :to => 'transportations#edit_conf'
   match 'transportations/:id/get_storage',  :to => 'transportations#get_storage'
   match	'transportations/:id/copy',			:to	=>	'transportations#new'
+  match	'transportations/:id/packet',			:to	=>	'transportations#packet_loading'
+  match	'transportations/:id/load',			:to	=>	'transportations#load'
   
   
   #match '/home', :to => 'pages#home'
