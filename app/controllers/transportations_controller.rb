@@ -73,13 +73,18 @@ class TransportationsController < ApplicationController
     @transportation = Transportation.find(params[:id])
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
-      if Time.zone.now.localtime.hour < 14 
+      if Time.zone.now.localtime.hour < trad_start_time 
         flash[:error] = "Торги еще не открыты!"
         redirect_to transportations_path
+        return
       end
       @transportation.company = current_user.company
-      @transportation.cur_sum = (@transportation.cur_sum.nil? ? @transportation.start_sum : @transportation.cur_sum) - @transportation.step #params[:cur_sum]
-      if @transportation.update_attributes(params[:user]) 
+      if (params[:summa].empty?)
+        @transportation.cur_sum = (@transportation.cur_sum.nil? ? @transportation.start_sum : @transportation.cur_sum) - @transportation.step #params[:cur_sum]
+      else
+        @transportation.cur_sum = params[:summa]
+      end
+      if @transportation.save! 
         flash[:success] = "Ваша ставка принята."
       else
         @title = "Error"
