@@ -1,5 +1,8 @@
 <tr class ="tr">
-  <td class = "tr"><%= link_to transportation.num, transportation %>, <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
+  <td class = "tr"><%= link_to transportation.num, transportation %> 
+  <% if manager? or is_admin? %>
+    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
+  <% end %>
   <td class = "tr"><%= transportation.date %></td> 
   <td class = "tr"><%= to_time(transportation.time) %></td> 
   <td class = "tr"><%= transportation.storage_source %></td> 
@@ -19,26 +22,42 @@
   <% if manager? or is_admin? %>
       <td class = "tr"><%= transportation.company.nil? ? "" : transportation.company.name %></td>
   <% else %>
-      <% if transportation.date >= Date.current() #Если дата меньше текущей - заявка не активна %>
-        <% if ( (Time.zone.now.localtime.hour < trad_start_time)) and (transportation.is_active?) %>
-          <% if Time.zone.now.localtime.hour < trad_start_time %>
-            <td class = "tr">Торги начнуться в <%= trad_start_time %>:00 МСК</td>
-          <% else %>
-            <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
-                                              :title  => "KO" %> </td>
-          <% end %>
-        <% else %>
-          <% if transportation.company == current_user.company %>
-            <td class = "tr"><%= link_to "Подтвердить заявку", transportation_path(transportation) + "/edit_conf"  %> </td>
-          <% elsif transportation.company.nil? #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
-               <td class = "tr">
-              <%= form_tag( transportation, :method => "put") do %>
-                <%= label_tag(:q, "Ваше предложение:") %>
-                <%= text_field_tag :summa, nil, :class => "datepicker" %>
-                <%= submit_tag("Ставка") %>
-              </td>
+      <% if transportation.is_active? #Если дата меньше текущей - заявка не активна %>
+        
+        <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра%>
+           <td class = "tr">
+                <%= form_tag( transportation, :method => "put") do %>
+                  <%= label_tag(:q, "Ваше предложение:") %>
+                  <%= text_field_tag :summa, nil, :class => "datepicker" %>
+                  <%= submit_tag("Ставка") %>
+                <% end %>
+                </td>
+        <% elsif transportation.is_today? and transportation.is_busy? #от перевозки на текущую дату еще можно отказаться %>
+            <td class = "tr"> <%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td> 
+        <% else #здесь ставки на завтра, т.е. обычные %>
+            
+            <% if Time.zone.now.localtime.hour < TransportationsController.trad_start_time %>
+              <td class = "tr">Торги начнуться в <%= TransportationsController.trad_start_time %>:00 МСК</td>
+            <% else %>
+              <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
+                                                :title  => "KO" %> </td>
+            <% end %>
+            
+            <% if Time.zone.now.localtime.hour > (TransportationsController.trad_start_time + 1) %>
+              <% if transportation.company == current_user.company %>
+                <td class = "tr"><%= link_to "Подтвердить заявку", transportation_path(transportation) + "/edit_conf"  %> 
+                <br>
+                <%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
+              <% elsif transportation.company.nil? #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
+                 <td class = "tr">
+                <%= form_tag( transportation, :method => "put") do %>
+                  <%= label_tag(:q, "Ваше предложение:") %>
+                  <%= text_field_tag :summa, nil, :class => "datepicker" %>
+                  <%= submit_tag("Ставка") %>
+                <% end %>
+                </td>
               <% end %>
-          <% end %>
+            <% end %>
         <% end %>
       <% else %>
         <td class = "tr"> </td>

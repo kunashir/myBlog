@@ -1,4 +1,6 @@
 #coding: utf-8
+require 'date'
+
 class Transportation < ActiveRecord::Base
   attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id
   
@@ -82,10 +84,25 @@ class Transportation < ActiveRecord::Base
     return arr
   end
   
-  def is_active?
-    if ( self.avto_id.nil? or self.driver_id.nil?)
+  def is_active? #заявка активна если дата заявки не меньше текущей даты!
+    if self.date >= Date.current()
       return true
     end
     return false
+  end
+  
+  def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
+    if ( !self.avto_id.nil? and !self.driver_id.nil?)
+      return true
+    end
+    return false
+  end
+  
+  def is_busy? #заявка занята, когда есть данные по перевозчике
+    return true unless self.company.nil?
+  end
+  
+  def is_today? #это сегодняшняя заявка
+    return true if self.date = Date.current()
   end
 end

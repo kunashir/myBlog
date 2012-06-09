@@ -1,4 +1,6 @@
 #coding: utf-8
+require 'transportations_helper'
+
 class TransportationsController < ApplicationController
  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
 #=====================================================================
@@ -6,18 +8,23 @@ class TransportationsController < ApplicationController
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
     if !params[:id].nil? #ввод копированием 
-		transportation_source = Transportation.find(params[:id])
-		@transportation.client 			= transportation_source.client
-		@transportation.storage_source 	= transportation_source.storage_source
-		@transportation.storage 		= transportation_source.storage
-		@transportation.weight 			= transportation_source.weight
-		@transportation.date 			= transportation_source.date
-		@transportation.volume 			= transportation_source.volume
-		@transportation.carcase 		= transportation_source.carcase
-		@transportation.start_sum 		= transportation_source.start_sum
-		@transportation.step 			= transportation_source.step
-		@transportation.comment			= transportation_source.comment
-	end
+      transportation_source = Transportation.find(params[:id])
+      @transportation.client 			= transportation_source.client
+      @transportation.storage_source 	= transportation_source.storage_source
+      @transportation.storage 		= transportation_source.storage
+      @transportation.weight 			= transportation_source.weight
+      @transportation.date 			= transportation_source.date
+      @transportation.volume 			= transportation_source.volume
+      @transportation.carcase 		= transportation_source.carcase
+      @transportation.start_sum 		= transportation_source.start_sum
+      @transportation.step 			= transportation_source.step
+      @transportation.comment			= transportation_source.comment
+    end
+  end
+
+#=====================================================================
+  def self.trad_start_time
+    return 14
   end
 
 #=====================================================================
@@ -73,7 +80,7 @@ class TransportationsController < ApplicationController
     @transportation = Transportation.find(params[:id])
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
-      if Time.zone.now.localtime.hour < trad_start_time 
+      if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time() 
         flash[:error] = "Торги еще не открыты!"
         redirect_to transportations_path
         return
@@ -115,6 +122,21 @@ class TransportationsController < ApplicationController
     redirect_to transportations_path
   end
 
+#=====================================================================  
+  def abort #отказ от ставки
+    @transportation       = Transportation.find(params[:id])
+    @transportation.avto  = nil
+    @transportation.driver  = nil
+    @transportation.cur_sum = @transportation.cur_sum + @transportation.step
+    @transportation.company =  nil
+    
+    if @transportation.save!
+      flash[:success] = "Ваша ставка отменена"
+    else
+      flash[:error] = "Ошибка отмены"
+    end
+    redirect_to transportations_path
+  end
 #=====================================================================  
 
   def edit_conf #show page for edit conf
@@ -164,6 +186,7 @@ class TransportationsController < ApplicationController
       end
   end
   
+
   
 private
 
