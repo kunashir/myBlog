@@ -208,3 +208,13 @@ ul.users {
 .users li {
   list-style: none;
 }
+
+section.news {
+  background-color: yellow;
+  padding: 0 0.7em;
+  white-space: nowrap;
+}
+
+h1.news {
+  text-align = center;
+  }

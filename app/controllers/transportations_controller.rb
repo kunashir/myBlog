@@ -30,6 +30,10 @@ class TransportationsController < ApplicationController
 #=====================================================================
   def index 
        
+    if !is_admin? and !manager?
+      return @transportations = Transportation.only_active.paginate(:page => params[:page])
+    end
+    
     begin
       @day = params[:datepicker]
       

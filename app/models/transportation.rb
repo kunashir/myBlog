@@ -31,6 +31,10 @@ class Transportation < ActiveRecord::Base
     end
   end
   
+  def self.only_active
+    Transportation.where("date >= ?", Date.current)
+  end
+  
   def self.format_date(dd)
     if /([0-9]{2}).([0-9]{2}).([0-9]{2})/ =~ dd
       return "20"+$3+"-"+$2+"-"+$1
@@ -103,6 +107,6 @@ class Transportation < ActiveRecord::Base
   end
   
   def is_today? #это сегодняшняя заявка
-    return true if self.date = Date.current()
+    return true if self.date == Date.current()
   end
 end
