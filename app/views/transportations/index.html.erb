@@ -11,6 +11,7 @@
   <%= text_field_tag :datepicker, nil, :class => "datepicker" %>
   <%= submit_tag("Отобрать") %>
 <% end %>
+<%= will_paginate %>
 <table class="transp">
   <tr>
     <td class = "tr">Номер распр.</td>
@@ -32,9 +33,9 @@
       <td class = "tr">Сделать ставку</td>
     <% end %>	  
   </tr>
-  <%= will_paginate %>
-  
+    
     <%= render @transportations %>
   
-  <%= will_paginate %>
+  
  </table>
+<%= will_paginate %>
