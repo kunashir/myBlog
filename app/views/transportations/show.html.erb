@@ -13,7 +13,7 @@
      <strong>Время погрузки:</strong>
     </td>
     <td>
-     <%= to_time(@transportation.time) %>
+     <%= to_time(@transportation.time) unless @transportation.time.nil? %>
     </td>
   </tr>
   <tr>
