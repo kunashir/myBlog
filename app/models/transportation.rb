@@ -1,5 +1,5 @@
 #coding: utf-8
-require 'date'
+#require 'date'
 
 class Transportation < ActiveRecord::Base
   attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id
@@ -22,6 +22,9 @@ class Transportation < ActiveRecord::Base
   validates :start_sum,       :presence => true
   validates :step,            :presence => true
   default_scope               :order  =>  'transportations.date DESC' #показываем самые свежие
+  
+  before_save   :logging
+  after_save    :logging_new
   
   def self.transportation_for_date(some_date)
     if some_date.to_s.empty?
@@ -108,5 +111,39 @@ class Transportation < ActiveRecord::Base
   
   def is_today? #это сегодняшняя заявка
     return true if self.date == Date.current()
+  end
+  
+  def logging
+    if !self.id.nil?
+      tr_in_base = Transportation.find(self.id)
+      @new_rec = false
+    else
+      @new_rec  = true
+      return true
+    end
+    attr_hash = self.attributes
+    keys      = attr_hash.keys
+    old_attr_hash = tr_in_base.attributes
+    for key in keys
+      if key == :created_at or key == :update_at #служебные поля пропускаем
+        next
+      end
+      if old_attr_hash[key] != attr_hash[key]
+        Log.save_log_record(self, self.user, key, old_attr_hash[key],'edit record')
+      end
+    end
+    
+    
+  end
+  
+  def logging_new
+    if !@new_rec
+      return true
+    end
+    attr_hash = self.attributes
+    keys      = attr_hash.keys
+    for key in keys
+        Log.save_log_record(self, self.user, key, nil, 'new record')
+    end
   end
 end
