@@ -6,4 +6,7 @@
     <%= f.label :driver, "Водитель на перевозку" %><br />
     <%= f.collection_select :driver_id, Driver.company_driver(@transportation.company), :id, :name %> 
   </div>
-
+  <div class="field">
+    <%= f.label :time, "Время погрузки" %><br />
+    <%= f.time_select :time %>
+  </div>

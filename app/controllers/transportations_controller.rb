@@ -116,8 +116,9 @@ class TransportationsController < ApplicationController
 #=====================================================================  
   def confirmation #save transp. confimation (update)
     @transportation = Transportation.find(params[:id])
-    @transportation.avto   = Avto.find(params[:transportation][:avto_id])
-    @transportation.driver = Driver.find(params[:transportation][:driver_id])
+    @transportation.avto    = Avto.find(params[:transportation][:avto_id])
+    @transportation.driver  = Driver.find(params[:transportation][:driver_id])
+    @transportation.time    = params[:transportation][:time]
     if @transportation.save!
       flash[:success] = "Подтверждение сохранено"
     else
