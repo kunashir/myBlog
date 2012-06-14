@@ -90,10 +90,14 @@ class TransportationsController < ApplicationController
         return
       end
       @transportation.company = current_user.company
-      if (params[:summa].empty?)
+      begin
+        if (params[:summa].empty?)
+          @transportation.cur_sum = (@transportation.cur_sum.nil? ? @transportation.start_sum : @transportation.cur_sum) - @transportation.step #params[:cur_sum]
+        else
+          @transportation.cur_sum = params[:summa]
+        end
+      rescue
         @transportation.cur_sum = (@transportation.cur_sum.nil? ? @transportation.start_sum : @transportation.cur_sum) - @transportation.step #params[:cur_sum]
-      else
-        @transportation.cur_sum = params[:summa]
       end
       if @transportation.save! 
         flash[:success] = "Ваша ставка принята."
