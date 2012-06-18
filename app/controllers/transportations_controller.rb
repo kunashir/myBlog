@@ -29,7 +29,12 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def index 
-       
+    
+    if is_block_user?
+        flash[:error] = "У Вас нет прав для проотра заявок!"
+      redirect_back_or current_user
+    end
+
     if !is_admin? and !manager?
       return @transportations = Transportation.only_active.paginate(:page => params[:page])
     end
@@ -40,11 +45,8 @@ class TransportationsController < ApplicationController
     rescue
      @day = Date.current
     end
-    @title = "Список заявок:"  + @day.to_s
-    if is_block_user?
-      flash[:error] = "У Вас нет прав для просмотра заявок!"
-      redirect_back_or current_user
-    end
+    title = "Список заявок:"  + @day.to_s
+    
     @transportations  = Transportation.transportation_for_date(@day).paginate(:page =>  params[:page])
   end
 #=====================================================================  
