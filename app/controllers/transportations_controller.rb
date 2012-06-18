@@ -89,7 +89,8 @@ class TransportationsController < ApplicationController
         redirect_to transportations_path
         return
       end
-      if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1))
+      if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1)) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+	     # то торговатся больше нельзя
         flash[:error] = "Торги уже закончились!"
         redirect_to transportations_path
         return

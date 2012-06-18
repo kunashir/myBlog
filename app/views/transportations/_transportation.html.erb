@@ -53,10 +53,14 @@
                 <%= form_tag( transportation, :method => "put") do %>
                   <%= label_tag(:q, "Ваше предложение:") %>
                   <%= text_field_tag :summa, nil, :class => "datepicker" %>
-                  <%= submit_tag("Ставка") %>
-                <% end %>
+		  <%= submit_tag("Ставка") %>
+		  <% end %>
+
+	  	<% else %>
+			<td class = "tr"></td>
+		<% end %>
                 </td>
-              <% end %>
+              
             <% end %>
         <% end %>
       <% else %>
