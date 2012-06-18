@@ -89,6 +89,13 @@ class TransportationsController < ApplicationController
         redirect_to transportations_path
         return
       end
+      if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1))
+        flash[:error] = "Торги уже закончились!"
+        redirect_to transportations_path
+        return
+      end
+      
+      
       @transportation.company = current_user.company
       begin
         if (params[:summa].empty?)
