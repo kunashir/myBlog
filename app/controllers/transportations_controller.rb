@@ -24,7 +24,7 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def self.trad_start_time
-    return 11
+    return 14
   end
   
   def percent_spec_price
