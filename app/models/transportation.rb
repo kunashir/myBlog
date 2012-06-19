@@ -1,8 +1,12 @@
 #coding: utf-8
 #require 'date'
 
+# include ActionView::Helpers
+
+
 class Transportation < ActiveRecord::Base
-  attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id
+  
+	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id
   
   belongs_to  :user
   belongs_to  :company
@@ -21,10 +25,15 @@ class Transportation < ActiveRecord::Base
   validates :carcase,         :presence => true
   validates :start_sum,       :presence => true
   validates :step,            :presence => true
-  default_scope               :order  =>  'transportations.date DESC' #показываем самые свежие
+  default_scope               :order  =>  'transportations.id  DESC' #сортировка по уменьшению ид
   
   before_save   :logging
   after_save    :logging_new
+  @cur_user = nil
+
+  def set_user(user)
+	  @cur_user = user
+  end
   
   def self.transportation_for_date(some_date)
     if some_date.to_s.empty?
@@ -68,7 +77,7 @@ class Transportation < ActiveRecord::Base
       carcase       = "Тент"
       # Парсим коммент - если там есть запятая, то все что до нее в
       # тип кузова, остальное в коммент, иначе тип кузова будет тент
-      if /(\W+),(\W+)\s/ =~ comment_text
+      if /(\W+),(\W+)\s/i =~ comment_text
         carcase   = $1.downcase
         comment   = $2
       else
@@ -129,7 +138,7 @@ class Transportation < ActiveRecord::Base
         next
       end
       if old_attr_hash[key] != attr_hash[key]
-        Log.save_log_record(self, self.user, key, old_attr_hash[key],'edit record')
+        Log.save_log_record(self, @cur_user, key, old_attr_hash[key],'edit record')
       end
     end
     
