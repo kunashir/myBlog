@@ -86,9 +86,10 @@
 });
 })(jQuery);    
 
-
+/*
 (function($) {
   $(document).ready(function() {
     setTimeout(window.location.reload(), 30000);
   });
 })(jQuery);
+*/

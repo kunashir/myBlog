@@ -129,6 +129,7 @@ end
 #=====================================================================
   def update
     @transportation = Transportation.find(params[:id])
+    @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
       if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time() 
@@ -161,7 +162,7 @@ end
       else
         @title = "Error"
       end
-     redirect_to @transportation
+     redirect_to transportations_path
     else
       if @transportation.update_attributes!(params[:transportation])
         flash[:success] = "Заявка обновлена."
@@ -191,6 +192,7 @@ end
 #=====================================================================  
   def abort #отказ от ставки
     @transportation       = Transportation.find(params[:id])
+    @transportation.set_user(current_user)
     @transportation.avto  = nil
     @transportation.driver  = nil
     if @transportation.have_spec_price?

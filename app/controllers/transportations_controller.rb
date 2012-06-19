@@ -97,6 +97,7 @@ end
 #=====================================================================
 	def spec_price
 		@transportation = Transportation.find(params[:id])
+		 @transportation.set_user(current_user)
 		if (manager? or  is_admin?)
 			flash[:error] = "Вы не можете делать ставки"
 			redirect_to transportations_path
@@ -129,6 +130,7 @@ end
 #=====================================================================
   def update
     @transportation = Transportation.find(params[:id])
+    @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
       if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time() 
@@ -176,21 +178,29 @@ end
 
 #=====================================================================  
   def confirmation #save transp. confimation (update)
-    @transportation = Transportation.find(params[:id])
-    @transportation.avto    = Avto.find(params[:transportation][:avto_id])
-    @transportation.driver  = Driver.find(params[:transportation][:driver_id])
-    @transportation.time    = params[:transportation][:time]
-    if @transportation.save!
-      flash[:success] = "Подтверждение сохранено"
-    else
-      flash[:error] = "Ошибка сохранения"
-    end
-    redirect_to transportations_path
+	@transportation = Transportation.find(params[:id])
+	if (params[:transportation][:avto_id].nil?) or (params[:transportation][:driver_id].nil?)
+		flash[:error] = "Поле машина или водитель не могут быть пустыми"
+		render :edit_conf
+		return
+	end
+	
+	@transportation.set_user(current_user)
+	@transportation.avto    = Avto.find(params[:transportation][:avto_id])
+	@transportation.driver  = Driver.find(params[:transportation][:driver_id])
+	@transportation.time    = params[:transportation][:time]
+	if @transportation.save!
+	    flash[:success] = "Подтверждение сохранено"
+	else
+	    flash[:error] = "Ошибка сохранения"
+	end
+	redirect_to transportations_path
   end
 
 #=====================================================================  
   def abort #отказ от ставки
     @transportation       = Transportation.find(params[:id])
+    @transportation.set_user(current_user)
     @transportation.avto  = nil
     @transportation.driver  = nil
     if @transportation.have_spec_price?
@@ -207,8 +217,42 @@ end
     end
     redirect_to transportations_path
   end
-#=====================================================================  
 
+#===================================================================== 
+  def request_abort #запрос отмены для заявок на сегодня
+    @transportation       = Transportation.find(params[:id])
+    @transportation.set_user(current_user)
+    @transportation.request_abort = true
+    if @transportation.save!
+      flash[:success] = "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
+    else
+      flash[:error] = "Ошибка отмены"
+    end
+    redirect_to transportations_path
+
+  end
+#=====================================================================  
+  def confirm_abort
+	 @transportation       = Transportation.find(params[:id])
+	 @transportation.set_user(current_user)
+	 @transportation.avto  = nil
+	 @transportation.driver  = nil
+	 @transportation.request_abort = false
+	 if @transportation.have_spec_price?
+	      @transportation.cur_sum = 0
+	 elsif
+	      @transportation.cur_sum = @transportation.cur_sum + @transportation.step
+	 end
+	 @transportation.company =  nil
+    
+	 if @transportation.save!
+	      flash[:success] = "Отказ подтвержден"
+	 else
+	      flash[:error] = "Ошибка отмены"
+	 end
+	 redirect_to transportations_path
+  end
+#=====================================================================  
   def edit_conf #show page for edit conf
     @transportation = Transportation.find(params[:id])
   end
