@@ -34,8 +34,8 @@ MyBlog::Application.routes.draw do
   match	'transportations/:id/packet',			  :to	=>	'transportations#packet_loading'
   match	'transportations/:id/load',			    :to	=>	'transportations#load'
   match	'transportations/:id/abort',			  :to	=>	'transportations#abort'
-  
-  
+  match 'transportations/:id/export',		:to 	=>		'transportations#export'
+  match 'transportations/:id/specprice',	:to	=>	'transportations#spec_price'
   #match '/home', :to => 'pages#home'
   
   root :to => 'pages#home'
