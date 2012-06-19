@@ -161,7 +161,7 @@ end
       else
         @title = "Error"
       end
-     redirect_to transportations_path
+     redirect_to @transportation
     else
       if @transportation.update_attributes!(params[:transportation])
         flash[:success] = "Заявка обновлена."

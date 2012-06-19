@@ -106,7 +106,7 @@ class Transportation < ActiveRecord::Base
   end
   
   def is_busy? #заявка занята, когда есть данные по перевозчике
-    return  self.company.nil? ? false : true
+    return true unless self.company.nil?
   end
   
   def is_today? #это сегодняшняя заявка
@@ -147,21 +147,17 @@ class Transportation < ActiveRecord::Base
     end
   end
 
-  def as_xls(option = {})
-      {
-	"Rasp" 	=> num,
-	"Date"		=> date,
-	"Storage source"	=> storage_source,
-	"comment"	=> comment,
-	"Weigth"	=> weight,
-	"carcase"	=> carcase,
-	"start sum"	=> start_sum,
-	"Cur sum"	=> cur_sum,
-	"company"		=> company
-      }
-  end
-
-  def have_spec_price?
-	return  specprice.nil? ? false : true
+  def as_xls
+    {
+      "Rasp"  => num, 
+        "Date"          => date,
+        "Storage source"        => storage_source,
+        "comment"       => comment,
+        "Weigth"        => weight,
+        "carcase"       => carcase,
+        "start sum"     => start_sum,
+        "Cur sum"       => cur_sum,
+        "company"               => company
+    }
   end
 end

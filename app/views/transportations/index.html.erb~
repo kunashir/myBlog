@@ -3,7 +3,7 @@
   <% if manager? or is_admin? %>
     <br>
     <li><%= link_to "Пакетная загрузка", transportations_path+"/-1/packet" %></li>
-    <li><%= link_to "Сохранить в xls", transportations_path+"/-1/export" %> </li>
+    <li><%= link_to "Сохранить в xls", transportations_path(request.parameters.merge({:format => :xls})) %> </li>
   <% end %>
 <% end %>	 
 <h1>Заявки на перевозку:<%= @day %></h1>

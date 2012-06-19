@@ -89,6 +89,6 @@
 
 (function($) {
   $(document).ready(function() {
-    setTimeout(window.location.reload(), 30000);
+    setTimeout(window.location.reload(), 300);
   });
 })(jQuery);
