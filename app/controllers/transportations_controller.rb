@@ -47,6 +47,7 @@ end
       redirect_back_or current_user
     end
 
+    
   #  if !is_admin? and !manager?
   #     @transportations = Transportation.only_active.paginate(:page => params[:page])
   #     return @transportations
@@ -190,8 +191,8 @@ end
 	@transportation.set_user(current_user)
 	@transportation.avto    = Avto.find(params[:transportation][:avto_id])
 	@transportation.driver  = Driver.find(params[:transportation][:driver_id])
-	@transportation.time    = params[:transportation][:time]
-	if @transportation.save!
+	@transportation.time    = params[:transportation]['time(4i)'] + ":" + params[:transportation]['time(5i)']
+       	if @transportation.save!
 	    flash[:success] = "Подтверждение сохранено"
 	else
 	    flash[:error] = "Ошибка сохранения"

@@ -62,7 +62,14 @@ module SessionsHelper
   def get_cur_client
     session[:cur_client]
   end
-  
+ 
+  def set_cur_storage(storage)
+	 session[:cur_storage] = storage
+  end
+
+  def get_cur_storage
+	 sesseion[:cur_storage]
+  end 
 private
   def user_from_remember_token
     User.authenticate_with_salt(*remember_token)

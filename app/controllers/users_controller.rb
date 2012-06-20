@@ -20,6 +20,12 @@ class UsersController < ApplicationController
   def show
     @user   = User.find(params[:id])
     @title  = @user.name
+    if ((!manager?) or (!is_admin? )) and (@user != current_user)
+	    flash[:error] = "У Вас прав для просмотра профиля другого пользователя"
+	    redirect_to users_path
+	    return
+    end
+
   end
 
   def create
@@ -61,7 +67,12 @@ class UsersController < ApplicationController
 
 
    else
-      @user.save_without_callbacks false
+      	if @user != current_user
+		flash[:error] = "У Вас нет прав редактировать данные другого пользователя"
+		redirect_to users_path
+		return
+	end 
+	@user.save_without_callbacks false
       if @user.update_attributes!(params[:user])
         flash[:success] = "Профиль обновлен."
         redirect_to @user
