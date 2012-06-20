@@ -207,6 +207,7 @@ end
     @transportation.driver  = nil
     if @transportation.have_spec_price?
       @transportation.cur_sum = 0
+      @transportation.specprice = false
     elsif
       @transportation.cur_sum = @transportation.cur_sum + @transportation.step
     end
