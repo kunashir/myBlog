@@ -1,5 +1,5 @@
 <tr class ="tr">
-  <td class = "tr"><%= link_to transportation.num, transportation %> 
+  <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, transportation %> 
   <% if manager? or is_admin? %>
     , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
   <% end %>

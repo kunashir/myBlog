@@ -51,7 +51,7 @@ end
   #     @transportations = Transportation.only_active.paginate(:page => params[:page])
   #     return @transportations
   #  end
-    
+    @filter_text = ""
     begin
       @day = params[:datepicker]
       
@@ -61,6 +61,7 @@ end
     title = "Список заявок:"  + @day.to_s
     show_all = params[:show_all].nil? ? false : true
     storage_source = params[:storage_source]
+    @filter_text = @day.to_s + " " + (storage_source.nil? ? "": storage_source )
     @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page])
   end
 #=====================================================================  
