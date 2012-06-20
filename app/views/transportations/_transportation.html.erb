@@ -46,7 +46,7 @@
 		<% elsif  Time.zone.now.localtime.hour == TransportationsController.trad_start_time #Штатаный ход торгов %>
 			<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
 				<td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
-			<% elsif !transportation.has_spec_price? #Если забрали по спец. цене - убрать из торгов %>
+			<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
               			<td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
 									      :title  => "KO" %> 
 			       <% if (transportation.cur_sum.nil? or transportation.cur_sum == 0) #Если текущая сумма еще пустая, можно забрать сразу %>
