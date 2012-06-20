@@ -43,6 +43,23 @@ class Transportation < ActiveRecord::Base
     end
   end
   
+  def self.set_filter(date, show_all, source_storage)
+	if show_all
+		return Transportation.all
+	end
+	request_text = "date = ?"
+	request_date = date
+	if date.nil? or date.empty?
+	  	request_text = "date >= ?"
+		request_date = Date.current
+	end
+	if !source_storage.nil? and !source_storage.empty?
+		request_text += " AND storage_source = ?"
+		return Transportation.where(request_text, request_date, source_storage)
+	end
+	Transportation.where(request_text, request_date)
+  end
+	
   def self.only_active
     Transportation.where("date >= ?", Date.current)
   end

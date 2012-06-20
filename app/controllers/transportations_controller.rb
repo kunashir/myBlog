@@ -47,10 +47,10 @@ end
       redirect_back_or current_user
     end
 
-    if !is_admin? and !manager?
-       @transportations = Transportation.only_active.paginate(:page => params[:page])
-       return @transportations
-    end
+  #  if !is_admin? and !manager?
+  #     @transportations = Transportation.only_active.paginate(:page => params[:page])
+  #     return @transportations
+  #  end
     
     begin
       @day = params[:datepicker]
@@ -59,8 +59,9 @@ end
      @day = Date.current
     end
     title = "Список заявок:"  + @day.to_s
-    
-    @transportations  = Transportation.transportation_for_date(@day).paginate(:page =>  params[:page])
+    show_all = params[:show_all].nil? ? false : true
+    storage_source = params[:storage_source]
+    @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page])
   end
 #=====================================================================  
   def create
