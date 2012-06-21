@@ -89,7 +89,33 @@
 /*
 (function($) {
   $(document).ready(function() {
-    setTimeout(window.location.reload(), 30000);
+   setTimeout("location.reload(true);",30000);
   });
 })(jQuery);
 */
+(function($) {
+  $(document).ready(function() {
+    setInterval(function(){
+	         $.ajax(
+	         {
+         		type: "GET",
+			url:  "/transportations/-1/server_time",
+			data: "",
+			dataType: "text",
+			error: function(XMLHttpRequest, textStatus, errorThrown)
+         		{
+			      $("#server_time").html("ОШИБКА: не удалось получить время сервера!")
+			},
+          		success:  function(result)
+			{
+			      //alert (result);
+			      $("#server_time").html(result);
+		        }		
+          
+          
+        	});
+  	}, 1000);
+});
+})(jQuery);    
+
+

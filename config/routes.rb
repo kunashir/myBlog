@@ -38,6 +38,7 @@ MyBlog::Application.routes.draw do
   match 'transportations/:id/specprice',	:to	=>	'transportations#spec_price'
   match 'transportations/:id/request_abort',	:to	=>	'transportations#request_abort'
   match 'transportations/:id/confirm_abort',	:to	=>	'transportations#confirm_abort'
+  match 'transportations/:id/server_time',	:to	=>	'transportations#server_time'
   #match '/home', :to => 'pages#home'
   
   root :to => 'pages#home'
