@@ -276,6 +276,11 @@ end
   end
 
 #=====================================================================
+  def server_time
+	render :text => Time.zone.now.localtime.to_s[11, 8]
+  end
+
+#=====================================================================
   def copy
     @title = "Ввод копированием"
     transportation_source = Transportation.find(params[:id])

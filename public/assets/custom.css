@@ -219,3 +219,8 @@ section.news {
 h1.news {
   text-align = center;
   }
+
+  div.server_time {
+	  text-align:  center;
+	  font-size: 150%;
+	}
