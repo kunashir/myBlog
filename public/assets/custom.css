@@ -217,7 +217,7 @@ section.news {
 }
 
 h1.news {
-  text-align = center;
+  text-align : center;
   }
 
   div.server_time {

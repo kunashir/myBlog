@@ -7,18 +7,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
-// $("input.date_picker").datepicker();
 
-//(function($) {
-  //$("#datepicker").datepicker();
-  ////$("#datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-//}
-//)(jQuery);
-
-//$(function($) {
-    //$( "#datepicker" ).datepicker();
-		//$( "#datepicker" ).datepicker("option", "dateFormat", "yy-mm-dd");
-	//})(jQuery);;
 
 (function($) {
   $(document).ready(function() {
@@ -93,6 +82,7 @@
   });
 })(jQuery);
 */
+
 (function($) {
   $(document).ready(function() {
     setInterval(function(){
@@ -104,7 +94,7 @@
 			dataType: "text",
 			error: function(XMLHttpRequest, textStatus, errorThrown)
          		{
-			      $("#server_time").html("ОШИБКА: не удалось получить время сервера!")
+			      $("#server_time").html("ОШИБКА: не удалось получить время сервера!");
 			},
           		success:  function(result)
 			{
