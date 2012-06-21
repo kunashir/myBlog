@@ -5,13 +5,16 @@ gem 'rails', '3.1.1'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-
+gem 'therubyracer'
+gem 'libv8', '3.3.10.4'
 gem 'jquery-rails'
 gem	'compass', ">= 0.11.7"
 gem 'gravatar_image_tag', '1.0.0.pre2'
 gem 'will_paginate', '3.0.pre2'
 gem 'jquery_datepicker'
 gem 'stamp'
+gem 'spreadsheet'
+gem 'to_xls', :git => "https://github.com/dblock/to_xls.git", :branch => "to-xls-on-models"
 
 group	:development do
 	gem	'rspec-rails', '2.6.1'
