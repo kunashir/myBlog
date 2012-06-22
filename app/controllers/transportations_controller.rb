@@ -30,12 +30,12 @@ class TransportationsController < ApplicationController
   def percent_spec_price
     return 15
   end
-
+#====================================================================
 def export
     headers['Content-Type'] = "application/vnd.ms-excel"
     headers['Content-Disposition'] = 'attachment; filename="report.xls"'
     headers['Cache-Control'] = ''
-     @transportations = Transportation.only_active.paginate(:page => params[:page])
+     @transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
     render :index
 end
 
@@ -63,7 +63,7 @@ end
     show_all = params[:show_all].nil? ? false : true
     storage_source = params[:storage_source]
     @filter_text = @day.to_s + " " + (storage_source.nil? ? "": storage_source )
-    @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 555550)
+    @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 50)
   end
 #=====================================================================  
   def create
