@@ -63,7 +63,7 @@ end
     show_all = params[:show_all].nil? ? false : true
     storage_source = params[:storage_source]
     @filter_text = @day.to_s + " " + (storage_source.nil? ? "": storage_source )
-    @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page])
+    @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 555550)
   end
 #=====================================================================  
   def create
