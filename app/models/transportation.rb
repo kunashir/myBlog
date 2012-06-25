@@ -6,7 +6,7 @@
 
 class Transportation < ActiveRecord::Base
   
-	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id
+	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id, :abort_company
   
   belongs_to  :user
   belongs_to  :company
@@ -91,7 +91,7 @@ class Transportation < ActiveRecord::Base
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]
-      carcase       = "Тент"
+      carcase       = "Термос"
       # Парсим коммент - если там есть запятая, то все что до нее в
       # тип кузова, остальное в коммент, иначе тип кузова будет тент
       if /(\W+),(\W+)\s/i =~ comment_text
@@ -112,7 +112,7 @@ class Transportation < ActiveRecord::Base
   def self.test_loading(filename)
     lines = File.readlines(filename)
     for line in lines
-      arr = line.split("#")
+      arr = line.split(";")
     end
     return arr
   end
@@ -190,4 +190,17 @@ class Transportation < ActiveRecord::Base
   def have_spec_price?
 	return  (specprice.nil? or !specprice ) ? false : true
   end
+
+  def get_volume
+      volume_text = ""
+      if (self.volume == 32)
+          volume_text = "32 поддона"
+      elsif (self.volume == 14)
+          volume_text = "14 поддонов"
+      else
+          volume_text = self.volume.to_s + " куб. м."
+      end
+      return volume_text
+  end
+          
 end

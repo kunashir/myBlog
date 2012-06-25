@@ -9,7 +9,7 @@
   <td class = "tr"><%= transportation.client.name if !transportation.client.nil? %></td> 
   <td class = "tr"><%= transportation.storage.name if !transportation.storage.nil? %></td> 
   <td class = "tr"><%= transportation.weight %></td> 
-  <td class = "tr"><%= transportation.volume %></td> 
+  <td class = "tr"><%= transportation.get_volume %></td> 
   <td class = "tr"><%= transportation.comment %></td> 
   <td class = "tr"><%= transportation.carcase %></td> 
   <td class = "tr"><%= transportation.start_sum %></td> 

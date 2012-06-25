@@ -43,7 +43,7 @@ end
   def index 
     
     if is_block_user?
-        flash[:error] = "У Вас нет прав для проотра заявок!"
+        flash[:error] = "У Вас нет прав для просмотра заявок!"
       redirect_back_or current_user
     end
 
@@ -141,8 +141,8 @@ end
         redirect_to transportations_path
         return
       end
-      if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1)) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
-	     # то торговатся больше нельзя
+      if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1)) and (@transportation.is_busy?)#Если вермя больше 15 
+         # и ставка занята, то торговатся больше нельзя
         flash[:error] = "Торги уже закончились!"
         redirect_to transportations_path
         return
@@ -155,12 +155,18 @@ end
       begin
         if (params[:summa].empty?)
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
-        else
-          @transportation.cur_sum = params[:summa]
+        else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
+            if (@transportation.abort_company == current_user.company)
+                flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
+                redirect_to transportations_path
+                return
+            end
+            @transportation.cur_sum = params[:summa]
         end
       rescue
         @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
       end
+      @transportation.abort_company = nil
       if @transportation.save! 
         flash[:success] = "Ваша ставка принята."
       else
@@ -206,11 +212,18 @@ end
     @transportation.set_user(current_user)
     @transportation.avto  = nil
     @transportation.driver  = nil
+    #Запомним последнего отказника, чтобы после окончания не смог сыграть на 
+    #повышение
+    @transportation.abort_company = @transportation.company_id
+
     if @transportation.have_spec_price?
       @transportation.cur_sum = 0
       @transportation.specprice = false
     elsif
       @transportation.cur_sum = @transportation.cur_sum + @transportation.step
+      if @transportation.cur_sum > @transportation.start_sum
+          @transportation.cur_sum = @transportation.start_sum
+      end
     end
     @transportation.company =  nil
     
