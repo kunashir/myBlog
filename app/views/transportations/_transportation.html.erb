@@ -38,16 +38,16 @@
                 <% end %>
                 </td>
         <% elsif transportation.is_today? and transportation.is_busy? #от перевозки на текущую дату еще можно отказаться %>
-		<% if transportation.company == current_user.company %>
-			<td class = "tr"> <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> </td> 
-		<% end %>
+    		<% if transportation.company == current_user.company %>
+	    		<td class = "tr"> <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> </td> 
+	    	<% end %>
         <% else #здесь ставки на завтра, т.е. обычные %>
             
-            	<% if Time.zone.now.localtime.hour < TransportationsController.trad_start_time %>
+            <% if check_time == -1 %>
               		<td class = "tr">Торги начнуться в <%= TransportationsController.trad_start_time %>:00 МСК</td>
-		<% elsif  Time.zone.now.localtime.hour == TransportationsController.trad_start_time #Штатаный ход торгов %>
-			<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
-				<td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
+		<% elsif  check_time == 0  #Штатаный ход торгов %>
+            <% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+                <td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
 			<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
               			<td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
 									      :title  => "KO" %> 
@@ -60,11 +60,16 @@
 			 <% end %>
 
             	<% end %>
-            <% if Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time + 1) %>
+            <% if check_time == 1 %>
               <% if transportation.company == current_user.company %>
                 <td class = "tr"><%= link_to "Подтвердить заявку", transportation_path(transportation) + "/edit_conf"  %> 
-                <br>
-                <%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
+                    <br>
+                 <% if require_confirmation? %>
+                    <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> 
+                 <% else %>
+                    <%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %>
+                  <% end %>
+                </td>
               <% elsif transportation.company.nil? #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
                  <td class = "tr">
                 <%= form_tag( transportation, :method => "put") do %>
