@@ -1,8 +1,10 @@
 #coding: utf-8
+#ecoding: utf-8
 require 'transportations_helper'
 
 class TransportationsController < ApplicationController
  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+
 #=====================================================================
   def new
     @title = "Добавление заявки на перевозку"
@@ -43,8 +45,9 @@ end
   def index 
     
     if is_block_user?
-        flash[:error] = "У Вас нет прав для просмотра заявок!"
+      flash[:error] = "У Вас нет прав для просмотра заявок!"
       redirect_back_or current_user
+      return 
     end
 
     
@@ -106,12 +109,13 @@ end
 			redirect_to transportations_path
 			return
 		end
-		if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
+		#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
+        if (!@transportation.is_today?) and (check_time == -1)
 		         flash[:error] = "Торги еще не открыты!"
 		         redirect_to transportations_path
 		         return
 	       end
-	       if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1)) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+	       if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
 	        	 # то торговатся больше нельзя
 		         flash[:error] = "Торги уже закончились!"
 			 redirect_to transportations_path
@@ -136,12 +140,12 @@ end
     @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
-      if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time() 
+      if (!@transportation.is_today?) and (check_time == -1) 
         flash[:error] = "Торги еще не открыты!"
         redirect_to transportations_path
         return
       end
-      if (Time.zone.now.localtime.hour >= (TransportationsController.trad_start_time() + 1)) and (@transportation.is_busy?)#Если вермя больше 15 
+      if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 
          # и ставка занята, то торговатся больше нельзя
         flash[:error] = "Торги уже закончились!"
         redirect_to transportations_path
@@ -320,9 +324,23 @@ end
       else
         render :text => "Ошибка", :layout => false
       end
+    #uploaded_io = params[:file]
+    #File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'wb') do |file|
+    #    #file.write(uploaded_io.read)
+    #    text = uploaded_io.read
+    #    file.puts(text)
+    #    #render :text => text
+    #end
+    #@text_of_load = "Ошибка загрузки"
+    #if Transportation.load_from_file(params[:file], current_user)
+    #    flash[:success] = "Заявки успешно загружены"
+    #    redirect_to transportations_path
+    #    return
+    #else
+    #    flash[:error] = "Ошибка загрузки"
+    #end
+    #render packet_loading  
   end
-  
-
   
 private
 
