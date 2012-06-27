@@ -21,7 +21,7 @@ class Transportation < ActiveRecord::Base
   validates :storage_source,  :presence => true
   # validates :storage_dist,    :presence => true
   # validates :type_transp,     :presence => true
-  validates :weight,          :presence => true
+  #validates :weight,          :presence => true
   validates :carcase,         :presence => true
   validates :start_sum,       :presence => true
   validates :step,            :presence => true
@@ -76,7 +76,7 @@ class Transportation < ActiveRecord::Base
     for line in lines
       # Обрабатываем одну перевозку, надо найти клиента, склад
       # остальное прочто текст/число
-      data_array    = line.split("#")
+      data_array    = line.split(";")
       client        = Client.find_by_name(data_array[2])
       dist_storage  = Storage.client_storage(client,data_array[4])
       my_storage    = data_array[5]
@@ -155,7 +155,7 @@ class Transportation < ActiveRecord::Base
         next
       end
       if old_attr_hash[key] != attr_hash[key]
-        Log.save_log_record(self, @cur_user, key, old_attr_hash[key],'edit record')
+        Log.save_log_record(self, @cur_user, key, old_attr_hash[key],'edit record', @cur_user.company)
       end
     end
     
@@ -169,7 +169,7 @@ class Transportation < ActiveRecord::Base
     attr_hash = self.attributes
     keys      = attr_hash.keys
     for key in keys
-        Log.save_log_record(self, self.user, key, nil, 'new record')
+        Log.save_log_record(self, self.user, key, nil, 'new record', self.user.company)
     end
   end
 
