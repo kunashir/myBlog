@@ -1,4 +1,6 @@
 <H1> Пакетная загрукза заявок</H1>
-<%= text_field(:user, :file) %>
-<%= link_to "Загрузить", "#", :id => "load_tr" %>
+<%= form_tag({:action => :load}, :multipart => true, :remote => true) do %>
+    <%= file_field_tag 'file' %>
+    <%= submit_tag %>
+<% end %>
 <p id=show_res></p>

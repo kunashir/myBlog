@@ -19,6 +19,13 @@ module TransportationsHelper
 	  return 15
 	end
 
+    def is_last_moment?
+        if Time.zone.now.localtime.min >= (trad_start_time.min + (trad_duration - 5))
+            return true
+        end
+        return false
+    end
+    
     def check_time
         #-1 если еще рано
         #0 если можно торговатся

@@ -1,6 +1,7 @@
 #coding: utf-8
 #ecoding: utf-8
 require 'transportations_helper'
+require 'encode.rb'
 
 class TransportationsController < ApplicationController
  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
@@ -109,17 +110,22 @@ end
 			redirect_to transportations_path
 			return
 		end
+        if @transporation.specprice #на случай, если два запроса подряд
+            flash[:error] = "К сожалению, заявку уже забрали!!!"
+            redirect_to transportations_path
+            return
+        end
 		#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
         if (!@transportation.is_today?) and (check_time == -1)
-		         flash[:error] = "Торги еще не открыты!"
-		         redirect_to transportations_path
-		         return
-	       end
-	       if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+		       flash[:error] = "Торги еще не открыты!"
+		       redirect_to transportations_path
+		       return
+	    end
+	    if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
 	        	 # то торговатся больше нельзя
 		         flash[:error] = "Торги уже закончились!"
-			 redirect_to transportations_path
-			 return
+			   redirect_to transportations_path
+		       return
 		end
 
 		@transportation.company = current_user.company
@@ -151,8 +157,15 @@ end
         redirect_to transportations_path
         return
       end
-      
-      
+     
+      #Проверим не послдение ли минуты, если да то проверим делал ли чел ставки до этого
+      if (is_last_moment?) and (@transportation.is_busy?)
+        if !Log.company_has_stake(@transportation, current_user.company) 
+            flash[:error] = "У Вас не было ставок до этого, поэтому Вы не можете перебить ставку других компаний в последние минуты"
+            redirect_to transportations_path
+            return 
+        end
+      end
       @transportation.company = current_user.company
       #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
       start_summa = (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step ): @transportation.cur_sum 
@@ -319,27 +332,43 @@ end
 #=====================================================================
   def load
     @title = "Пакетная загрузка"
-      if Transportation.load_from_file(params[:file], current_user)
-        render :text => "Загрузка закончена", :layout => false
-      else
-        render :text => "Ошибка", :layout => false
-      end
-    #uploaded_io = params[:file]
-    #File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'wb') do |file|
-    #    #file.write(uploaded_io.read)
-    #    text = uploaded_io.read
-    #    file.puts(text)
-    #    #render :text => text
-    #end
+    #  if Transportation.load_from_file(params[:file], current_user)
+    #    render :text => "Загрузка закончена", :layout => false
+    #  else
+    #    render :text => "Ошибка", :layout => false
+    #  end
+    uploaded_io = params[:file]
+    File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'w') do |file|
+        #file.write(uploaded_io.read)
+        text = uploaded_io.read
+        #file.puts(text.encode('UTF-8'))
+    #    begin
+     #       text = URI.escape(text)         #.encoding
+   #     rescue
+    #        text = ""
+   #     end
+       # temptext = ""
+       # if  !text.nil?
+       #     for i in (0..text.length)
+       #         begin
+       #             temptext = temptext + text[i].encode('UTF-8')
+       #         rescue
+       #         end
+       #     end
+            file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8"))
+       # end
+       # render :text => encode_utf8(text)
+    end
+    #return
     #@text_of_load = "Ошибка загрузки"
-    #if Transportation.load_from_file(params[:file], current_user)
-    #    flash[:success] = "Заявки успешно загружены"
-    #    redirect_to transportations_path
-    #    return
-    #else
-    #    flash[:error] = "Ошибка загрузки"
-    #end
-    #render packet_loading  
+    if Transportation.load_from_file(Rails.root.join('public', 'uploads', uploaded_io.original_filename), current_user)
+        flash[:success] = "Заявки успешно загружены"
+        redirect_to transportations_path
+        return
+    else
+        flash[:error] = "Ошибка загрузки"
+    end
+    render packet_loading  
   end
   
 private
