@@ -110,7 +110,7 @@ end
 			redirect_to transportations_path
 			return
 		end
-        if @transporation.specprice #на случай, если два запроса подряд
+        if @transportation.specprice #на случай, если два запроса подряд
             flash[:error] = "К сожалению, заявку уже забрали!!!"
             redirect_to transportations_path
             return

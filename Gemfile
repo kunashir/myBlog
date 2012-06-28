@@ -5,7 +5,7 @@ gem 'rails', '3.1.1'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'therubyracer'
+
 gem 'libv8', '3.3.10.4'
 gem 'jquery-rails'
 gem	'compass', ">= 0.11.7"
@@ -17,7 +17,7 @@ gem 'spreadsheet'
 gem 'to_xls', :git => "https://github.com/dblock/to_xls.git", :branch => "to-xls-on-models"
 
 group	:development do
-	gem	'rspec-rails', '2.6.1'
+    gem	'rspec-rails', '2.6.1'
   gem 'annotate', '~>2.4.1.beta'
   gem 'sqlite3'
 end
@@ -35,6 +35,7 @@ group :assets do
   gem 'sass-rails',   '~> 3.1.4'
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
+  gem 'therubyracer'
 end
 
 
