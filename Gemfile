@@ -16,6 +16,11 @@ gem 'stamp'
 gem 'spreadsheet'
 gem 'to_xls', :git => "https://github.com/dblock/to_xls.git", :branch => "to-xls-on-models"
 
+group   :production do
+    gem 'ps'
+    gem 'activerecord-postgresql-adapter'
+end
+
 group	:development do
     gem	'rspec-rails', '2.6.1'
   gem 'annotate', '~>2.4.1.beta'
