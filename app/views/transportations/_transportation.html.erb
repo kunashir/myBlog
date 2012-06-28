@@ -49,15 +49,15 @@
             <% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
                 <td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
 			<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
-              			<td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
+              	   <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
 									      :title  => "KO" %> 
 			       <% if (transportation.cur_sum.nil? or transportation.cur_sum == 0) #Если текущая сумма еще пустая, можно забрать сразу %>
 				       <%= link_to "Забрать перевозку со скидкой 15%", transportation_path(transportation) + "/specprice" %>
-				<% end %>
-				</td>
-			 <% else %>
-				<td class = "tr"></td>
-			 <% end %>
+				    <% end %>
+				 </td>
+			     <% else %>
+			    	<td class = "tr"></td>
+			     <% end %>
 
             	<% end %>
             <% if check_time == 1 %>
@@ -75,12 +75,12 @@
                 <%= form_tag( transportation, :method => "put") do %>
                   <%= label_tag(:q, "Ваше предложение:") %>
                   <%= text_field_tag :summa, nil, :class => "datepicker" %>
-		  <%= submit_tag("Ставка") %>
-		  <% end %>
+        		  <%= submit_tag("Ставка") %>
+		         <% end %>
 
-	  	<% else %>
-			<td class = "tr"></td>
-		<% end %>
+	    	<% else %>
+		    	<td class = "tr"></td>
+		    <% end %>
                 </td>
               
             <% end %>
