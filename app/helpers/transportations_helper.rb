@@ -19,8 +19,14 @@ module TransportationsHelper
 	  return 15
 	end
 
+    def last_moment
+        cur_time = 5
+        IO.foreach(Rails.root.join('today_random')){|line| cur_time += line.to_i } 
+        return    cur_time
+    end
+
     def is_last_moment?
-        if Time.zone.now.localtime.min >= (trad_start_time.min + (trad_duration - 5))
+        if Time.zone.now.localtime.min >= (trad_start_time.min + (trad_duration - last_moment))
             return true
         end
         return false
