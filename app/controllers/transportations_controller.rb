@@ -95,7 +95,7 @@ end
 #=====================================================================
    def edit
     @transportation = Transportation.find(params[:id])
-    if (@transportation.user != current_user) or (!is_admin?)
+    if (!manager?) and (!is_admin?)
       flash[:error] = "Вы не можете редактировать данную заявку"
       redirect_to transportations_path
     end
