@@ -6,7 +6,7 @@ gem 'rails', '3.1.1'
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 
-gem 'libv8', '3.3.10.4'
+#gem 'libv8', '~> 3.11.8'
 gem 'jquery-rails'
 gem	'compass', ">= 0.11.7"
 gem 'gravatar_image_tag', '1.0.0.pre2'
