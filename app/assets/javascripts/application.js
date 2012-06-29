@@ -75,20 +75,90 @@
 });
 })(jQuery);    
 
-/*
-(function($) {
+function add_sec(cur_time)
+{
+   // alert (cur_time);
+   // return cur_time;
+    if (cur_time.length == 0)
+    {
+        return "00:00:00";
+     }
+    var time = cur_time.split(":");
+    var is_change_min = false;
+    var is_change_hour = false;
+    if (time[2] == "59")
+    {
+       is_change_min = true;
+       time[2] = "00";
+    }
+    else
+    {
+       var loc = parseInt(time[2], 10) + 1;
+       if (loc < 10)
+       {
+           time[2] = "0" + loc;
+       }
+       else
+       {
+           time[2] = loc;
+       }
+    }
+    if (is_change_min)
+    {
+         if (time[1] == "59")
+        {
+             is_change_hour = true;
+              time[1] = "00";
+        }
+         else
+        {
+            var loc = parseInt(time[1], 10) + 1;
+            if (loc < 10)
+            {
+                time[1] = "0" + loc;
+            }
+            else
+            {
+               time[1] = loc;
+            }
+        }
+    }
+
+    if (is_change_hour)
+    {
+         if (time[0] == "23")
+        {
+             is_change_hour = true;
+              time[0] = "00";
+        }
+         else
+        {
+            var loc = parseInt(time[0], 10) + 1;
+            if (loc < 10)
+            {
+                time[0] = "0" + loc;
+            }
+            else
+            {
+               time[0] = loc;
+            }
+        }
+    }
+    return time[0]+":"+time[1]+":"+time[2];
+}
+
+/*(function($) {
   $(document).ready(function() {
-   setTimeout("location.reload(true);",30000);
+   setInterval(function() {$("#server_time").html( add_sec($("#server_time").val()) ); },1000);
   });
 })(jQuery);
 */
 
 (function($) {
   $(document).ready(function() {
-    setInterval(function(){
-	         $.ajax(
-	         {
-         		type: "GET",
+         $.ajax(
+	     {
+         	type: "GET",
 			url:  "/transportations/-1/server_time",
 			data: "",
 			dataType: "text",
@@ -100,11 +170,13 @@
 			{
 			      //alert (result);
 			      $("#server_time").html(result);
+                  //var temp = $("#server_time").text();
+                  //alert (temp+"::" + result);
+                  setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
 		        }		
           
           
-        	});
-  	}, 1000);
+        }); 	
 });
 })(jQuery);    
 
