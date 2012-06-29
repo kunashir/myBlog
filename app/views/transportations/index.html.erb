@@ -17,11 +17,10 @@
   <br><%= submit_tag("Отобрать") %>
 <% end %>
 <%= will_paginate %>
-<table class="transp">
-  <tr>
+<table class="transp" border="1">
+  <tr class = "tr">
     <td class = "tr">Номер распр.</td>
     <td class = "tr">Дата рейса</td>
-    <td class = "tr">Время погрзуки</td>
     <td class = "tr">Склад погрузки</td>
     <td class = "tr">Клиент</td>
     <td class = "tr">Склад выгрзуки</td>
@@ -29,9 +28,9 @@
     <td class = "tr">Объем</td>    
     <td class = "tr">Примечание</td>
     <td class = "tr">Тип кузова</td>
-    <td class = "tr">Нач. сумма за лот(руб.)</td>
-    <td class = "tr">Лучшее предложение за лот (руб.)</td>
-    <td class = "tr">Шаг цены для лота</td>
+    <td class = "tr">Нач. сумма (руб.)</td>
+    <td class = "tr">Лучшее предложение (руб.)</td>
+    <td class = "tr">Шаг цены </td>
     <% if manager? or is_admin? %>
       <td class = "tr">ТЭК</td>
     <% else %>	  
