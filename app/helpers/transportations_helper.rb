@@ -46,9 +46,13 @@ module TransportationsHelper
             if cur_time.min  < min
                 return 0
             end
-        else
-            return 1
         end
-     end
+        return 1
+        
+    end
+
+    def upper_limit
+        return 1,15
+    end
 
 end
