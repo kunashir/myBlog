@@ -39,7 +39,7 @@ def export
     headers['Content-Disposition'] = 'attachment; filename="report.xls"'
     headers['Cache-Control'] = ''
      @transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
-    render :index
+    render :index , :layout => false
 end
 
 #=====================================================================
@@ -91,7 +91,13 @@ end
   def show
     @transportation   = Transportation.find(params[:id])
     @title  = "Заявка # " # + @transportation.num.to_str
+    if (!manager?) and (!is_admin?)
+      flash[:error] = "Вы не можете просматривать детализация по заявке!"
+      redirect_to transportations_path
+      return
+    end
   end
+
 #=====================================================================
    def edit
     @transportation = Transportation.find(params[:id])
@@ -158,6 +164,13 @@ end
         return
       end
      
+      if @transportation.specprice #на случай, если два запроса подряд
+           flash[:error] = "К сожeлению, заявку уже забрали со скидкой 15%!!!"
+           redirect_to transportations_path
+           return
+      end
+
+      
       #Проверим не послдение ли минуты, если да то проверим делал ли чел ставки до этого
       if (is_last_moment?) and (@transportation.is_busy?)
         if !Log.company_has_stake(@transportation, current_user.company) 
@@ -173,10 +186,15 @@ end
         if (params[:summa].empty?)
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
-            if (@transportation.abort_company == current_user.company)
+            if (@transportation.abort_company == current_user.company_id)
                 flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
                 redirect_to transportations_path
                 return
+            end
+            if (@transportation.start_sum*upper_limit < params[:summa])
+              flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
+              redirect_to transportations_path
+              return
             end
             @transportation.cur_sum = params[:summa]
         end
@@ -188,12 +206,13 @@ end
         flash[:success] = "Ваша ставка принята."
       else
         @title = "Error"
+        flash[:error] = "Ошибка сохранения сообщите об этом разработчикам (transp_contr:204)."
       end
-     redirect_to transportations_path
+      redirect_to transportations_path
     else
       if @transportation.update_attributes!(params[:transportation])
         flash[:success] = "Заявка обновлена."
-        redirect_to @transportation
+        redirect_to transportations_path #при сохранение сразу на список
       else
         @title = "Изменить заявку"
         render 'edit'
@@ -204,23 +223,23 @@ end
 
 #=====================================================================  
   def confirmation #save transp. confimation (update)
-	@transportation = Transportation.find(params[:id])
-	if (params[:transportation][:avto_id].nil?) or (params[:transportation][:driver_id].nil?)
-		flash[:error] = "Поле машина или водитель не могут быть пустыми"
-		render :edit_conf
-		return
-	end
-	
-	@transportation.set_user(current_user)
-	@transportation.avto    = Avto.find(params[:transportation][:avto_id])
-	@transportation.driver  = Driver.find(params[:transportation][:driver_id])
-	@transportation.time    = params[:transportation]['time(4i)'] + ":" + params[:transportation]['time(5i)']
-       	if @transportation.save!
-	    flash[:success] = "Подтверждение сохранено"
-	else
-	    flash[:error] = "Ошибка сохранения"
-	end
-	redirect_to transportations_path
+  	@transportation = Transportation.find(params[:id])
+  	if (params[:transportation][:avto_id].nil?) or (params[:transportation][:driver_id].nil?)
+  		flash[:error] = "Поле машина или водитель не могут быть пустыми"
+  		render :edit_conf
+  		return
+  	end
+  	
+  	@transportation.set_user(current_user)
+  	@transportation.avto    = Avto.find(params[:transportation][:avto_id])
+  	@transportation.driver  = Driver.find(params[:transportation][:driver_id])
+  	@transportation.time    = params[:transportation]['time(4i)'] + ":" + params[:transportation]['time(5i)']
+         	if @transportation.save!
+  	    flash[:success] = "Подтверждение сохранено"
+  	else
+  	    flash[:error] = "Ошибка сохранения"
+  	end
+  	redirect_to transportations_path
   end
 
 #=====================================================================  
@@ -233,6 +252,7 @@ end
     #повышение
     @transportation.abort_company = @transportation.company_id
 
+    old_cur_sum = @transportation.cur_sum
     if @transportation.have_spec_price?
       @transportation.cur_sum = 0
       @transportation.specprice = false
@@ -246,6 +266,7 @@ end
     
     if @transportation.save!
       flash[:success] = "Ваша ставка отменена"
+      Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
     else
       flash[:error] = "Ошибка отмены"
     end
@@ -258,7 +279,9 @@ end
     @transportation.set_user(current_user)
     @transportation.request_abort = true
     if @transportation.save!
-      flash[:success] = "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
+      flash[:success] =  "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
+      #UserMailer.request_abort(@transportation).deliver
+      
     else
       flash[:error] = "Ошибка отмены"
     end
