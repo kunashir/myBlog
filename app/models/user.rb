@@ -55,7 +55,24 @@ class User < ActiveRecord::Base
     end
     return "Callback off"
   end
-  
+
+  def self.carriers_email(ignore_company=0)
+      if ignore_company == 0
+          users_list = User.all
+      else
+          users_list = User.where("company_id != ?", ignore_company)
+      end
+      output_array = Array.new
+      j = 0
+      for i in users_list
+          if i.company.is_freighter
+              output_array[j] = i.email
+              j = j + 1
+          end
+      end
+      return output_array
+  end
+
   private
    def encrypt_password
      if !@use_callback

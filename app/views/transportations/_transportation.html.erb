@@ -1,8 +1,10 @@
 <tr class ="tr">
-  <td class = "tr"><%= transportation.num.nil? ? "без номера" : transportation.num %> 
+  
   <% if manager? or is_admin? %>
     <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, transportation %> 
     , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
+  <% else %>
+    <td class = "tr"><%= transportation.num.nil? ? "без номера" : transportation.num %> 
   <% end %>
   <td class = "tr"><%= transportation.date %></td> 
   <td class = "tr"><%= transportation.storage_source %></td> 

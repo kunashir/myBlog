@@ -279,7 +279,9 @@ end
     @transportation.set_user(current_user)
     @transportation.request_abort = true
     if @transportation.save!
-      flash[:success] = "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
+      flash[:success] =  "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
+      #UserMailer.request_abort(@transportation).deliver
+      
     else
       flash[:error] = "Ошибка отмены"
     end
