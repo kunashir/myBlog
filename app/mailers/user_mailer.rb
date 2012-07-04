@@ -20,7 +20,7 @@ class UserMailer < ActionMailer::Base
   	end
   end
 
-  def test
-  	mail(:to => "korolev@roshen48.ru", :subject => "Тест")
+  def test(email)
+  	mail(:to => email, :subject => "Тест")
   end
 end
