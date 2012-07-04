@@ -12,7 +12,7 @@
 
 class User < ActiveRecord::Base
   attr_accessor   :password
-  attr_accessible :name, :email, :company_id, :password, :password_confirmation
+  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified
   
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
       if ignore_company == 0
           users_list = User.all
       else
-          users_list = User.where("company_id != ?", ignore_company)
+          users_list = User.where("company_id != ? AND be_notified = ?", ignore_company, true)
       end
       output_array = Array.new
       j = 0

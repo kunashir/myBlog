@@ -5,8 +5,9 @@ class UserMailer < ActionMailer::Base
   def notification_to_companies(tr, abort_company)
     emails = User.carriers_email(abort_company)
     for email in emails
-    	@transp_text = "Кто-то отказался от заяки: " + tr.storage_source + " - " + tr.storage.name + " текущая цена: " + tr.cur_sum
-    	mail(:to => email, :subject => "Открытая заявка")
+    	print email
+    	@transp_text = "Кто-то отказался от заяки: " + tr.storage_source + " - " + tr.storage.name + " текущая цена: " + tr.cur_sum.to_s
+    	mail(:to => email, :subject => "Открытая заявка").deliver
    	end
 
   end

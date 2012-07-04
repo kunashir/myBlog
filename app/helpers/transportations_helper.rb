@@ -52,7 +52,7 @@ module TransportationsHelper
     end
 
     def upper_limit
-        return 1,15
+        return 1.15
     end
 
 end
