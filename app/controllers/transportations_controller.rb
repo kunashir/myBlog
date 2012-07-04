@@ -191,7 +191,7 @@ end
                 redirect_to transportations_path
                 return
             end
-            if (@transportation.start_sum*upper_limit < params[:summa])
+            if (@transportation.start_sum*upper_limit < params[:summa].to_i)
               flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
               redirect_to transportations_path
               return
@@ -262,11 +262,15 @@ end
           @transportation.cur_sum = @transportation.start_sum
       end
     end
+    company_aborting = @transportation.company
     @transportation.company =  nil
     
     if @transportation.save!
       flash[:success] = "Ваша ставка отменена"
       Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
+      if (check_time == 1) # Если отмена после окончания отправим другим уведомление
+        UserMailer.notification_to_companies(@transportation, company_aborting)
+      end
     else
       flash[:error] = "Ошибка отмены"
     end
@@ -280,7 +284,7 @@ end
     @transportation.request_abort = true
     if @transportation.save!
       flash[:success] =  "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
-      #UserMailer.request_abort(@transportation).deliver
+      UserMailer.request_abort(@transportation)
       
     else
       flash[:error] = "Ошибка отмены"
@@ -297,13 +301,17 @@ end
 	 @transportation.request_abort = false
 	 if @transportation.have_spec_price?
 	      @transportation.cur_sum = 0
-	 elsif
+	 elsif (@transportation.cur_sum > @transportation.start_sum)
+        @transportation.cur_sum = 0
+   else
 	      @transportation.cur_sum = @transportation.cur_sum + @transportation.step
 	 end
-	 @transportation.company =  nil
+	 company_aborting = @transportation.company
+   @transportation.company =  nil
     
 	 if @transportation.save!
 	      flash[:success] = "Отказ подтвержден"
+        UserMailer.notification_to_companies(@transportation, company_aborting)
 	 else
 	      flash[:error] = "Ошибка отмены"
 	 end
@@ -362,25 +370,10 @@ end
     #  end
     uploaded_io = params[:file]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'w') do |file|
-        #file.write(uploaded_io.read)
-        text = uploaded_io.read
-        #file.puts(text.encode('UTF-8'))
-    #    begin
-     #       text = URI.escape(text)         #.encoding
-   #     rescue
-    #        text = ""
-   #     end
-       # temptext = ""
-       # if  !text.nil?
-       #     for i in (0..text.length)
-       #         begin
-       #             temptext = temptext + text[i].encode('UTF-8')
-       #         rescue
-       #         end
-       #     end
+       text = uploaded_io.read
+ 
             file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8"))
-       # end
-       # render :text => encode_utf8(text)
+      
     end
     #return
     #@text_of_load = "Ошибка загрузки"

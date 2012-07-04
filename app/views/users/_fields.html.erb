@@ -12,6 +12,9 @@
     <%= f.label :email %><br />
     <%= f.text_field :email %>
   </div>
+   <div class="field">
+    <%= f.check_box :be_notified %><%= f.label :be_notified, "Получать уведомления на почту об откзаных заявках" %>
+  </div>
   <div class="field">
     <%= f.label :password, "Пароль:" %><br />
     <%= f.password_field :password %>
