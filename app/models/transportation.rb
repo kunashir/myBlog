@@ -38,7 +38,7 @@ class Transportation < ActiveRecord::Base
     end
     return area
   end
-  
+
   def set_user(user)
 	  @cur_user = user
   end
@@ -95,7 +95,7 @@ class Transportation < ActiveRecord::Base
       tr.time       = data_array[16]
       tr.client     = client
       tr.storage    = dist_storage
-      tr.storage_source = my_storage
+      tr.area       = Area.find_by_name(my_storage)
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]

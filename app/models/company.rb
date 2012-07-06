@@ -7,4 +7,11 @@ class Company < ActiveRecord::Base
   has_many  :drivers
   
   validates :name,    :presence => true
+
+  def self.get_main_company
+  	begin
+  		return Company.find(1).name
+  	rescue
+  		return "Заведите основную компанию(она должена быть первой)"
+  	end
 end
