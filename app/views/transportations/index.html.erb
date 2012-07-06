@@ -13,7 +13,9 @@
   <br><%= label_tag(:q, "Показать все заявки (по-умолчанию только активные):") %>
   <%= check_box_tag :show_all, 1 %>
   <br><%= label_tag(:q, "Склад погрузки:") %>
-<%= select_tag :storage_source, options_for_select([['',''],['Трубный', 'Трубный'], ['Сенцово', 'Сенцово'], ['Дятьково', 'Дятьково'],['Доватора','Доватора'] ]) %>
+<%= #select_tag :storage_source, options_for_select([['',''],['Трубный', 'Трубный'], ['Сенцово', 'Сенцово'], ['Дятьково', 'Дятьково'],['Доватора','Доватора'] ]) 
+%>
+<%= select_tag :area, options_for_select(Area.get_selector) %>
   <br><%= submit_tag("Отобрать") %>
 <% end %>
 <%= will_paginate %>

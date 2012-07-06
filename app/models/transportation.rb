@@ -14,6 +14,7 @@ class Transportation < ActiveRecord::Base
   belongs_to  :driver
   belongs_to  :client
   belongs_to  :storage
+  belongs_to  :area
   
   #validates :user_id, :presence => true
   validates :date,            :presence => true
@@ -31,6 +32,13 @@ class Transportation < ActiveRecord::Base
   after_save    :logging_new
   @cur_user = nil
 
+  def area
+    if area.nil?
+      return storage_source
+    end
+    return area
+  end
+  
   def set_user(user)
 	  @cur_user = user
   end
