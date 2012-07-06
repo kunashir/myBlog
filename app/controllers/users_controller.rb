@@ -18,6 +18,11 @@ class UsersController < ApplicationController
   end
   
   def show
+    if !signed_in?
+      deny_access
+      #redirect_to root_path
+      return
+    end
     @user   = User.find(params[:id])
     @title  = @user.name
     if ((!manager?) or (!is_admin? )) and (@user != current_user)

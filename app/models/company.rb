@@ -1,3 +1,4 @@
+#coding: utf-8
 class Company < ActiveRecord::Base
   attr_accessible :name, :inn, :is_freighter
   
@@ -14,4 +15,5 @@ class Company < ActiveRecord::Base
   	rescue
   		return "Заведите основную компанию(она должена быть первой)"
   	end
+  end
 end
