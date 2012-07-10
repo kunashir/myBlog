@@ -46,7 +46,7 @@
         <% else #здесь ставки на завтра, т.е. обычные %>
             
             <% if check_time == -1 %>
-              		<td class = "tr">Торги начнуться в <%= TransportationsController.trad_start_time %>:00 МСК</td>
+              		<td class = "tr">Торги начнуться в <%= trad_start_time %>:00 МСК</td>
 		<% elsif  check_time == 0  #Штатаный ход торгов %>
             <% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
                 <td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
