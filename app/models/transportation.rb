@@ -19,7 +19,7 @@ class Transportation < ActiveRecord::Base
   #validates :user_id, :presence => true
   validates :date,            :presence => true
   #validates :time,            :presence => true #время ставят перевозчики
-  validates :area, 		 :presence => true
+#  validates :area, 		 :presence => true
   # validates :storage_dist,    :presence => true
   # validates :type_transp,     :presence => true
   #validates :weight,          :presence => true
