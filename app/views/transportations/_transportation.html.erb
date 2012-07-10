@@ -7,7 +7,7 @@
     <td class = "tr"><%= transportation.num.nil? ? "без номера" : transportation.num %> 
   <% end %>
   <td class = "tr"><%= transportation.date %></td> 
-  <td class = "tr"><%= transportation.area %></td> 
+  <td class = "tr"><%= transportation.get_area %></td> 
   <td class = "tr"><%= transportation.client.name if !transportation.client.nil? %></td> 
   <td class = "tr"><%= transportation.storage.name if !transportation.storage.nil? %></td> 
   <td class = "tr"><%= transportation.weight %></td> 
