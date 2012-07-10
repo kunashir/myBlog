@@ -6,7 +6,7 @@
 
 class Transportation < ActiveRecord::Base
   
-	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id, :abort_company, :area
+	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id, :abort_company, :area_id
   
   belongs_to  :user
   belongs_to  :company
@@ -36,7 +36,7 @@ class Transportation < ActiveRecord::Base
     if area.nil?
       return storage_source
     end
-    return area
+    return area.name
   end
 
   def set_user(user)
