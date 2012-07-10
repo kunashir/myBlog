@@ -32,7 +32,7 @@ class Transportation < ActiveRecord::Base
   after_save    :logging_new
   @cur_user = nil
 
-  def area
+  def get_area
     if area.nil?
       return storage_source
     end
