@@ -10,7 +10,9 @@
     <%= f.label :area, "Склад погрузки" %><br />
     <% #f.text_field :storage_source 
     %>
-    <%= select_tag :area, options_for_select(Area.get_selector, @transportation.get_area) %>
+    <%= #select_tag :area_id, options_for_select(Area.get_selector,  !@transportation.area.nil? ? @transportation.get_area: 1) 
+    %>
+        <%= f.collection_select :area_id, Area.all, :id, :name %> 
   </div>
   <div class="field">
     <%= f.label :client, "Клиент:" %><br />
