@@ -1,7 +1,7 @@
 #coding: utf-8
 class UserMailer < ActionMailer::Base
-  default from: "robot@roshen48.ru"
-
+  default from: "robot@roshen48.ru",  'Content-Transfer-Encoding' => '7bit'
+	
   def notification_to_companies(tr, abort_company)
     emails = User.carriers_email(abort_company)
     for email in emails
