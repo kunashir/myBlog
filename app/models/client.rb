@@ -4,7 +4,7 @@ class Client < ActiveRecord::Base
   has_many  :transportations
   
   validates :name, :presence  => true
-	default_scope	:order => 'clients.name by ASC'
+	default_scope	:order => 'clients.name  ASC'
   
   def storages
     Storage.where("client_id=?", self)
