@@ -15,7 +15,7 @@ class UserMailer < ActionMailer::Base
   def request_abort(tr)
   	emails = User.where("nmanager = ?", true)
   	for email in emails
-  		@msg_txt = Company.find(tr.company).name + " запросила отказ, от перевозки: " +  tr.storage_source + " - " + tr.storage.name 
+  		@msg_txt = Company.find(tr.company).name + " запросила отказ, от перевозки: " +  tr.area.name + " - " + tr.storage.name 
   		mail(:to => email.email, :subject => "Запрос отмены").deliver
   	end
   end
