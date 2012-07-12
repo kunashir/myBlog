@@ -62,7 +62,7 @@ class Transportation < ActiveRecord::Base
 		request_date = Date.current
 	end
 	if !source_storage.nil? and !source_storage.empty?
-		request_text += " AND storage_source = ?"
+		request_text += " AND area = ?"
 		return Transportation.where(request_text, request_date, source_storage)
 	end
 	Transportation.where(request_text, request_date)

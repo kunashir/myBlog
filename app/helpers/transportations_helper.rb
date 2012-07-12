@@ -1,14 +1,18 @@
 module TransportationsHelper
 
 	def trad_start_time
-	    return "2012-01-01 14:00:00".to_time
+	    return "2012-01-01 12:00:00".to_time
 	end
 
     def trad_duration
         return 30 #in minutes
     end
+    
+    def trad_stop_time
+	return "2012-01-01 13:30:00".to_time
+    end
 
-	def require_confirmation?
+    def require_confirmation?
         if Time.zone.now.localtime.hour >= 17
             return true
         end
@@ -39,13 +43,11 @@ module TransportationsHelper
         hour    = trad_start_time.hour
         min     = trad_start_time.min + trad_duration
         cur_time    =   Time.zone.now.localtime
-        if cur_time.hour < hour
+        if cur_time.hour < trad_start_time
             return -1
-        elsif hour == cur_time.hour
+        elsif (trad_start_time <= cur_time ) and (cur_time < trad_stop_time)
             #если часы равны проверяем минуты
-            if cur_time.min  < min
-                return 0
-            end
+           return 0
         end
         return 1
         
