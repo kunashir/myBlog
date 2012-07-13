@@ -108,15 +108,15 @@ end
     @title = "Изменить заявку "
   end
 #=====================================================================
-	def spec_price
-		@transportation = Transportation.find(params[:id])
-		 @transportation.set_user(current_user)
-		if (manager? or  is_admin?)
-			flash[:error] = "Вы не можете делать ставки"
-			redirect_to transportations_path
-			return
-		end
-        if @transportation.specprice #на случай, если два запроса подряд
+  def spec_price
+	@transportation = Transportation.find(params[:id])
+	@transportation.set_user(current_user)
+	if (manager? or  is_admin?)
+		flash[:error] = "Вы не можете делать ставки"
+		redirect_to transportations_path
+		return
+	end
+        if (@transportation.specprice) or (!@transportation.company.nil?)) #на случай, если два запроса подряд
             flash[:error] = "К сожалению, заявку уже забрали!!!"
             redirect_to transportations_path
             return
