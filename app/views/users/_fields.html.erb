@@ -1,7 +1,7 @@
 
  <div class="field">
     <%= f.label :company, "Компания (выберите из списка или добавте новую):" %><br />
-    <%= f.collection_select :company_id, Company.all, :id, :name %><li><%= link_to "Добавить компанию", new_company_path %></li>
+    <%= f.collection_select :company_id, Company.all, :id, :name %> <li><%= link_to "Добавить компанию", new_company_path %></li>
   </div>
   
   <div class="field">
@@ -11,6 +11,9 @@
   <div class="field">
     <%= f.label :email %><br />
     <%= f.text_field :email %>
+  </div>
+   <div class="field">
+    <%= f.check_box :be_notified %><%= f.label :be_notified, "Получать уведомления на почту об откзаных заявках" %>
   </div>
   <div class="field">
     <%= f.label :password, "Пароль:" %><br />

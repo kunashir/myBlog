@@ -15,7 +15,7 @@
         
         <li><%= link_to "Помощь", help_path %></li>
         <% if signed_in? %>
-        <li><%= link_to "Выход", signout_path, :method => :delete %></li>
+        <li><%= link_to "Выход", signout_path, :method => :delete, :id => 'exit_link' %></li>
         <% else %>
         <li><%= link_to "Вход", signin_path %></li>
         <% end %>	    	

@@ -1,7 +1,34 @@
 #coding: utf-8
-<h1>ООО "Рошен"</h1>
+<h1><%= Company.get_main_company
+%></h1>
 <p>Заявки на перевозки </p>
 
 <% if ! signed_in? %>
-<%= link_to "Зарегистрируйтесь для работы!", signup_path, :class => "signup_button round" %>
+  <%= link_to "Регистрация!", signup_path, :class => "signup_button round" %><br>
+  <%= link_to "Вход!", signin_path, :class => "signup_button round" %>
+<% elsif %>
+  <table>
+  <tr>
+    <td>
+  <%= link_to "Заявки", transportations_path, :class => "signup_button round" %>
+  </td>
+  <% if current_user.company.is_freighter? %>
+    <td>
+     <%= link_to "Машины", avtos_path, :class => "signup_button round" %>
+     </td>
+     <td>
+     <%= link_to "Водители", drivers_path, :class => "signup_button round" %>
+     </td>
+  <% else %>
+  <td>
+     <%= link_to "Клиенты", clients_path, :class => "signup_button round" %>
+    </td>
+  <% end %>
+  </table>
 <% end %>
+
+	<section class = "news">
+      <%= render "layouts/news" %>
+      </section>
+
+

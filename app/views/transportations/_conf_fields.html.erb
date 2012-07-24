@@ -1,0 +1,12 @@
+<div class="field">
+    <%= f.label :avto, "Машина на перевозку:" %><br />
+    <%= f.collection_select :avto_id, Avto.company_avto(@transportation.company), :id, :shortname %> 
+  </div>
+  <div class="field">
+    <%= f.label :driver, "Водитель на перевозку" %><br />
+    <%= f.collection_select :driver_id, Driver.company_driver(@transportation.company), :id, :name  %> 
+  </div>
+  <div class="field">
+    <%= f.label :time, "Время погрузки" %><br />
+    <%= f.time_select :time %>
+  </div>

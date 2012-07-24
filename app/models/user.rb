@@ -12,12 +12,14 @@
 
 class User < ActiveRecord::Base
   attr_accessor   :password
-  attr_accessible :name, :email, :company_id, :password, :password_confirmation
+  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified
   
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
   
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  
+  
   
   validates :name,    :presence => true, :length =>  { :maximum => 50}
   validates :email,   :presence => true, :format =>  { :with => email_regex },
@@ -26,7 +28,7 @@ class User < ActiveRecord::Base
   validates :password,  :presence => true, :confirmation  => true,
                         :length   => { :within => 6..40}
                         
-  before_save :encrypt_password
+ before_save :encrypt_password
   
   def has_password?(submitted_password)
     encrypted_password == encrypt(submitted_password)
@@ -42,11 +44,42 @@ class User < ActiveRecord::Base
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user : nil
   end
+
+  def save_without_callbacks ( use )
+    @use_callback = use
+  end
   
+  def show_save_type
+    if !@use_callback
+      return "Use callback"
+    end
+    return "Callback off"
+  end
+
+  def self.carriers_email(ignore_company=0)
+      if ignore_company == 0
+          users_list = User.all
+      else
+          users_list = User.where("company_id != ? AND be_notified = ?", ignore_company, true)
+      end
+      output_array = Array.new
+      j = 0
+      for i in users_list
+          if i.company.is_freighter
+              output_array[j] = i.email
+              j = j + 1
+          end
+      end
+      return output_array
+  end
+
   private
    def encrypt_password
-      self.salt = make_salt if new_record?
-      self.encrypted_password = encrypt(password)
+     if !@use_callback
+        self.salt = make_salt if new_record?
+        return self.encrypted_password = encrypt(password)
+     end
+     return true
     end
 
     def encrypt(string)

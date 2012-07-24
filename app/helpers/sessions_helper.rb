@@ -30,7 +30,7 @@ module SessionsHelper
   end
   
   def save_location
-	store_location
+   # store_location
   end
   
   def current_user?(user)
@@ -50,6 +50,26 @@ module SessionsHelper
   def is_admin?
     current_user.admin?
   end
+  
+  def is_block_user?
+    current_user.is_block?
+  end
+  
+  def set_cur_client(client)
+    session[:cur_client] = client
+  end
+  
+  def get_cur_client
+    session[:cur_client]
+  end
+ 
+  def set_cur_storage(storage)
+	 session[:cur_storage] = storage
+  end
+
+  def get_cur_storage
+	 sesseion[:cur_storage]
+  end 
 private
   def user_from_remember_token
     User.authenticate_with_salt(*remember_token)

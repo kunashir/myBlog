@@ -10,7 +10,16 @@
       <strong>Компания:</strong><%= @user.company.name %><br />
       <strong>URL:</strong><%= link_to user_path(@user), @user %><br />
       <%= link_to "Редактировать профиль", edit_user_path(@user) %>
+      <% if current_user.company.is_freighter? %>
+        <br><%= link_to "Машины", avtos_path %>
+        <br><%= link_to "Водители", drivers_path %>
+      <% else %>
+        <br><%= link_to "Клиенты", clients_path %>
+      <% end %>
+      
     </td>
   </tr>
 </table>
+
+
 

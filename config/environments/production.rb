@@ -57,4 +57,18 @@ MyBlog::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  #config.assets.debug = true
+  config.action_mailer.delivery_method = :smtp
+  # Defaults to:
+  config.action_mailer.smtp_settings = {
+    :address    =>  'srv-mail',
+    :port       =>  25,
+    :domain     =>  'roshen48.ru',
+    :user_name  =>  'robot',
+    :password   =>  'hl7kx4v',
+    :authentication => 'login',
+    :enable_starttls_auto   => true}
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
 end

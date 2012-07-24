@@ -1,0 +1,7 @@
+<h1> Подтвержедние заказа </h1>
+<%= form_for @transportation, :url => transportation_path(@transportation) + "/confirmation" do |f| %>
+<%= render 'conf_fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Сохранить" %>
+  </div>
+<% end %> 

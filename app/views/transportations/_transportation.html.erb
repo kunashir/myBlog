@@ -1,13 +1,18 @@
 <tr class ="tr">
-  <td class = "tr"><%= link_to transportation.num, transportation %></td> 
-  <td class = "tr"><%= transportation.date %></td> 
-  <td class = "tr"><%= to_time(transportation.time) %></td> 
-  <td class = "tr"><%= transportation.storage_source %></td> 
-  <td class = "tr"><%= transportation.storage_dist %></td> 
-  <td class = "tr"><%= transportation.weight %></td> 
-  <td class = "tr"><%= transportation.comment %></td> 
-  <td class = "tr"><%= transportation.type_transp %></td> 
   
+  <% if manager? or is_admin? %>
+    <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, transportation %> 
+    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
+  <% else %>
+    <td class = "tr"><%= transportation.num.nil? ? "без номера" : transportation.num %> 
+  <% end %>
+  <td class = "tr"><%= transportation.date %></td> 
+  <td class = "tr"><%= transportation.get_area %></td> 
+  <td class = "tr"><%= transportation.client.name if !transportation.client.nil? %></td> 
+  <td class = "tr"><%= transportation.storage.name if !transportation.storage.nil? %></td> 
+  <td class = "tr"><%= transportation.weight %></td> 
+  <td class = "tr"><%= transportation.get_volume %></td> 
+  <td class = "tr"><%= transportation.comment %></td> 
   <td class = "tr"><%= transportation.carcase %></td> 
   <td class = "tr"><%= transportation.start_sum %></td> 
   <% if transportation.company == current_user.company %>
@@ -17,9 +22,74 @@
   <% end %>
   <td class = "tr"><%= transportation.step %></td> 
   <% if manager? or is_admin? %>
-      <td class = "tr"><%= transportation.company.nil? ? "" : transportation.company.name %></td>
+	  <td class = "tr">
+		  <%= transportation.company.nil? ? "" : transportation.company.name %>
+		  <% if transportation.request_abort %>
+			  <br><%= link_to "Подтвердить отказ", transportation_path(transportation) + "/confirm_abort"  %> 
+		<% end %>
+	  </td>
   <% else %>
-      <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
-                                            :title  => "KO" %> </td>
+      <% if transportation.is_active? #Если дата меньше текущей - заявка не активна %>
+        
+        <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра%>
+           <td class = "tr">
+                <%= form_tag( transportation, :method => "put") do %>
+                  <%= label_tag(:q, "Ваше предложение:") %>
+                  <%= text_field_tag :summa, nil, :class => "datepicker" %>
+                  <%= submit_tag("Ставка") %>
+                <% end %>
+                </td>
+        <% elsif transportation.is_today? and transportation.is_busy? #от перевозки на текущую дату еще можно отказаться %>
+    		<% if transportation.company == current_user.company %>
+	    		<td class = "tr"> <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> </td> 
+	    	<% end %>
+        <% else #здесь ставки на завтра, т.е. обычные %>
+            
+            <% if check_time == -1 %>
+              		<td class = "tr">Торги начнуться в <%= trad_start_time %>:00 МСК</td>
+		<% elsif  check_time == 0  #Штатаный ход торгов %>
+            <% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+                <td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
+			<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
+              	   <td class = "tr"><%= link_to "Сделать ставку", transportation, :method => :put, :confirm => "Вы точно хотите сделать ставку?",
+									      :title  => "KO" %> 
+			       <% if (transportation.cur_sum.nil? or transportation.cur_sum == 0) #Если текущая сумма еще пустая, можно забрать сразу %>
+				       <%= link_to "Забрать перевозку со скидкой 15%", transportation_path(transportation) + "/specprice" %>
+				    <% end %>
+				 </td>
+			     <% else %>
+			    	<td class = "tr"></td>
+			     <% end %>
+
+            	<% end %>
+            <% if check_time == 1 %>
+              <% if transportation.company == current_user.company %>
+                <td class = "tr"><%= link_to "Подтвердить заявку", transportation_path(transportation) + "/edit_conf"  %> 
+                    <br>
+                 <% if require_confirmation? %>
+                    <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> 
+                 <% else %>
+                    <%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %>
+                  <% end %>
+                </td>
+              <% elsif transportation.company.nil? #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
+                 <td class = "tr">
+                <%= form_tag( transportation, :method => "put") do %>
+                  <%= label_tag(:q, "Ваше предложение:") %>
+                  <%= text_field_tag :summa, nil, :class => "datepicker" %>
+        		  <%= submit_tag("Ставка") %>
+		         <% end %>
+
+	    	<% else %>
+		    	<td class = "tr"></td>
+		    <% end %>
+                </td>
+              
+            <% end %>
+        <% end %>
+      <% else %>
+        <td class = "tr"> </td>
+      <% end %>
+      
   <% end %>	  
 </tr>  

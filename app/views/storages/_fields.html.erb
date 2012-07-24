@@ -1,0 +1,9 @@
+ <div class="field">
+    <%= f.label :city, "Город:" %><br />
+    <%= f.collection_select :city_id, City.all, :id, :name %> 
+  </div>
+  <div class="field">
+    <%= f.label :address, "Адрес:" %><br />
+    <%= f.text_field :address %>
+  </div>
+     

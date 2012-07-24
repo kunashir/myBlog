@@ -1,4 +1,12 @@
 MyBlog::Application.routes.draw do
+  #get "storages/new"
+
+  #get "clients/new"
+
+  #get "drivers/new"
+
+  #get "avtos/new"
+
   #get "companies/new"
 
   #get "transportations/new"
@@ -7,6 +15,10 @@ MyBlog::Application.routes.draw do
   resources :sessions, :only => [:new, :create, :destroy]
   resources :transportations #, :only => [:new, :create, :index ]
   resources :companies
+  resources :avtos  
+  resources :drivers
+  resources :storages
+  resources :clients
   
   match '/signup',  :to => 'users#new'
 	match '/contact', :to => 'pages#contact'
@@ -14,7 +26,20 @@ MyBlog::Application.routes.draw do
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
   match '/index',   :to => 'transportations#index'
-  
+  #спец. роутинг для подтверждения заявки
+  match 'transportations/:id/confirmation', 	:to 	=>  'transportations#confirmation'
+  match 'transportations/:id/edit_conf',    	:to 	=>  'transportations#edit_conf'
+  match 'transportations/:id/get_storage',  	:to 	=>  'transportations#get_storage'
+  match	'transportations/:id/copy',		:to	=>	'transportations#new'
+  match	'transportations/:id/packet',		:to	=>	'transportations#packet_loading'
+  match	'transportations/:id/load',		:to	=>	'transportations#load'
+  match	'transportations/:id/abort',		:to	=>	'transportations#abort'
+  match 'transportations/:id/export',		:to 	=>	'transportations#export'
+  match 'transportations/:id/specprice',	:to	=>	'transportations#spec_price'
+  match 'transportations/:id/request_abort',	:to	=>	'transportations#request_abort'
+  match 'transportations/:id/confirm_abort',	:to	=>	'transportations#confirm_abort'
+  match 'transportations/:id/server_time',	:to	=>	'transportations#server_time'
+  match 'transportations/:id/do_rate',	:to	=>	'transportations#do_rate'
   #match '/home', :to => 'pages#home'
   
   root :to => 'pages#home'

@@ -13,7 +13,7 @@ class CreateTransportations < ActiveRecord::Migration
       t.integer :start_sum
       t.integer :cur_sum
       t.integer :step
-      t.integer :manager_id
+      t.integer :user_id
       t.integer :carrier_id
 
       t.timestamps

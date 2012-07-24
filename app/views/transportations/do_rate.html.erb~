@@ -1,0 +1,132 @@
+Заявка № <%= @transportation.num.nil? ? "без номера" : @transportation.num %> | <%= link_to "к списку заявок", transportation_path %>
+<table  class="profile" summary="Profile information">
+  <tr>
+    <% if check_time == 0 %>
+      <% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+	<td class = "tr"><%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> </td>
+      <% else %>
+	<td>
+	  <%= form_tag(transportation_path(@transportation) + "/specprice", :method => "put") do %>
+	    <%= show_simple_captcha %>
+	    <%= submit_tag("-15%") %>
+	  <% end %>
+	</td>
+
+	<td>
+	  <%= form_tag(transportation_path(@transportation), :method => "put") do %>
+	    <%= show_simple_captcha %>
+	    <%= submit_tag("-"+@transportation.step.to_s) %>
+	  <% end %>
+	</td>
+      <% end %>
+    <% else %>
+      <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	
+															  %>
+	<td class = "tr">
+          <%= form_tag( transportation, :method => "put") do %>
+            <%= label_tag(:q, "Ваше предложение:") %>
+            <%= text_field_tag :summa, nil, :class => "datepicker" %>
+	    <%= submit_tag("Ставка") %>
+	  <% end %>
+        </td>
+      <% end %>
+
+
+    <% end %>
+		
+  </tr>
+  <tr>
+    <td>
+     <strong>Дата перевозки:</strong>
+    </td>
+    <td>
+     <%= @transportation.date %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Время погрузки:</strong>
+    </td>
+    <td>
+     <%= to_time(@transportation.time) unless @transportation.time.nil? %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Склад погрузки:</strong>
+    </td>
+    <td>
+     <%= @transportation.storage_source %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Клиент:</strong>
+    </td>
+    <td>
+     <%= @transportation.client.name unless @transportation.client.nil? %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Склад доставки:</strong>
+    </td>
+    <td>
+     <%= @transportation.storage.name unless @transportation.storage.nil? %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Комментарий:</strong>
+    </td>
+    <td>
+     <%= @transportation.comment %>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+     <strong>Тоннаж:</strong>
+    </td>
+    <td>
+     <%= @transportation.weight %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Тип кузова:</strong>
+    </td>
+    <td>
+     <%= @transportation.carcase %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Нач. сумма:</strong>
+    </td>
+    <td>
+     <%= @transportation.start_sum %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Шаг торгов:</strong>
+    </td>
+    <td>
+     <%= @transportation.step %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+     <strong>Тек. сумма:</strong>
+    </td>
+    <td>
+     <%= @transportation.cur_sum %>
+    </td>
+  </tr>
+  
+</table>
+  
+  
+  
+

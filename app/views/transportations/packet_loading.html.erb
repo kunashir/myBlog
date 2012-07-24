@@ -1,0 +1,6 @@
+<H1> Пакетная загрукза заявок</H1>
+<%= form_tag({:action => :load}, :multipart => true, :remote => true) do %>
+    <%= file_field_tag 'file' %>
+    <%= submit_tag %>
+<% end %>
+<p id=show_res></p>

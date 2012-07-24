@@ -11,13 +11,13 @@ header {
 }
 
 header img {
-  padding: 1em;
+  
   background: #fff;
 }
 
 section {
   margin-top: 1em;
-  font-size: 120%;
+  font-size: 110%;
   padding: 20px;
   background: #fff;
 }
@@ -99,7 +99,7 @@ a.signup_button {
 footer {
   text-align: center;
   margin-top: 10px;
-  width: 90%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -116,14 +116,14 @@ table.profile {
 }
 
 table.transp  {
-  width:  70%;
-  /* border: 1px solid;*/
+  width:  100%;
+   border: 1px solid;
   }
   
 tr.tr {
   width: 90%;
-  font-size: 75%;
-  
+  font-size: 70%;
+  /*border: 1px solid;*/  
   }
   
 td.tr {
@@ -208,3 +208,19 @@ ul.users {
 .users li {
   list-style: none;
 }
+
+section.news {
+  background-color: yellow;
+  padding: 20px;
+  white-space: nowrap;
+  border-radius:         10px;
+}
+
+h1.news {
+  text-align : center;
+  }
+
+  div.server_time {
+	  text-align:  center;
+	  font-size: 150%;
+	}
