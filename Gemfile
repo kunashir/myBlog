@@ -15,7 +15,7 @@ gem 'jquery_datepicker'
 gem 'stamp'
 gem 'spreadsheet'
 gem 'to_xls', :git => "https://github.com/dblock/to_xls.git", :branch => "to-xls-on-models"
-
+gem "galetahub-simple_captcha", :require => "simple_captcha"
 group   :production do
     gem 'ps'
     gem 'activerecord-postgresql-adapter'
