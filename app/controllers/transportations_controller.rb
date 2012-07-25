@@ -186,14 +186,15 @@ end
 #=====================================================================
   def update
     
-    if check_captcha == -1 
-		return
-    end 
+    
     
     @transportation = Transportation.find(params[:id]) 
     @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
-      
+	  
+	  if check_captcha == -1 
+			return
+	  end 
       if (!@transportation.is_today?) and (check_time == -1) 
         flash[:error] = "Торги еще не открыты!"
         redirect_to transportations_path
