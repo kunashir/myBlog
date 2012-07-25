@@ -233,10 +233,7 @@ end
 			if (params[:summa].to_i < 0 )
 				params_summa = -1*params[:summa].to_i
 			end
-		else
-			flash[:error] = "Во время торгов нельзя задавать произвольную сумму"
-            redirect_to transportations_path
-            return
+		
 		end
 
         if (params_summa == 0)
