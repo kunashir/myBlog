@@ -66,7 +66,7 @@ end
     title = "Список заявок:"  + @day.to_s
     show_all = params[:show_all].nil? ? false : true
     storage_source = params[:area]
-    @filter_text = @day.to_s + " " + (storage_source.nil? ? "": storage_source )
+    @filter_text = @day.to_s + " " + (storage_source.nil? ? "": Area.find(storage_source).name )
     @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 50)
   end
 #=====================================================================  
@@ -125,41 +125,41 @@ end
 	  return
 	end
 	#if !@transportation.valid_with_captcha?
-		@transportation.set_user(current_user)
+	@transportation.set_user(current_user)
 	if (manager? or  is_admin?)
 		flash[:error] = "Вы не можете делать ставки"
 		redirect_to transportations_path
 		return
 	end
-        if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
-            flash[:error] = "К сожалению, заявку уже забрали!!!"
-            redirect_to transportations_path
-            return
-        end
-		#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
-        if (!@transportation.is_today?) and (check_time == -1)
-		       flash[:error] = "Торги еще не открыты!"
-		       redirect_to transportations_path
-		       return
-	    end
-	    if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
-	        	 # то торговатся больше нельзя
-		         flash[:error] = "Торги уже закончились!"
-			   redirect_to transportations_path
-		       return
-		end
-
-		@transportation.company = current_user.company
-		@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
-		@transportation.specprice = true
-		
-		if @transportation.save_with_captcha
-		        flash[:success] = "Поздравляем данная перевозка уже ваша."
-		else
-		        @title = "Ошибка сохранения!"
-	        end
+	if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
+		flash[:error] = "К сожалению, заявку уже забрали!!!"
 		redirect_to transportations_path
+		return
 	end
+	#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
+	if (!@transportation.is_today?) and (check_time == -1)
+	       flash[:error] = "Торги еще не открыты!"
+	       redirect_to transportations_path
+	       return
+    end
+    if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+        	 # то торговатся больше нельзя
+	         flash[:error] = "Торги уже закончились!"
+		   redirect_to transportations_path
+	       return
+	end
+
+	@transportation.company = current_user.company
+	@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
+	@transportation.specprice = true
+	
+	if @transportation.save!
+	        flash[:success] = "Поздравляем данная перевозка уже ваша."
+	else
+	        @title = "Ошибка сохранения!"
+        end
+	redirect_to transportations_path
+  end
 
 #=====================================================================
   def save_rate
@@ -173,20 +173,18 @@ end
   end
 #=====================================================================
   def do_rate
-    if (check_time != 0)
-      flash[:error] = "Торги закрыты в данный момент"
-      #redirect_to transportations_path
-    end
     @transportation = Transportation.find(params[:id])
         #redirect_to transportations_path
   end
 	
 #=====================================================================
   def update
-    @transportation = Transportation.find(params[:id])
+    
     if check_captcha == -1 
-	return
-    end  
+		return
+    end 
+    
+    @transportation = Transportation.find(params[:id]) 
     @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
       
@@ -221,14 +219,14 @@ end
       #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
       start_summa = (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step ): @transportation.cur_sum 
       #суммы из параметров не должно быть во время основного хода торгов, и она не должна быть отрицательной
-      params_summa = 0
-      begin
-	
-	if (check_time != 0)
-	  if (params[:summa] < 0 )
-		  params_summa = -1*params[:summa].to_i
-	  end
-	end
+      #params_summa = 0
+	  begin
+		params_summa = params[:summa].to_i
+		if (check_time != 0)
+			if (params[:summa].to_i < 0 )
+				params_summa = -1*params[:summa].to_i
+			end
+		end
 
         if (params_summa == 0)
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
@@ -249,7 +247,7 @@ end
         @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
       end
       @transportation.abort_company = nil
-      if @transportation.save_with_captcha
+      if @transportation.save!
         flash[:success] = "Ваша ставка принята."
       else
         @title = "Error"

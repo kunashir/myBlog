@@ -6,7 +6,7 @@ class UserMailer < ActionMailer::Base
     emails = User.carriers_email(abort_company)
     for email in emails
     	print email
-    	@transp_text = "Кто-то отказался от заяки: " + tr.storage_source + " - " + tr.storage.name + " текущая цена: " + tr.cur_sum.to_s
+    	@transp_text = "Кто-то отказался от заяки: " + tr.area.name + " - " + tr.storage.name + " текущая цена: " + tr.cur_sum.to_s
     	mail(:to => email, :subject => "Открытая заявка").deliver
    	end
 

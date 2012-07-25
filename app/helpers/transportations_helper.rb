@@ -1,11 +1,11 @@
 module TransportationsHelper
 
 	def trad_start_time
-	    return "2012-01-01 14:00:00".to_time
+	    return "2012-01-01 15:00:00".to_time
 	end
 
     def trad_duration
-        return 30 #in minutes
+        return 59 #in minutes
     end
     
     def trad_stop_time
