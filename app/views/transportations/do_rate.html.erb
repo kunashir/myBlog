@@ -25,7 +25,7 @@
 	<% end %>
     <% else #=============================================================================  %>
 	  <td class = "tr">
-      <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	
+      <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
 															  %>
 			<%= form_tag( @transportation, :method => "put") do %>
 				<%= show_simple_captcha %>
@@ -34,7 +34,7 @@
 				<%= submit_tag("Ставка") %>
 			<% end %>
         
-      <% elsif (check_time == 1) and (@transportation.is_active?) and (!@transportation.is_busy?)
+      <% elsif (check_time == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
 			
 			<%= form_tag( @transportation, :method => "put") do %>
 				<%= show_simple_captcha %>
