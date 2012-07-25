@@ -65,8 +65,14 @@ end
     end
     title = "Список заявок:"  + @day.to_s
     show_all = params[:show_all].nil? ? false : true
-    storage_source = params[:area]
-    @filter_text = @day.to_s + " " + (storage_source.nil? ? "": Area.find(storage_source).name )
+    area_name = ""
+    if params[:use_area].nil?
+		storage_source = ""
+	else
+		storage_source = params[:area]
+		area_name = storage_source.nil? ? "": Area.find(storage_source).name 
+	end
+    @filter_text = @day.to_s + " " + area_name
     @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 50)
   end
 #=====================================================================  
