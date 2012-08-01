@@ -29,10 +29,7 @@ class TransportationsController < ApplicationController
   def self.trad_start_time
     return 14
   end
-  
-  def percent_spec_price
-    return 15
-  end
+
 #====================================================================
 def export
     headers['Content-Type'] = "application/vnd.ms-excel"
