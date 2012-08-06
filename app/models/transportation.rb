@@ -238,7 +238,7 @@ class Transportation < ActiveRecord::Base
 
 #=======================================================================
 	def set_rate
-		temp = Rate.find_rate(self.area, self.storage.city, self.carcase)
+		temp = Rate.find_rate(self.area.city, self.storage.city, self.carcase)
 		
 		self.rate = temp
 		self.start_sum = temp.get_summa
