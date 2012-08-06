@@ -117,7 +117,11 @@ class Transportation < ActiveRecord::Base
         comment   = comment_text
       end
       tr.comment  = comment
-      tr.rate	  = Rate.find_rate(area.city, dist_storage.city, carcase)
+		if area.nil? or dist_storage.nil?
+			tr.rate = nil
+		else
+			tr.rate	  = Rate.find_rate(area.city, dist_storage.city, carcase)
+		end
       tr.carcase  = carcase
       tr.start_sum  =  tr.rate_summa #data_array[10].sub(" ", "")
       tr.step       = 500
