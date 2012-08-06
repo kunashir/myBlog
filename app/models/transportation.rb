@@ -102,7 +102,8 @@ class Transportation < ActiveRecord::Base
       tr.time       = data_array[16]
       tr.client     = client
       tr.storage    = dist_storage
-      tr.area       = Area.find_by_name(my_storage)
+      area		    = Area.find_by_name(my_storage)
+      tr.area		= area
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]
@@ -116,7 +117,7 @@ class Transportation < ActiveRecord::Base
         comment   = comment_text
       end
       tr.comment  = comment
-      tr.rate	  = Rate.find_rate(tr.area.city, dist_storage.city, carcase)
+      tr.rate	  = Rate.find_rate(area.city, dist_storage.city, carcase)
       tr.carcase  = carcase
       tr.start_sum  =  tr.rate_summa #data_array[10].sub(" ", "")
       tr.step       = 500

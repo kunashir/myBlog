@@ -351,6 +351,7 @@ end
   def confirm_abort
 	 @transportation       = Transportation.find(params[:id])
 	 @transportation.set_user(current_user)
+	 @transportation.abort_company = @transportation.company
 	 @transportation.avto  = nil
 	 @transportation.driver  = nil
 	 @transportation.request_abort = false
