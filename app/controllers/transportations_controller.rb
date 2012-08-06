@@ -77,6 +77,12 @@ end
     ls = lastNum
     @transportation = Transportation.new(params[:transportation])
     @transportation.user = current_user
+    if !@transportation.set_rate
+		flash[:error] = "Не найден тариф!"
+		@title = "Добавление заявки на перевозку"
+		render 'new'
+		return
+	end
     # @transportation.num = ls + 1
     if @transportation.save
       # Обработка успешного сохранения.
@@ -84,7 +90,7 @@ end
       flash[:success] = "Заявка успешно добавлена"
       redirect_to :index
     else
-      flash[:success] = "Проверте данные!"
+      flash[:error] = "Проверте данные!"
       @title = "Добавление заявки на перевозку"
       render 'new'
     end
@@ -111,6 +117,7 @@ end
     @title = "Изменить заявку "
   end
   
+#=====================================================================  
   def check_captcha
 	if !simple_captcha_valid?
 	  flash[:error] = "Вы ввели не правильную каптчу"
@@ -182,9 +189,7 @@ end
 	
 #=====================================================================
   def update
-    
-    
-    
+       
     @transportation = Transportation.find(params[:id]) 
     @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
@@ -351,17 +356,18 @@ end
 	 @transportation.request_abort = false
 	 if @transportation.have_spec_price?
 	      @transportation.cur_sum = 0
+	      @transportation.specprice = false
 	 elsif (@transportation.cur_sum > @transportation.start_sum)
-        @transportation.cur_sum = 0
-   else
+	        @transportation.cur_sum = 0
+	 else
 	      @transportation.cur_sum = @transportation.cur_sum + @transportation.step
 	 end
 	 company_aborting = @transportation.company
-   @transportation.company =  nil
-    
+	 @transportation.company =  nil
+    	 
 	 if @transportation.save!
 	      flash[:success] = "Отказ подтвержден"
-        UserMailer.notification_to_companies(@transportation, company_aborting)
+	      UserMailer.notification_to_companies(@transportation, company_aborting)
 	 else
 	      flash[:error] = "Ошибка отмены"
 	 end

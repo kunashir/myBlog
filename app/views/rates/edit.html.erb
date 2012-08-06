@@ -1,0 +1,8 @@
+<h1>Редактировать тариф:</h1>
+
+<%= form_for(@rate) do |f| %>
+  <%= render 'fields', :f => f %>
+  <div class="actions">
+      <%= f.submit "Сохранить" %>
+  </div>
+<% end %>

@@ -1,7 +1,7 @@
 module TransportationsHelper
 
 	def trad_start_time
-	    return "2012-01-01 15:00:00".to_time
+	    return "2012-01-01 09:00:00".to_time
 	end
 
     def trad_duration
@@ -20,7 +20,7 @@ module TransportationsHelper
     end
 
     def percent_spec_price
-	  return 15
+	  return 10
 	end
 
     def last_moment

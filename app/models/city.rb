@@ -10,4 +10,8 @@ class City < ActiveRecord::Base
 			curCity.save!
 		end
 	end
+	
+	def self.find_city(some_name)
+		where("name LIKE ?", "#{some_name}%").first
+	end
 end

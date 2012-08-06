@@ -1,0 +1,12 @@
+<tr class ="tr">
+	 <td class = "tr">
+		<%= link_to rate.get_name, edit_rate_path(rate) %> 
+	 </td>
+	 <td class = "tr">
+		<%= rate.summa %>
+	 </td>
+	 <td class = "tr">
+		<%= link_to "Удалить", rate, :method =>  :delete, :confirm => "Вы уверены?",
+                                            :title  => "Удалить #{rate.get_name}" %>
+	</td>
+</tr> 

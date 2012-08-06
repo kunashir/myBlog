@@ -1,0 +1,17 @@
+ <div class="field">
+    <%= f.label :area, "Склад:" %><br />
+    <%= f.collection_select :area, Area.all, :id, :name %> 
+ </div>
+ <div class="field">
+    <%= f.label :city, "Город:" %><br />
+    <%= f.collection_select :city_id, City.all, :id, :name %> 
+ </div>
+  <div class="field">
+    <%= f.label :carcase, "Тип кузова:" %><br />
+    <%= f.select :carcase, options_for_select([['реф', 'реф'], ['термос', 'термос'], ['тент', 'тент'] ]) %>
+  </div>
+ <div class="field">
+   <%= f.label :summa, "Сумма:" %><br />
+   <%= f.text_field :summa %>
+ </div>
+     

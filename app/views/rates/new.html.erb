@@ -1,0 +1,7 @@
+<h1>Добавление тарифа:</h1>
+<%= form_for(@rate) do |f| %>
+<%= render 'fields', :f => f %>
+  <div class="actions">
+    <%= f.submit "Добавить" %>
+  </div>
+<% end %>

@@ -1,5 +1,6 @@
 class Area < ActiveRecord::Base
-	  has_many  :transportations
+	has_many  	:transportations
+	belongs_to	:city
 	def self.get_selector
 		areas = Area.select("id, name")
 		array_to_selector = Array.new
