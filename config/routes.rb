@@ -19,9 +19,10 @@ MyBlog::Application.routes.draw do
   resources :drivers
   resources :storages
   resources :clients
+  resources	:rates
   
   match '/signup',  :to => 'users#new'
-	match '/contact', :to => 'pages#contact'
+  match '/contact', :to => 'pages#contact'
   match '/help',    :to => 'pages#help'
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
