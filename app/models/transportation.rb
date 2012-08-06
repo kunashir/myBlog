@@ -243,6 +243,9 @@ class Transportation < ActiveRecord::Base
 
 #=======================================================================
 	def set_rate
+		if self.area.nil? or self.storage.nil?
+			return true
+		end
 		temp = Rate.find_rate(self.area.city, self.storage.city, self.carcase.downcase)
 		
 		self.rate = temp
