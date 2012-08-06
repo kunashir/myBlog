@@ -106,7 +106,7 @@ class Transportation < ActiveRecord::Base
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]
-      carcase       = "Термос"
+      carcase       = "термос"
       # Парсим коммент - если там есть запятая, то все что до нее в
       # тип кузова, остальное в коммент, иначе тип кузова будет тент
       if /(\W+),(\W+)\s/i =~ comment_text
@@ -115,9 +115,10 @@ class Transportation < ActiveRecord::Base
       else
         comment   = comment_text
       end
-      tr.comment  = comment_text
+      tr.comment  = comment
+      tr.rate	  = Rate.find_rate(tr.area.city, dist_storage.city, carcase)
       tr.carcase  = carcase
-      tr.start_sum  = data_array[10].sub(" ", "")
+      tr.start_sum  =  tr.rate_summa #data_array[10].sub(" ", "")
       tr.step       = 500
       tr.user       = manager unless manager.nil?
       tr.save!

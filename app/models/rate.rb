@@ -49,11 +49,11 @@ class Rate < ActiveRecord::Base
 private	
 		
 	def self.add_rate(area_item, city, code_carcase, summa) # code_carcase (1 - тент, 2 - темрос, 3 - реф
-		carcase = "Тент"
+		carcase = "тент"
 		if code_carcase == 2
-			carcase = "Термос"
+			carcase = "термос"
 		elsif code_carcase == 3
-			carcase = "Реф"
+			carcase = "реф"
 		end 
 		newRate 		= Rate.new
 		newRate.city 	= city
