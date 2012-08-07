@@ -248,6 +248,9 @@ class Transportation < ActiveRecord::Base
 		end
 		temp = Rate.find_rate(self.area.city, self.storage.city, self.carcase.downcase)
 		
+		if temp.nil?
+		  return true
+		end
 		self.rate = temp
 		self.start_sum = temp.get_summa
 		return true
