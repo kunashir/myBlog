@@ -116,7 +116,7 @@ class Transportation < ActiveRecord::Base
       else
         comment   = comment_text
       end
-      tr.comment  = comment
+      tr.comment  = comment_text
 		if area.nil? or dist_storage.nil?
 			tr.rate = nil
 		else
@@ -235,14 +235,15 @@ class Transportation < ActiveRecord::Base
           
 #=======================================================================
 	def rate_summa
-		if self.rate.nil?
-			return self.start_sum
-		end
-		return self.rate.get_summa
+		return self.start_sum 
 	end
 
 #=======================================================================
 	def set_rate
+		if !self.start_sum.nil? #если нач. сумма уже есть, ничего не делаем
+								#для ручного редактирования
+			return true
+		end
 		if self.area.nil? or self.storage.nil?
 			return true
 		end

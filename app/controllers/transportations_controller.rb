@@ -188,6 +188,11 @@ end
   end
 	
 #=====================================================================
+  def do_spec_rate
+    @transportation = Transportation.find(params[:id])
+        #redirect_to transportations_path
+  end
+#=====================================================================
   def update
        
     @transportation = Transportation.find(params[:id]) 

@@ -2,40 +2,26 @@
 <table  class="profile" summary="Profile information">
   <tr>
     <% if check_time == 0 %>
-		<% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+      <% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
 			<td class = "tr"><%= link_to "Отменить ставку", transportation_path(@transportation) + "/abort"  %> </td>
-		<% else %>
-	
-			<td class = "tr">
-				<%= form_tag(transportation_path(@transportation), :method => "put") do %>
-					<%= show_simple_captcha %>
-					<%= submit_tag("-"+@transportation.step.to_s) %>
-				<% end %>
-			</td>
+      <% else %>
 	
 	
-		<% end %>
+	  <td class = "tr">
+	    <% if (@transportation.cur_sum.nil? or @transportation.cur_sum == 0) #Если текущая сумма еще пустая, можно забрать сразу %>
+	      <%= form_tag(transportation_path(@transportation) + "/specprice") do %>
+			<%= show_simple_captcha %>
+			<%= submit_tag(percent_spec_price.to_s + "%") %>
+	      <% end %>
+	    <% else %>
+			<H1>Данную заявку невозможно забрать по спец. цене!</H1>
+	    <% end %>
+	  </td>
+	
+	<% end %>
     <% else #=============================================================================  %>
 	  <td class = "tr">
-      <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
-															 
-			<%= form_tag( @transportation, :method => "put") do %>
-				<%= show_simple_captcha %>
-				<%= label_tag(:q, "Ваше предложение:") %>
-				<%= text_field_tag :summa, nil, :class => "datepicker" %>
-				<%= submit_tag("Ставка") %>
-			<% end %>
-        
-      <% elsif (check_time == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
-			
-			<%= form_tag( @transportation, :method => "put") do %>
-				<%= show_simple_captcha %>
-				<%= label_tag(:q, "Ваше предложение:") %>
-				<%= text_field_tag :summa, nil, :class => "datepicker" %>
-				<%= submit_tag("Ставка") %>
-			<% end %>
-        
-      <% end %>
+		<H1>В данный момент торги не проводятся!</H1>
 	  </td>
 
     <% end %>
