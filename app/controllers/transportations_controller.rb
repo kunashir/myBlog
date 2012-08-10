@@ -120,6 +120,7 @@ end
 #=====================================================================  
   def check_captcha
 	if !simple_captcha_valid?
+		Log.save_log_record(@transportation, current_user, params[:captcha],  SimpleCaptcha::Utils::simple_captcha_value(session[:captcha]),'Captcha', current_user.company)
 	  flash[:error] = "Вы ввели не правильную каптчу"
 	  render "do_rate"
 	  return -1
