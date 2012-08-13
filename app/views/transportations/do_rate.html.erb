@@ -8,7 +8,7 @@
 	
 			<td class = "tr">
 				<%= form_tag(transportation_path(@transportation), :method => "put") do %>
-					<%= show_simple_captcha %>
+					<%= show_simple_captcha :code_type => 'numeric' %>
 					<%= submit_tag("-"+@transportation.step.to_s) %>
 				<% end %>
 			</td>
@@ -20,7 +20,7 @@
       <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
 															 
 			<%= form_tag( @transportation, :method => "put") do %>
-				<%= show_simple_captcha %>
+				<%= show_simple_captcha :code_type => 'numeric'%>
 				<%= label_tag(:q, "Ваше предложение:") %>
 				<%= text_field_tag :summa, nil, :class => "datepicker" %>
 				<%= submit_tag("Ставка") %>
@@ -29,7 +29,7 @@
       <% elsif (check_time == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
 			
 			<%= form_tag( @transportation, :method => "put") do %>
-				<%= show_simple_captcha %>
+				<%= show_simple_captcha :code_type => 'numeric'%>
 				<%= label_tag(:q, "Ваше предложение:") %>
 				<%= text_field_tag :summa, nil, :class => "datepicker" %>
 				<%= submit_tag("Ставка") %>
