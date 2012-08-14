@@ -1,15 +1,15 @@
 module TransportationsHelper
 
 	def trad_start_time
-	    return "2012-01-01 09:00:00".to_time
+	   return  Time.parse(MyBlog::Application.config.time_start)
 	end
 
     def trad_duration
-        return 59 #in minutes
+       return MyBlog::Application.config.duration.to_i #in seconds
     end
     
     def trad_stop_time
-	return "2012-01-01 13:30:00".to_time
+	   return Time.parse(MyBlog::Application.config.time_stop)
     end
 
     def require_confirmation?
@@ -24,13 +24,13 @@ module TransportationsHelper
 	end
 
     def last_moment
-        cur_time = 5
+        cur_time = 300
         IO.foreach(Rails.root.join('today_random')){|line| cur_time += line.to_i } 
         return    cur_time
     end
 
     def is_last_moment?
-        if Time.zone.now.localtime.min >= (trad_start_time.min + (trad_duration - last_moment))
+        if Time.zone.now.localtime.min >= (trad_stop_time - last_moment)
             return true
         end
         return false
@@ -43,14 +43,11 @@ module TransportationsHelper
         hour    = trad_start_time.hour
         min     = trad_start_time.min + trad_duration
         cur_time    =   Time.zone.now.localtime
-        if cur_time.hour < hour
+        if cur_time < trad_start_time
             return -1
-        elsif hour == cur_time.hour
-            #если часы равны проверяем минуты
-	  if cur_time.min < min
-	     return 0
-	  end
-        end
+        elsif (trad_start_time <= cur_time) and (cur_time < trad_stop_time)
+            return 0
+	    end
         return 1
         
     end
