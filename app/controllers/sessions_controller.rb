@@ -8,12 +8,16 @@ class SessionsController < ApplicationController
     user = User.authenticate(params[:session][:email],
                              params[:session][:password])
     if user.nil?
+     
+     
       flash.now[:error] = "Не верный email или пароль."
       @title = "Войти"
       render 'new'
     else
       # Sign the user in and redirect to the user's show page.
+
       sign_in user
+      Log.save_log_record(nil, current_user, session[:id],  session[:id],'Session', current_user.company)
       redirect_back_or user
       #redirect_to user 
     end
