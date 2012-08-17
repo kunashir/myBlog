@@ -30,7 +30,7 @@ module TransportationsHelper
     end
 
     def is_last_moment?
-        if Time.zone.now.localtime.min >= (trad_stop_time - last_moment)
+        if Time.zone.now.localtime >= (trad_stop_time - last_moment)
             return true
         end
         return false
@@ -53,7 +53,7 @@ module TransportationsHelper
     end
 
     def upper_limit
-        return 1.15
+        return MyBlog::Application.config.upper_limit
     end
 
 end

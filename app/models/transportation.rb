@@ -5,7 +5,7 @@
 
 
 class Transportation < ActiveRecord::Base
-	apply_simple_captcha  
+	#apply_simple_captcha  
 	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id, :abort_company, :area_id
   
   belongs_to  	:user
@@ -64,7 +64,7 @@ class Transportation < ActiveRecord::Base
 	request_text = "date = ?"
 	request_date = date
 	if date.nil? or date.empty?
-	  	request_text = "date >= ?"
+	  request_text = "date >= ?"
 		request_date = Date.current
 	end
 	if !source_storage.nil? and !source_storage.empty?
@@ -74,10 +74,12 @@ class Transportation < ActiveRecord::Base
 	Transportation.where(request_text, request_date)
   end
 	
+#=======================================================================
   def self.only_active
     Transportation.where("date >= ?", Date.current)
   end
   
+#=======================================================================
   def self.format_date(dd)
     if /([0-9]{2}).([0-9]{2}).([0-9]{2})/ =~ dd
       return "20"+$3+"-"+$2+"-"+$1
