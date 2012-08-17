@@ -9,6 +9,7 @@ for line in lines
 	MyBlog::Application.config.time_start	= data_array[0]
 	MyBlog::Application.config.time_stop	= data_array[1]
 	MyBlog::Application.config.duration		= data_array[2]
+	MyBlog::Application.config.upper_limit	= data_array[3]
 end
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information

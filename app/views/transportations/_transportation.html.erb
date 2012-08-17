@@ -4,7 +4,8 @@
     <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, edit_transportation_path(transportation) %> 
     , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
   <% else %>
-    <td class = "tr"><%= transportation.num.nil? ? "без номера" : transportation.num %> </td>
+    <td class = "tr"><%=  @cur %>  </td>
+    <% @cur = @cur + 1 %>
   <% end %>
   
   <td class = "tr"><%= transportation.date %></td> 

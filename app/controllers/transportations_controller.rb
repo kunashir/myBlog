@@ -60,17 +60,21 @@ end
     rescue
      @day = Date.current
     end
+    if check_time == 0 
+      @day = Date.tommorow
+    end
     title = "Список заявок:"  + @day.to_s
     show_all = params[:show_all].nil? ? false : true
     area_name = ""
     if params[:use_area].nil?
-		storage_source = ""
-	else
-		storage_source = params[:area]
-		area_name = storage_source.nil? ? "": Area.find(storage_source).name 
-	end
+		  storage_source = ""
+	  else
+		  storage_source = params[:area]
+		  area_name = storage_source.nil? ? "": Area.find(storage_source).name 
+	  end
     @filter_text = @day.to_s + " " + area_name
     @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 50)
+    @cur = 1
   end
 #=====================================================================  
   def create
@@ -78,11 +82,11 @@ end
     @transportation = Transportation.new(params[:transportation])
     @transportation.user = current_user
     if !@transportation.set_rate
-		flash[:error] = "Не найден тариф!"
-		@title = "Добавление заявки на перевозку"
-		render 'new'
-		return
-	end
+		  flash[:error] = "Не найден тариф!"
+		  @title = "Добавление заявки на перевозку"
+		  render 'new'
+		  return
+	  end
     # @transportation.num = ls + 1
     if @transportation.save
       # Обработка успешного сохранения.
@@ -119,8 +123,9 @@ end
   
 #=====================================================================  
   def check_captcha
-	if !simple_captcha_valid?
-		Log.save_log_record(@transportation, current_user, params[:captcha],  SimpleCaptcha::Utils::simple_captcha_value(session[:captcha]),'Captcha', current_user.company)
+	#if !simple_captcha_valid?
+  if !verify_recaptcha
+		Log.save_log_record(@transportation, current_user, params[:recaptcha_response_field],  session[:recaptcha_challenge_field],'Captcha', current_user.company)
 	  flash[:error] = "Вы ввели не правильную каптчу"
 	  render "do_rate"
 	  return -1

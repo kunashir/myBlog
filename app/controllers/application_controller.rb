@@ -2,5 +2,5 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   include SessionsHelper
   include TransportationsHelper
-  include SimpleCaptcha::ControllerHelpers
+  #include SimpleCaptcha::ControllerHelpers
 end

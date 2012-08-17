@@ -16,6 +16,7 @@
 	<%= select_tag :area, options_for_select(Area.get_selector) %>Вкл. в отбор <%= check_box_tag :use_area, 1 %>
 	<br><%= submit_tag("Отобрать") %>
 <% end %>
+
 <%= will_paginate %>
 <table class="transp" border="1">
   <tr class = "tr">

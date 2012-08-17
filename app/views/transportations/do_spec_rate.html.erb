@@ -10,7 +10,8 @@
 	  <td class = "tr">
 	    <% if (@transportation.cur_sum.nil? or @transportation.cur_sum == 0) #Если текущая сумма еще пустая, можно забрать сразу %>
 	      <%= form_tag(transportation_path(@transportation) + "/specprice") do %>
-			<%= show_simple_captcha :code_type => 'numeric' %>
+			<%= #show_simple_captcha :code_type => 'numeric' %>
+      <%= recaptcha_tags %>
 			<%= submit_tag(percent_spec_price.to_s + "%") %>
 	      <% end %>
 	    <% else %>
