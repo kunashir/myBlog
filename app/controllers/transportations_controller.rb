@@ -60,8 +60,9 @@ end
     rescue
      @day = Date.current
     end
+    hide_today = false
     if check_time == 0 
-      @day = Date.tommorow
+      hide_today = true
     end
     title = "Список заявок:"  + @day.to_s
     show_all = params[:show_all].nil? ? false : true
@@ -73,7 +74,7 @@ end
 		  area_name = storage_source.nil? ? "": Area.find(storage_source).name 
 	  end
     @filter_text = @day.to_s + " " + area_name
-    @transportations  = Transportation.set_filter(@day, show_all, storage_source).paginate(:page =>  params[:page], :per_page => 50)
+    @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today).paginate(:page =>  params[:page], :per_page => 50)
     @cur = 1
   end
 #=====================================================================  
