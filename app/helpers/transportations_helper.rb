@@ -56,9 +56,10 @@ module TransportationsHelper
     end
 
     def show_close_time(time_last_edit)
-        if time_last_edit.nil?
+        if (time_last_edit.nil?) or (time_last_edit.to_s.empty?)
             return ""
         end
+        puts ("TIME=>" + time_last_edit.to_s)
         cur_time    =   Time.zone.now.localtime
         if (trad_start_time <= cur_time) and (cur_time < end_ext_time)
             return time_last_edit.to_s(:time)
