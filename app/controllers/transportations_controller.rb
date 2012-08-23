@@ -256,7 +256,7 @@ end
         params_summa = 0
       end
     		
-      if (params_summa == 0) and (@check_time(@transportation.get_time) == 0)
+      if (params_summa == 0) and (check_time(@transportation.get_time) == 0)
         @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
       else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
           if (@transportation.abort_company == current_user.company_id)
