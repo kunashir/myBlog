@@ -4,7 +4,7 @@
     <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, edit_transportation_path(transportation) %> 
     , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
   <% else %>
-    <td class = "tr"><%=  @cur %>  </td>
+    <td class = "tr"><%=  @cur.to_s + "; " + show_close_time(transportation.close_time) %>  </td>
     <% @cur = @cur + 1 %>
   <% end %>
   
@@ -44,9 +44,9 @@
 	    	<% end %>
         <% else #здесь ставки на завтра, т.е. обычные %>
             
-			<% if check_time == -1 %>
-              		<td class = "tr">Торги начнуться в <%= trad_start_time.hour %>:00 МСК</td>
-			<% elsif  check_time == 0  #Штатаный ход торгов %>
+			<% if check_time(transportation.get_time) == -1 %>
+              		<td class = "tr">Торги начнуться в <%= trad_start_time.to_s(:time) %> МСК</td>
+			<% elsif  check_time(transportation.get_time) == 0  #Штатаный ход торгов %>
 				<td class = "tr">
 				<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
 					<%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> 
@@ -58,7 +58,7 @@
 				<% end %>
 				</td>
 			<% end %>
-            <% if check_time == 1 %>
+            <% if check_time(transportation.get_time) == 1 %>
               <% if transportation.company == current_user.company %>
                 <td class = "tr"><%= link_to "Подтвердить заявку", transportation_path(transportation) + "/edit_conf"  %> 
                     <br>

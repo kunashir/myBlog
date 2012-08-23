@@ -30,7 +30,8 @@ class Transportation < ActiveRecord::Base
   default_scope               :order  =>  'transportations.id  DESC' #сортировка по уменьшению ид
   
   before_save   :logging
-  before_save	:set_rate
+  before_save	  :set_rate
+  before_save   :set_time
   after_save    :logging_new
   @cur_user = nil
 
@@ -262,4 +263,18 @@ class Transportation < ActiveRecord::Base
 		self.start_sum = temp.get_summa
 		return true
 	end	
+
+  #=======================================================================
+  def set_time
+    self.time_last_action =  Time.now
+  end
+ 
+  #=======================================================================
+  def get_time
+    return self.time_last_action.getlocal + 300
+  end
+  #=======================================================================
+  def close_time
+    return self.time_last_action.getlocal + 300
+  end
 end

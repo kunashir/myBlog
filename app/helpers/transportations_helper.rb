@@ -20,7 +20,7 @@ module TransportationsHelper
     end
 
     def percent_spec_price
-	  return 10
+	  return  MyBlog::Application.config.specprice
 	end
 
     def last_moment
@@ -35,11 +35,39 @@ module TransportationsHelper
         end
         return false
     end
+
+    def is_ext_time?(cur_time, end_time)
+        puts "ext_time cur_time" + cur_time.to_s
+        puts "ext_time end_time" + end_time.to_s
+        if end_time.nil?
+            return false
+        end
+        if (end_time < trad_stop_time)
+            return false
+        end
+        if (end_ext_time <= cur_time )
+            return false
+        end
+        if (cur_time < end_time)
+            return true
+        end
+
+        return false
+    end
+
+    def show_close_time(time_last_edit)
+        cur_time    =   Time.zone.now.localtime
+        if (trad_start_time <= cur_time) and (cur_time < end_ext_time)
+            return time_last_edit.to_s(:time)
+        end
+        return "";
+    end
     
-    def check_time
+    def check_time(end_time = nil)
         #-1 если еще рано
         #0 если можно торговатся
         #1 если уже закрылись
+
         hour    = trad_start_time.hour
         min     = trad_start_time.min + trad_duration
         cur_time    =   Time.zone.now.localtime
@@ -48,6 +76,12 @@ module TransportationsHelper
         elsif (trad_start_time <= cur_time) and (cur_time < trad_stop_time)
             return 0
 	    end
+
+        #Проверим 
+        
+        if is_ext_time?(cur_time, end_time)
+            return 0;
+        end
         return 1
         
     end
@@ -56,4 +90,10 @@ module TransportationsHelper
         return MyBlog::Application.config.upper_limit
     end
 
+    def end_ext_time
+        #return MyBlog::Application.config.end_time
+        return Time.parse(MyBlog::Application.config.ext_stop_time)
+    end
+
+    
 end

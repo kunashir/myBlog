@@ -1,7 +1,7 @@
 Заявка № <%= @transportation.num.nil? ? "без номера" : @transportation.num %> | <%= link_to "к списку заявок", transportation_path %>
 <table  class="profile" summary="Profile information">
   <tr>
-    <% if check_time == 0 %>
+    <% if check_time(@transportation.get_time) == 0 %>
 		<% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
 			<td class = "tr"><%= link_to "Отменить ставку", transportation_path(@transportation) + "/abort"  %> </td>
 		<% else %>
@@ -28,7 +28,7 @@
 				<%= submit_tag("Ставка") %>
 			<% end %>
         
-      <% elsif (check_time == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
+      <% elsif (check_time(@transportation.get_time) == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
 			
 			<%= form_tag( @transportation, :method => "put") do %>
 				

@@ -148,18 +148,14 @@ end
 		redirect_to transportations_path
 		return
 	end
-	if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
-		flash[:error] = "К сожалению, заявку уже забрали!!!"
-		redirect_to transportations_path
-		return
-	end
+	
 	#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
-	if (!@transportation.is_today?) and (check_time == -1)
+	if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1)
 	       flash[:error] = "Торги еще не открыты!"
 	       redirect_to transportations_path
 	       return
     end
-    if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+    if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
         	 # то торговатся больше нельзя
 	         flash[:error] = "Торги уже закончились!"
 		   redirect_to transportations_path
@@ -170,11 +166,17 @@ end
 	@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
 	@transportation.specprice = true
 	
-	if @transportation.save!
+	if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
+    flash[:error] = "К сожалению, заявку уже забрали!!!"
+    redirect_to transportations_path
+    return
+  end
+  
+  if @transportation.save!
 	        flash[:success] = "Поздравляем данная перевозка уже ваша."
 	else
 	        @title = "Ошибка сохранения!"
-        end
+  end
 	redirect_to transportations_path
   end
 
@@ -206,68 +208,72 @@ end
     @transportation.set_user(current_user)
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
 	  
-	  if check_captcha == -1 
-			return
-	  end 
-      if (!@transportation.is_today?) and (check_time == -1) 
+      if check_captcha == -1 
+    		return
+      end 
+      if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1) 
         flash[:error] = "Торги еще не открыты!"
         redirect_to transportations_path
         return
       end
-      if (check_time == 1) and (@transportation.is_busy?)#Если вермя больше 15 
-         # и ставка занята, то торговатся больше нельзя
-        flash[:error] = "Торги уже закончились!"
-        redirect_to transportations_path
-        return
+      if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 
+        #проверим не продленно ли время по заявке
+        #if !is_ext_time?(Time.zone.now.localtime, (@transportation.get_time+14400))
+          #проверяем нельзя ли использовать расширенное время
+          # и ставка занята, то торговатся больше нельзя
+          flash[:error] = "Торги уже закончились!"
+          redirect_to transportations_path
+          return
+        #end
       end
      
       if @transportation.specprice #на случай, если два запроса подряд
-           flash[:error] = "К сожeлению, заявку уже забрали со скидкой 15%!!!"
+           flash[:error] = "К сожeлению, заявку уже забрали со скидкой "+ percent_spec_price + "%!!!"
            redirect_to transportations_path
            return
       end
 
       
       #Проверим не послдение ли минуты, если да то проверим делал ли чел ставки до этого
-      if (is_last_moment?) and (@transportation.is_busy?)
-        if !Log.company_has_stake(@transportation, current_user.company) 
-            flash[:error] = "У Вас не было ставок до этого, поэтому Вы не можете перебить ставку других компаний в последние минуты"
-            redirect_to transportations_path
-            return 
-        end
-      end
+      # if (is_last_moment?) and (@transportation.is_busy?)
+      #   if !Log.company_has_stake(@transportation, current_user.company) 
+      #       flash[:error] = "У Вас не было ставок до этого, поэтому Вы не можете перебить ставку других компаний в последние минуты"
+      #       redirect_to transportations_path
+      #       return 
+      #   end
+      # end
+
+
+
       @transportation.company = current_user.company
       #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
       start_summa = (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step ): @transportation.cur_sum 
       #суммы из параметров не должно быть во время основного хода торгов, и она не должна быть отрицательной
       #params_summa = 0
-	  begin
-		params_summa = params[:summa].to_i
-		if (check_time != 0)
-			if (params[:summa].to_i < 0 )
-				params_summa = -1*params[:summa].to_i
-			end
-		
-		end
-
-        if (params_summa == 0)
-          @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
-        else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
-            if (@transportation.abort_company == current_user.company_id)
-                flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
-                redirect_to transportations_path
-                return
-            end
-            if (@transportation.start_sum*upper_limit < params_summa)
-              flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
+  	  begin
+      	params_summa = params[:summa].to_i.abs
+      rescue
+        params_summa = 0
+      end
+    		
+      if (params_summa == 0) and (@check_time(@transportation.get_time) == 0)
+        @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
+      else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
+          if (@transportation.abort_company == current_user.company_id)
+              flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
               redirect_to transportations_path
               return
-            end
-            @transportation.cur_sum = params_summa
-        end
-      rescue
-        @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
+          end
+          if (@transportation.start_sum*upper_limit < params_summa)
+            flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
+            redirect_to transportations_path
+            return
+          end
+          @transportation.cur_sum = params_summa
       end
+      # rescue
+      #   @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
+      # end
       @transportation.abort_company = nil
       if @transportation.save!
         flash[:success] = "Ваша ставка принята."
@@ -320,10 +326,10 @@ end
     @transportation.abort_company = @transportation.company_id
 
     old_cur_sum = @transportation.cur_sum
-    if @transportation.have_spec_price?
+    if (@transportation.have_spec_price?) or (check_time(@transportation.get_time) == 1)
       @transportation.cur_sum = 0
       @transportation.specprice = false
-    elsif
+    else
       @transportation.cur_sum = @transportation.cur_sum + @transportation.step
       if @transportation.cur_sum > @transportation.start_sum
           @transportation.cur_sum = @transportation.start_sum
@@ -335,7 +341,7 @@ end
     if @transportation.save!
       flash[:success] = "Ваша ставка отменена"
       Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
-      if (check_time == 1) # Если отмена после окончания отправим другим уведомление
+      if (check_time(@transportation.get_time) == 1) # Если отмена после окончания отправим другим уведомление
         UserMailer.notification_to_companies(@transportation, company_aborting)
       end
     else

@@ -72,12 +72,17 @@ class UsersController < ApplicationController
 
 
    else
-      	if @user != current_user
-		flash[:error] = "У Вас нет прав редактировать данные другого пользователя"
-		redirect_to users_path
-		return
-	end 
-	@user.save_without_callbacks false
+    	if @user != current_user
+    		flash[:error] = "У Вас нет прав редактировать данные другого пользователя"
+    		redirect_to users_path
+    		return
+    	end 
+	    @user.save_without_callbacks false
+      
+      if (!is_admin?) #если не админ, то блокируем, чтобы зря не меняли данные!
+        @user.toggle! :is_block
+      end
+
       if @user.update_attributes!(params[:user])
         flash[:success] = "Профиль обновлен."
         redirect_to @user
