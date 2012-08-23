@@ -20,7 +20,7 @@ module TransportationsHelper
     end
 
     def percent_spec_price
-	  return  MyBlog::Application.config.specprice
+	  return  MyBlog::Application.config.specprice.to_i
 	end
 
     def last_moment
