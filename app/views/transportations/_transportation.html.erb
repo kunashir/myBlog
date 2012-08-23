@@ -1,8 +1,8 @@
 <tr class ="tr">
   
   <% if manager? or is_admin? %>
-    <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, edit_transportation_path(transportation)  + "; " + show_close_time(transportation.close_time) %> 
-    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> </td> 
+    <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, edit_transportation_path(transportation)  %> 
+    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> , <%= show_close_time(transportation.close_time) %> </td> 
   <% else %>
     <td class = "tr"><%=  @cur.to_s + "; " + show_close_time(transportation.close_time) %>  </td>
     <% @cur = @cur + 1 %>
