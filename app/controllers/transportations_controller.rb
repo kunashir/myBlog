@@ -162,7 +162,7 @@ end
 	       return
 	end
 
-	@transportation.company = current_user.company
+	
 	@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
 	@transportation.specprice = true
 	
@@ -171,7 +171,7 @@ end
     redirect_to transportations_path
     return
   end
-  
+  @transportation.company = current_user.company
   if @transportation.save!
 	        flash[:success] = "Поздравляем данная перевозка уже ваша."
 	else
