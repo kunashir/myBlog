@@ -229,7 +229,7 @@ end
       end
      
       if @transportation.specprice #на случай, если два запроса подряд
-           flash[:error] = "К сожeлению, заявку уже забрали со скидкой "+ percent_spec_price + "%!!!"
+           flash[:error] = "К сожeлению, заявку уже забрали со скидкой "+ percent_spec_price.to_s + "%!!!"
            redirect_to transportations_path
            return
       end
