@@ -164,13 +164,14 @@ end
 
 	
 	@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
-	@transportation.specprice = true
+	
 	
 	if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
     flash[:error] = "К сожалению, заявку уже забрали!!!"
     redirect_to transportations_path
     return
   end
+  @transportation.specprice = true
   @transportation.company = current_user.company
   if @transportation.save!
 	        flash[:success] = "Поздравляем данная перевозка уже ваша."

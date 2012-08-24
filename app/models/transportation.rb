@@ -283,4 +283,13 @@ class Transportation < ActiveRecord::Base
     end
     return self.time_last_action.getlocal + 300
   end
+  #=======================================================================
+  def is_close?
+    cur_time = Time.now
+    if cur_time > get_time
+      return true
+    end
+    return false
+  end
+
 end
