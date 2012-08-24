@@ -22,7 +22,7 @@
 	<% if transportation.company == current_user.company %>
 		<%= link_to track_logo %>
   <% elsif manager? or is_admin? %>
-    <% if check_time(transportation.get_time) == 1 and transportation.is_close? %>
+    <% if check_time == 1 and transportation.is_close? %>
       <%= lock_logo %>
     <% end %>
 	<% end %>
