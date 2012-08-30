@@ -18,7 +18,7 @@ module ApplicationHelper
   end
   
   def lock_logo
-  	image_tag("lock.jpeg", :size => "50x50", :alt => "Заявка заркылась", :class => "round")
+  	image_tag("lock.jpeg", :size => "25x25", :alt => "Заявка заркылась", :class => "round")
   end
   
   def to_time ( m_time )
