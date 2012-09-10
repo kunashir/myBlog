@@ -34,6 +34,10 @@ class User < ActiveRecord::Base
     encrypted_password == encrypt(submitted_password)
   end
   
+  def show_reg?
+    return self.show_reg
+  end
+
   def self.authenticate(email, submitted_password)
     user = find_by_email(email)
     return nil  if user.nil?
@@ -55,6 +59,7 @@ class User < ActiveRecord::Base
     end
     return "Callback off"
   end
+
 
   def self.carriers_email(ignore_company=0)
       if ignore_company == 0

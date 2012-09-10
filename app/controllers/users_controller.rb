@@ -98,6 +98,19 @@ class UsersController < ApplicationController
     @title  = "Все пользователи системы"
     @users  = User.paginate(:page =>  params[:page])
   end
+
+  def read_reg
+    @user = User.find(params[:id])
+    if @user != current_user
+        flash[:error] = "Ошибка: Вы пытаетесь изменить данные другого пользователя!"
+        redirect_to root_path
+        return
+    end
+    if @user.show_reg?
+      @user.toggle! :show_reg
+    end
+    redirect_to transportations_path
+  end
 private
 
   def authenticate

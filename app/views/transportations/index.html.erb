@@ -2,7 +2,8 @@
   <%= link_to "Добавить заявку", new_transportation_path %>
   <% if manager? or is_admin? %>
     | <%= link_to "Пакетная загрузка", transportations_path+"/-1/packet" %>
-    | <%= link_to "Сохранить в xls", transportations_path+"/-1/export" %> 
+    | <div id="link_to_xls"><a href=<%=transportations_path+"/-1/export" %> >Сохранить в xls</a></div>
+
   <% end %>
 <% end %>	
 <div class = "server_time" id = "server_time" ></div>

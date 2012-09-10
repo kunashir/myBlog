@@ -26,16 +26,38 @@ class TransportationsController < ApplicationController
   end
 
 #=====================================================================
-  def self.trad_start_time
-    return 14
-  end
-
+def get_list_transp (parameters)
+    @filter_text = ""
+    begin
+      @day = parameters[:datepicker]
+      
+    rescue
+     @day = Date.current
+    end
+    hide_today = false
+    if check_time == 0 
+      hide_today = true
+    end
+    title = "Список заявок:"  + @day.to_s
+    show_all = parameters[:show_all].nil? ? false : true
+    area_name = ""
+    if parameters[:use_area].nil?
+      storage_source = ""
+    else
+      storage_source = parameters[:area]
+      area_name = storage_source.nil? ? "": Area.find(storage_source).name 
+    end
+    @filter_text = @day.to_s + " " + area_name
+    @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today).paginate(:page =>  parameters[:page], :per_page => 50)
+end
 #====================================================================
 def export
     headers['Content-Type'] = "application/vnd.ms-excel"
     headers['Content-Disposition'] = 'attachment; filename="report.xls"'
     headers['Cache-Control'] = ''
-     @transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
+    #@transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
+    puts ("EXPORT=>" + params.to_s)
+    get_list_transp(params)
     render :index , :layout => false
 end
 
@@ -48,33 +70,12 @@ end
       return 
     end
 
-    
-  #  if !is_admin? and !manager?
-  #     @transportations = Transportation.only_active.paginate(:page => params[:page])
-  #     return @transportations
-  #  end
-    @filter_text = ""
-    begin
-      @day = params[:datepicker]
-      
-    rescue
-     @day = Date.current
+    if current_user.show_reg?
+      flash[:error] = "Для продолжения Вам слеудет прочитать регламент"
+      redirect_to root_path + "/help"
     end
-    hide_today = false
-    if check_time == 0 
-      hide_today = true
-    end
-    title = "Список заявок:"  + @day.to_s
-    show_all = params[:show_all].nil? ? false : true
-    area_name = ""
-    if params[:use_area].nil?
-		  storage_source = ""
-	  else
-		  storage_source = params[:area]
-		  area_name = storage_source.nil? ? "": Area.find(storage_source).name 
-	  end
-    @filter_text = @day.to_s + " " + area_name
-    @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today).paginate(:page =>  params[:page], :per_page => 50)
+
+    get_list_transp(params)
     @cur = 1
   end
 #=====================================================================  

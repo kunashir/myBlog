@@ -28,6 +28,15 @@
   });
 })(jQuery);
 
+(function($){
+  $(document).ready(function() {
+    $("#datepicker").change(function(){
+      //alert ("ttts");
+      $("#link_to_xls").html('<a href="transportations/-1/export?datepicker='+$("#datepicker").val() +'" >Сохранить в xls</a>');
+    })
+  })
+})(jQuery);
+
 (function($) 
 {
   $(document).ready(
@@ -192,3 +201,28 @@ function add_sec(cur_time)
 })(jQuery);    
 
 
+function saveToXls ()
+{
+  $.ajax(
+       {
+          type: "POST",
+          url:  "/transportations/-1/export?datepicker=" + $("#datepicker").val(),
+          data: "",
+          dataType: "text",
+          error: function(XMLHttpRequest, textStatus, errorThrown)
+          {
+            alert ("Ошибка формирования файла xls");
+          },
+          success:  function(result)
+          {
+            //alert (result);
+            //$("#server_time").html(result);
+                  //var temp = $("#server_time").text();
+                  //alert (temp+"::" + result);
+             //     setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
+            }   
+          
+          
+        });
+  return false;
+}

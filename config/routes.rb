@@ -42,6 +42,7 @@ MyBlog::Application.routes.draw do
   match 'transportations/:id/server_time',	:to	=>	'transportations#server_time'
   match 'transportations/:id/do_rate',	:to	=>	'transportations#do_rate'
   match 'transportations/:id/do_spec_rate',	:to	=>	'transportations#do_spec_rate'
+  match 'users/:id/read_reg', :to => 'users#read_reg'
   #match '/home', :to => 'pages#home'
   
   root :to => 'pages#home'
