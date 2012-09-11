@@ -79,9 +79,9 @@ class UsersController < ApplicationController
     	end 
 	    @user.save_without_callbacks false
       
-      if (!is_admin?) #если не админ, то блокируем, чтобы зря не меняли данные!
-        @user.toggle! :is_block
-      end
+      # if (!is_admin?) #если не админ, то блокируем, чтобы зря не меняли данные!
+      #   @user.toggle! :is_block
+      # end
 
       if @user.update_attributes!(params[:user])
         flash[:success] = "Профиль обновлен."
@@ -107,6 +107,7 @@ class UsersController < ApplicationController
         return
     end
     if @user.show_reg?
+      @user.save_without_callbacks true
       @user.toggle! :show_reg
     end
     redirect_to transportations_path
