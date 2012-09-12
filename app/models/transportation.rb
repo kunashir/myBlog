@@ -106,7 +106,7 @@ class Transportation < ActiveRecord::Base
       tr            = Transportation.new
       tr.num        = data_array[3]
       tr.date       = format_date(data_array[0])
-      tr.time       = data_array[16]
+      tr.time       = data_array[11]
       tr.client     = client
       tr.storage    = dist_storage
       area		    = Area.find_by_name(my_storage)

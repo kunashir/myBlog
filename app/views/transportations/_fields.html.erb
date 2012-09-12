@@ -7,6 +7,10 @@
     <%= f.datepicker :date, :dateFormat => "yy-mm-dd" %>
   </div>
   <div class="field">
+    <%= f.label :time, "Время погрузки:" %><br />
+    <%= f.text_field :time %>
+  </div>
+  <div class="field">
     <%= f.label :area, "Склад погрузки" %><br />
     <% #f.text_field :storage_source 
     %>

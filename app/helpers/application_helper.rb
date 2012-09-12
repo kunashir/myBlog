@@ -25,6 +25,8 @@ module ApplicationHelper
                     # => Thu Jan 18 06:10:17 CST 2007
 
    # m_time.to_s ( Time::DATE_FORMATS[:short_ordinal] = lambda { |time| time.strftime("%B #{time.day.ordinalize}") })
-    m_time.to_formatted_s(:time)
+    if !m_time.nil?
+    	m_time.to_formatted_s(:time)
+    end
   end
 end
