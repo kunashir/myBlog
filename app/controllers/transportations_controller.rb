@@ -142,6 +142,11 @@ end
 	if check_captcha == -1 
 	  return
 	end
+
+  if percent_spec_price == 0 
+    return
+  end
+
 	#if !@transportation.valid_with_captcha?
 	@transportation.set_user(current_user)
 	if (manager? or  is_admin?)
@@ -200,6 +205,11 @@ end
 	
 #=====================================================================
   def do_spec_rate
+    if percent_spec_price == 0
+       flash[:error] = "Ставки по спец. цене отключены"
+       redirect_to transportations_path
+       return
+    end
     @transportation = Transportation.find(params[:id])
         #redirect_to transportations_path
   end

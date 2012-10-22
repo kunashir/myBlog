@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     if @user.save
       # Обработка успешного сохранения.
       sign_in @user   #автоматический вход
-      flash[:success] = "Добро пожаловать в Реестр перевозок !"
+      flash[:success] = "Добро пожаловать!"
       redirect_to @user
     else
       @title = "Регистрация"
