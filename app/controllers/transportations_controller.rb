@@ -222,7 +222,7 @@ end
      
       Transportation.transaction do
 
-        @transportations = Transportation.lock.find(params[:id])
+        @transportation = Transportation.lock.find(params[:id])
         if check_captcha == -1 
           return
         end 
