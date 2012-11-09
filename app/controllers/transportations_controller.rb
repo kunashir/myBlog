@@ -223,6 +223,7 @@ end
       Transportation.transaction do
 
         @transportation = Transportation.lock.find(params[:id])
+        @transportation.set_user(current_user)
         if check_captcha == -1 
           return
         end 
