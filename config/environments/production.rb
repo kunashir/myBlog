@@ -64,9 +64,9 @@ MyBlog::Application.configure do
   config.action_mailer.smtp_settings = {
     :address    =>  'srv-mail',
     :port       =>  25,
-    :domain     =>  'roshen48.ru',
+    :domain     =>  '',
     :user_name  =>  'robot',
-    :password   =>  'hl7kx4v',
+    :password   =>  '',
     :authentication => 'login',
     :enable_starttls_auto   => true}
   config.action_mailer.perform_deliveries = true
