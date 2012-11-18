@@ -262,6 +262,12 @@ end
           params_summa = 0
         end
       		
+        if (params_summa == 0) and (check_time(@transportation.get_time) == 1)
+          flash[:error] = "Ошибка в указанной сумме"
+          redirect_to transportations_path
+          return
+        end
+        
         if (params_summa == 0) and (check_time(@transportation.get_time) == 0)
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
