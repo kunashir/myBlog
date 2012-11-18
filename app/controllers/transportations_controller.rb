@@ -128,7 +128,7 @@ end
 	#if !simple_captcha_valid?
   if !verify_recaptcha
 		Log.save_log_record(@transportation, current_user, params[:recaptcha_response_field],  session[:recaptcha_challenge_field],'Captcha', current_user.company)
-	  flash[:error] = "Вы ввели не правильную каптчу"
+	  flash[:error] = "Вы ввели не правильную капчу"
 	  render "do_rate"
 	  return -1
 	end
@@ -244,22 +244,12 @@ end
         end
        
         if @transportation.specprice #на случай, если два запроса подряд
-             flash[:error] = "К сожeлению, заявку уже забрали со скидкой "+ percent_spec_price.to_s + "%!!!"
+             flash[:error] = "К сожалению, заявку уже забрали со скидкой "+ percent_spec_price.to_s + "%!!!"
              redirect_to transportations_path
              return
         end
 
         
-        #Проверим не послдение ли минуты, если да то проверим делал ли чел ставки до этого
-        # if (is_last_moment?) and (@transportation.is_busy?)
-        #   if !Log.company_has_stake(@transportation, current_user.company) 
-        #       flash[:error] = "У Вас не было ставок до этого, поэтому Вы не можете перебить ставку других компаний в последние минуты"
-        #       redirect_to transportations_path
-        #       return 
-        #   end
-        # end
-
-
 
         @transportation.company = current_user.company
         #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы

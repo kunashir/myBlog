@@ -12,7 +12,8 @@
 
 class User < ActiveRecord::Base
   attr_accessor   :password
-  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified
+  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
+  #attr_protected :login_count
   
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
@@ -21,15 +22,33 @@ class User < ActiveRecord::Base
   
   
   
-  validates :name,    :presence => true, :length =>  { :maximum => 50}
+  validates :name,    :presence => true, :length =>  { :maximum => 50}, :unless => :use_validate?
   validates :email,   :presence => true, :format =>  { :with => email_regex },
-                      :uniqueness => { :case_sensitive => false }
-  validates :company_id, :presence => true
+                      :uniqueness => { :case_sensitive => false }, :unless => :use_validate?
+  validates :company_id, :presence => true , :unless => :use_validate?
   validates :password,  :presence => true, :confirmation  => true,
-                        :length   => { :within => 6..40}
+                        :length   => { :within => 6..40}, :unless => :use_validate?
                         
  before_save :encrypt_password
   
+  def inc_login
+    self.login_count = self.login_count + 1
+    save_without_callbacks(true)
+    self.save!
+  end
+
+  def dec_login
+    if self.login_count > 0
+      self.login_count -= 1
+      save_without_callbacks(true)
+      self.save!
+    end
+  end
+
+  def was_login?
+    self.login_count == 0 ? false : true
+  end
+
   def has_password?(submitted_password)
     encrypted_password == encrypt(submitted_password)
   end
@@ -97,5 +116,9 @@ class User < ActiveRecord::Base
 
     def secure_hash(string)
       Digest::SHA2.hexdigest(string)
+    end
+
+    def use_validate?
+      return @use_callback
     end
 end
