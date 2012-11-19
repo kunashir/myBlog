@@ -64,6 +64,12 @@ end
 #=====================================================================
   def index 
     
+    if signed_in? and !current_user.was_login?
+      sign_out
+      redirect_to root_path
+      return
+    end
+
     if is_block_user?
       flash[:error] = "У Вас нет прав для просмотра заявок!"
       redirect_back_or current_user
