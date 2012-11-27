@@ -143,54 +143,59 @@ end
 
 #=====================================================================
   def spec_price
-	@transportation = Transportation.find(params[:id])
-	
-	if check_captcha == -1 
-	  return
-	end
+	#@transportation = Transportation.find(params[:id])
+    Transportation.transaction do
 
-  if percent_spec_price == 0 
-    return
-  end
+        @transportation = Transportation.lock.find(params[:id])
+        @transportation.set_user(current_user)
+	
+      	if check_captcha == -1 
+      	  return
+      	end
 
-	#if !@transportation.valid_with_captcha?
-	@transportation.set_user(current_user)
-	if (manager? or  is_admin?)
-		flash[:error] = "Вы не можете делать ставки"
-		redirect_to transportations_path
-		return
-	end
-	
-	#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
-	if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1)
-	       flash[:error] = "Торги еще не открыты!"
-	       redirect_to transportations_path
-	       return
-    end
-    if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
-        	 # то торговатся больше нельзя
-	         flash[:error] = "Торги уже закончились!"
-		   redirect_to transportations_path
-	       return
-	end
+        if percent_spec_price == 0 
+          return
+        end
 
-	
-	@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
-	
-	
-	if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
-    flash[:error] = "К сожалению, заявку уже забрали!!!"
+      	#if !@transportation.valid_with_captcha?
+      	#@transportation.set_user(current_user)
+      	if (manager? or  is_admin?)
+      		flash[:error] = "Вы не можете делать ставки"
+      		redirect_to transportations_path
+      		return
+      	end
+      	
+      	#if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
+      	if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1)
+      	       flash[:error] = "Торги еще не открыты!"
+      	       redirect_to transportations_path
+      	       return
+          end
+          if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+              	 # то торговатся больше нельзя
+      	         flash[:error] = "Торги уже закончились!"
+      		   redirect_to transportations_path
+      	       return
+      	end
+
+      	
+      	@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
+      	
+      	
+      	if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
+          flash[:error] = "К сожалению, заявку уже забрали!!!"
+          redirect_to transportations_path
+          return
+        end
+        @transportation.specprice = true
+        @transportation.company = current_user.company
+        if @transportation.save!
+      	        flash[:success] = "Поздравляем данная перевозка уже ваша."
+      	else
+      	        @title = "Ошибка сохранения!"
+        end
+      end
     redirect_to transportations_path
-    return
-  end
-  @transportation.specprice = true
-  @transportation.company = current_user.company
-  if @transportation.save!
-	        flash[:success] = "Поздравляем данная перевозка уже ваша."
-	else
-	        @title = "Ошибка сохранения!"
-  end
-	redirect_to transportations_path
   end
 
 #=====================================================================
