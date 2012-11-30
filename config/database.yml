@@ -24,4 +24,4 @@ production:
   pool: 20
   enconding: unicode
   username: postgres
-  password: la58
+  password: ***
