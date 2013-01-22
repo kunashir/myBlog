@@ -272,7 +272,7 @@ class Transportation < ActiveRecord::Base
   #=======================================================================
   def get_time
     if self.time_last_action.nil?
-      return ''
+      return Time.now
     end
     return self.time_last_action.getlocal + 300
   end
