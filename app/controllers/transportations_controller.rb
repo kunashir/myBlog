@@ -6,6 +6,12 @@ require 'encode.rb'
 class TransportationsController < ApplicationController
  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
 
+  def destroy
+    Transportation.find(params[:id]).destroy
+    flash[:success] = "Заявка удалена"
+    redirect_to transportations_path
+  end
+
 #=====================================================================
   def new
     @title = "Добавление заявки на перевозку"

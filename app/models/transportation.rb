@@ -6,7 +6,7 @@
 
 class Transportation < ActiveRecord::Base
 	#apply_simple_captcha  
-	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id, :abort_company, :area_id
+	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume, :client_id, :storage_id, :abort_company, :area_id
   
   belongs_to  	:user
   belongs_to  	:company

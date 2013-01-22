@@ -2,7 +2,9 @@
   
   <% if manager? or is_admin? %>
     <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, edit_transportation_path(transportation)  %> 
-    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> , <%= show_close_time(transportation.close_time) %> </td> 
+    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> , <%= show_close_time(transportation.close_time) %> ,
+  <%= link_to "Удалить",transportation, :method =>  :delete, :confirm => "Вы уверены?",
+                                            :title  => "Удалить #{transportation.num}" %>   </td> 
   <% else %>
     <td class = "tr"><%=  @cur.to_s + "; " + show_close_time(transportation.close_time) %>  </td>
     <% @cur = @cur + 1 %>

@@ -51,7 +51,15 @@
     <%= f.label :step, "Шаг:" %><br />
     <%= f.text_field :step %>
   </div>
-  
-  
+  <div class="field">
+    <%= f.label :cur_sum, "Лучшее предложение:" %><br />
+    <%= f.text_field :cur_sum %>
+  </div>
+  <% if !@transportation.company.nil? %>
+    <div class="field">
+      <%= f.label :company, "Текущая компания:" %><br />
+      <%= f.collection_select :company_id, Company.all, :id, :name %> 
+    </div>
+  <% end %>
   
 
