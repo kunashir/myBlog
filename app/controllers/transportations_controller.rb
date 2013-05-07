@@ -285,14 +285,16 @@ end
           return
         end
         
+        if (@transportation.abort_company == current_user.company_id)
+          flash[:error] = "Вы не можете забрать заявку, т.к. до этого отказались от нее"
+          redirect_to transportations_path
+          return
+        end
+
         if (params_summa == 0) and (check_time(@transportation.get_time) == 0)
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
-            if (@transportation.abort_company == current_user.company_id)
-                flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
-                redirect_to transportations_path
-                return
-            end
+           
             if (@transportation.start_sum*upper_limit < params_summa)
               flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
               redirect_to transportations_path
@@ -362,7 +364,7 @@ end
       @transportation.cur_sum = 0
       @transportation.specprice = false
     else
-      @transportation.cur_sum = @transportation.cur_sum + @transportation.step
+      @transportation.cur_sum  += @transportation.step 
       if @transportation.cur_sum > @transportation.start_sum
           @transportation.cur_sum = @transportation.start_sum
       end

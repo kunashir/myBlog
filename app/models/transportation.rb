@@ -224,7 +224,7 @@ class Transportation < ActiveRecord::Base
 
 #=======================================================================
   def have_spec_price?
-	return  (specprice.nil? or !specprice ) ? false : true
+	 return  (self.specprice.nil? or !self.specprice ) ? false : true
   end
 
 #=======================================================================
