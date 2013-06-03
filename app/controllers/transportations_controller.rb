@@ -352,6 +352,12 @@ end
 #=====================================================================  
   def abort #отказ от ставки
     @transportation       = Transportation.find(params[:id])
+    #check owner of transportation
+    if current_user.company != @transaction.company
+      flash[:error] = "Нельзя отказаться от чужой ставки!!!"
+      redirect_to transportations_path
+      return
+    end
     @transportation.set_user(current_user)
     @transportation.avto  = nil
     @transportation.driver  = nil
