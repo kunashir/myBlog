@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
   end
   
   def show_reg?
-    return self.show_reg
+    self.show_reg
   end
 
   def self.authenticate(email, submitted_password)
@@ -94,11 +94,11 @@ class User < ActiveRecord::Base
               j = j + 1
           end
       end
-      return output_array
+      output_array
   end
 
   private
-   def encrypt_password
+    def encrypt_password
      if !@use_callback
         self.salt = make_salt if new_record?
         return self.encrypted_password = encrypt(password)
@@ -119,6 +119,6 @@ class User < ActiveRecord::Base
     end
 
     def use_validate?
-      return @use_callback
+      @use_callback
     end
 end

@@ -4,9 +4,8 @@ class City < ActiveRecord::Base
 	 
 	def self.load_cities(fileName)
 		lines = File.readlines(fileName)
-		for line in lines
-			curCity = City.new	
-			curCity.name = line	
+		lines.each do |line|
+			curCity = City.new(name: line)	
 			curCity.save!
 		end
 	end

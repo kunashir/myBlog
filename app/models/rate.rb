@@ -12,34 +12,33 @@ class Rate < ActiveRecord::Base
 	validates :summa,           :presence => true
 	
 	def get_name
-		return self.area.name + " - " + self.city.name + " (" + self.carcase + ")"
+		self.area.name + " - " + self.city.name + " (" + self.carcase + ")"
 	end
 	
 	def get_summa
-		return self.summa
+		self.summa
 	end
 	
 	def get_area
-		return self.area.name
+		self.area.name
 	end
 	
 	def get_city
-		return self.city.name
+		self.city.name
 	end
 	
 	def self.find_rate(area, city, carcase)
-		return Rate.where('area_id = ? AND city_id = ? AND carcase = ?', area, city, carcase).first
+		Rate.where('area_id = ? AND city_id = ? AND carcase = ?', area, city, carcase).first
 	end
 	
 	def self.load_from_file(filename, city)
 		lines = File.readlines(filename)
 		#area_item = Area.find_by_name(area_name)
-		for line in lines
+		lines.each do |line|
 			data_array    	= line.split(",")#[0] - город, [1] - сумма тент, [2] - сумма термос, [3] - сумма реф
 			cur_city		= City.find_city(data_array[0])
-			if cur_city.nil?
-				next
-			end
+			next if cur_city.nil?
+			
 			for i in [1,2,3]
 				add_rate(city, cur_city, i, data_array[i].to_i)
 			end

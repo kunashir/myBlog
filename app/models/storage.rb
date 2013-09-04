@@ -12,8 +12,6 @@ class Storage < ActiveRecord::Base
 private
 
   def set_name
-    if self.name.nil?
-      self.name = city.name
-    end
+    self.name ||= city.name
   end
 end
