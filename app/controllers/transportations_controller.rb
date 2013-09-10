@@ -54,7 +54,7 @@ class TransportationsController < ApplicationController
         area_name = storage_source.nil? ? "": Area.find(storage_source).name 
       end
       @filter_text = @day.to_s + " " + area_name
-      @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today).paginate(:page =>  parameters[:page], :per_page => 50)
+      @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today, parameters[:page], 50) #.paginate(:page =>  parameters[:page], :per_page => 50)
   end
   #====================================================================
   def export

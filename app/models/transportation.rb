@@ -53,8 +53,8 @@ class Transportation < ActiveRecord::Base
   end
 
 #=======================================================================
-def self.set_filter(date, show_all, source_storage, hide_today)
-  return Transportation.all if show_all
+def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
+  return Transportation.paginate(:page =>  page, :per_page => per_page) if show_all
     
   request_text = "date = ?"
   request_date = date
