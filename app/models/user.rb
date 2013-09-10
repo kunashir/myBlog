@@ -11,10 +11,13 @@
 #
 
 class User < ActiveRecord::Base
+
   attr_accessor   :password
   attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
   #attr_protected :login_count
   
+  scope :manager, -> {where("nmanager = ?", true)}
+
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
   

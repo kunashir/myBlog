@@ -53,8 +53,8 @@ class Transportation < ActiveRecord::Base
   end
 
 #=======================================================================
-def self.set_filter(date, show_all, source_storage, hide_today)
-  return Transportation.all if show_all
+def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
+  return Transportation.paginate(:page =>  page, :per_page => per_page) if show_all
     
   request_text = "date = ?"
   request_date = date
@@ -68,9 +68,9 @@ def self.set_filter(date, show_all, source_storage, hide_today)
   end
   if !source_storage.nil? and !source_storage.empty?
     request_text += " AND area_id = ?"
-    return Transportation.where(request_text, request_date, source_storage)
+    return Transportation.where(request_text, request_date, source_storage).paginate(:page =>  page, :per_page => per_page)
   end
-  Transportation.where(request_text, request_date)
+  Transportation.where(request_text, request_date).paginate(:page =>  page, :per_page => per_page)
 end
   
 #=======================================================================
@@ -266,20 +266,20 @@ end
   #=======================================================================
   def get_time
     if self.time_last_action.nil?
-      return ''
+      return Time.new(1900-01-01)
     end
     return self.time_last_action.getlocal + 300
   end
   #=======================================================================
   def close_time
     if self.time_last_action.nil?
-      return ''
+      return Time.new(1900-01-01)
     end
     return self.time_last_action.getlocal + 300
   end
   #=======================================================================
   def is_close?
-    return true if Time.now > get_time
+    return true if (Time.now > get_time)
       
     return false
   end

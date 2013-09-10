@@ -54,7 +54,7 @@ class TransportationsController < ApplicationController
         area_name = storage_source.nil? ? "": Area.find(storage_source).name 
       end
       @filter_text = @day.to_s + " " + area_name
-      @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today).paginate(:page =>  parameters[:page], :per_page => 50)
+      @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today, parameters[:page], 50) #.paginate(:page =>  parameters[:page], :per_page => 50)
   end
   #====================================================================
   def export
@@ -70,11 +70,11 @@ class TransportationsController < ApplicationController
   #=====================================================================
   def index 
     
-    if signed_in? and !current_user.was_login?
-      sign_out
-      redirect_to root_path
-      return
-    end
+    # if signed_in? #and !current_user.was_login?
+    #   sign_out
+    #   redirect_to root_path
+    #   return
+    # end
 
     if is_block_user?
       flash[:error] = "У Вас нет прав для просмотра заявок!"
@@ -173,15 +173,15 @@ class TransportationsController < ApplicationController
         
         #if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
         if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1)
-               flash[:error] = "Торги еще не открыты!"
-               redirect_to transportations_path
-               return
-          end
-          if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
+          flash[:error] = "Торги еще не открыты!"
+          redirect_to transportations_path
+          return
+        end
+        if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 и ставка занято,
                  # то торговатся больше нельзя
-                 flash[:error] = "Торги уже закончились!"
-             redirect_to transportations_path
-               return
+          flash[:error] = "Торги уже закончились!"
+          redirect_to transportations_path
+          return
         end
 
         
@@ -195,10 +195,11 @@ class TransportationsController < ApplicationController
         end
         @transportation.specprice = true
         @transportation.company = current_user.company
+    
         if @transportation.save!
-                flash[:success] = "Поздравляем данная перевозка уже ваша."
+          flash[:success] = "Поздравляем данная перевозка уже ваша."
         else
-                @title = "Ошибка сохранения!"
+          @title = "Ошибка сохранения!"
         end
       end
     redirect_to transportations_path
@@ -339,7 +340,8 @@ class TransportationsController < ApplicationController
     @transportation.avto    = Avto.find(params[:transportation][:avto_id])
     @transportation.driver  = Driver.find(params[:transportation][:driver_id])
     @transportation.time    = params[:transportation]['time(4i)'] + ":" + params[:transportation]['time(5i)']
-           if @transportation.save!
+    
+    if @transportation.save!
         flash[:success] = "Подтверждение сохранено"
     else
         flash[:error] = "Ошибка сохранения"
@@ -375,6 +377,7 @@ class TransportationsController < ApplicationController
       Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
       if (check_time(@transportation.get_time) == 1) # Если отмена после окончания отправим другим уведомление
         UserMailer.notification_to_companies(@transportation, company_aborting)
+        UserMailer.notificate_manager(@transportation, old_cur_sum)
       end
     else
       flash[:error] = "Ошибка отмены"
