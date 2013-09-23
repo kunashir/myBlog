@@ -84,7 +84,7 @@ class TransportationsController < ApplicationController
 
     if current_user.show_reg?
       flash[:error] = "Для продолжения Вам слеудет прочитать регламент"
-      redirect_to root_path + "/help"
+      redirect_to  help_path #root_path + "/help"
     end
 
     get_list_transp(params)
