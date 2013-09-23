@@ -23,7 +23,7 @@ gem 'recaptcha', :require => "recaptcha/rails"
 group   :production do
     gem 'ps'
     gem 'activerecord-postgresql-adapter'
-    gem 'gem newrelic_rpm'
+    gem 'newrelic_rpm'
 end
 
 group	:development do
