@@ -10,7 +10,7 @@ module ApplicationHelper
 	end
 
 	def logo
-		image_tag("logo.jpg", :size => "500x105", :alt => "Лого", :class => "round")
+		image_tag("logo.jpg", :size => "500x105", :alt => "Лого", :class => "img-rounded")
 	end
   
   def track_logo
