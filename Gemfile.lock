@@ -83,6 +83,7 @@ GEM
     mime-types (1.25)
     mini_portile (0.5.1)
     multi_json (1.8.0)
+    newrelic_rpm (3.5.8.72)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     pg (0.16.0)
@@ -175,6 +176,7 @@ DEPENDENCIES
   jquery-rails (= 2.1.4)
   jquery-ui-rails
   jquery_datepicker
+  newrelic_rpm
   ps
   rails (= 3.2.13)
   rails-asset-jqueryui
