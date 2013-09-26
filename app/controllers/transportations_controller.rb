@@ -44,7 +44,7 @@ class TransportationsController < ApplicationController
       if check_time == 0 
         hide_today = true
       end
-      title = "Список заявок:"  + @day.to_s
+      @title = "Список заявок:"  + @day.to_s
       show_all = parameters[:show_all].nil? ? false : true
       area_name = ""
       if parameters[:use_area].nil?
