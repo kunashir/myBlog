@@ -24,7 +24,7 @@ MyBlog::Application.routes.draw do
   match '/signup',  :to => 'users#new'
   match '/contact', :to => 'pages#contact'
   match '/help',    :to => 'pages#help', :as => :help
-  match '/signin',  :to => 'sessions#new'
+  match '/signin',  :to => 'sessions#new', :as => :signin
   match '/signout', :to => 'sessions#destroy'
   match '/index',   :to => 'transportations#index'
   #спец. роутинг для подтверждения заявки

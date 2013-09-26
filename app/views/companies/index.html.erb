@@ -1,6 +1,7 @@
 <li><%= link_to "Добавить компанию", new_company_path %></li>
 
 <h1>Компании:</h1>
+<%= will_paginate %>
 <table class="transp">
   <tr>
     <td class = "tr">Название</td>
@@ -8,9 +9,10 @@
     <td class = "tr">это ТЭК</td>
     
   </tr>
-  <%= will_paginate %>
+  
   
     <%= render @companies %>
   
-  <%= will_paginate %>
- </table> 
+
+</table> 
+<%= will_paginate %>

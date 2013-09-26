@@ -1,6 +1,7 @@
 #coding: utf-8
 class UsersController < ApplicationController
-  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+  #before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+  skip_before_filter :authenticate, :only => [:new, :create]
   before_filter :correсt_user,  :only => [:edit, :update]
   before_filter :admin_user,    :only => [:destroy ]
   #after_filter  :admin_user,    :only => [:update ]
@@ -114,9 +115,9 @@ class UsersController < ApplicationController
   end
 private
 
-  def authenticate
-    deny_access unless signed_in?
-  end
+  # def authenticate
+  #   deny_access unless signed_in?
+  # end
   
   def correсt_user
     @user = User.find(params[:id])

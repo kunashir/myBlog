@@ -1,6 +1,6 @@
 #coding: utf-8
 class CompaniesController < ApplicationController
-  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+  #before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
   def new
     @title = "Добавление компании"
     @company   = Company.new
@@ -29,7 +29,5 @@ class CompaniesController < ApplicationController
 
 
 private
-  def authenticate
-    deny_access unless signed_in?
-  end
+  
 end
