@@ -352,6 +352,11 @@ class TransportationsController < ApplicationController
 #=====================================================================  
   def abort #отказ от ставки
     @transportation       = Transportation.find(params[:id])
+    if current_user.company != @transportation.company
+      flash[:error] = "Вы не можете отказать от чужой ставки!!!"
+      redirect_to transportations_path
+      return
+    end
     @transportation.set_user(current_user)
     @transportation.avto  = nil
     @transportation.driver  = nil
