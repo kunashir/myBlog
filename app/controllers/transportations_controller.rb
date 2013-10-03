@@ -4,8 +4,8 @@ require 'transportations_helper'
 require 'encode.rb'
 
 class TransportationsController < ApplicationController
- before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
-
+  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+  before_filter :log_do_rate, :only => [:update]
   def destroy
     Transportation.find(params[:id]).destroy
     flash[:success] = "Заявка удалена"
@@ -515,5 +515,8 @@ private
     end
   end
 
+  def log_do_rate
+    Log.save_log_record(Transportation.find(params[:id]), current_user, "cur_time", Time.zone.now.localtime,'Request time', current_user.company)   
+  end 
 
 end
