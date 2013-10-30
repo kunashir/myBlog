@@ -41,7 +41,7 @@ class TransportationsController < ApplicationController
        @day = Date.current
       end
       hide_today = false
-      if check_time == 0 
+      if is_trade? 
         hide_today = true
       end
       @title = "Список заявок:"  + @day.to_s
@@ -159,7 +159,9 @@ class TransportationsController < ApplicationController
           return
         end
 
-        if percent_spec_price == 0 
+        if percent_spec_price == 0 or @transportation.abort_company
+          flash[:error] = "Спец. цена не активна!"
+          redirect_to transportations_path
           return
         end
 
@@ -365,15 +367,15 @@ class TransportationsController < ApplicationController
     @transportation.abort_company = @transportation.company_id
 
     old_cur_sum = @transportation.cur_sum
-    if (@transportation.have_spec_price?) or (check_time(@transportation.get_time) == 1)
-      @transportation.cur_sum = 0
-      @transportation.specprice = false
-    else
-      @transportation.cur_sum = @transportation.cur_sum + @transportation.step
-      if @transportation.cur_sum > @transportation.start_sum
-          @transportation.cur_sum = @transportation.start_sum
-      end
-    end
+   # if (@transportation.have_spec_price?) or (check_time(@transportation.get_time) == 1)
+    @transportation.cur_sum = 0
+    @transportation.specprice = false
+    # else
+    #   @transportation.cur_sum = @transportation.cur_sum + @transportation.step
+    #   if @transportation.cur_sum > @transportation.start_sum
+    #       @transportation.cur_sum = @transportation.start_sum
+    #   end
+    # end
     company_aborting = @transportation.company
     @transportation.company =  nil
     

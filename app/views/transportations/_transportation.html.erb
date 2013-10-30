@@ -59,7 +59,7 @@
 					<%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> 
 				<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
 					<%= link_to "Сделать ставку", transportation_path(transportation) + "/do_rate" %>
-					<% if (transportation.cur_sum.nil? or transportation.cur_sum == 0) and (percent_spec_price != 0) #Если текущая сумма еще пустая, можно забрать сразу %>
+					<% if (transportation.cur_sum.nil?) and (percent_spec_price != 0) #Если текущая сумма еще пустая, можно забрать сразу %>
 						<br><%= link_to "Спец. цена", transportation_path(transportation) + "/do_spec_rate" %>
 					<% end %>
 				<% end %>
