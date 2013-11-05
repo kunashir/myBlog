@@ -14,6 +14,10 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def new
+    if (!manager?) and (!is_admin?)
+      flash[:error] = "Вы не создавать заявки"
+      redirect_to transportations_path
+    end
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
     if !params[:id].nil? #ввод копированием 
@@ -92,6 +96,10 @@ class TransportationsController < ApplicationController
   end
   #=====================================================================  
   def create
+    if (!manager?) and (!is_admin?)
+      flash[:error] = "Вы не можете редактировать данную заявку"
+      redirect_to transportations_path
+    end
     ls = lastNum
     @transportation = Transportation.new(params[:transportation])
     @transportation.user = current_user
@@ -142,9 +150,9 @@ class TransportationsController < ApplicationController
       Log.save_log_record(@transportation, current_user, params[:recaptcha_response_field],  session[:recaptcha_challenge_field],'Captcha', current_user.company)
       flash[:error] = "Вы ввели не правильную капчу"
       render "do_rate"
-      return -1
+      return false
     end
-    return 0
+    return true
   end
 
 #=====================================================================
@@ -155,10 +163,8 @@ class TransportationsController < ApplicationController
         @transportation = Transportation.lock.find(params[:id])
         @transportation.set_user(current_user)
   
-        if check_captcha == -1 
-          return
-        end
-
+        return if  !check_captcha
+        
         if percent_spec_price == 0 or @transportation.abort_company
           flash[:error] = "Спец. цена не активна!"
           redirect_to transportations_path
@@ -244,9 +250,9 @@ class TransportationsController < ApplicationController
 
         @transportation = Transportation.lock.find(params[:id])
         @transportation.set_user(current_user)
-        if check_captcha == -1 
-          return
-        end 
+        
+        return if !check_captcha
+        
         if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1) 
           flash[:error] = "Торги еще не открыты!"
           redirect_to transportations_path
@@ -288,14 +294,17 @@ class TransportationsController < ApplicationController
           return
         end
         
+        if (@transportation.abort_company == current_user.company_id)
+          flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
+          redirect_to transportations_path
+          return
+        end
+
+
         if (params_summa == 0) and (check_time(@transportation.get_time) == 0)
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
-            if (@transportation.abort_company == current_user.company_id)
-                flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
-                redirect_to transportations_path
-                return
-            end
+            
             if (@transportation.start_sum*upper_limit < params_summa)
               flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
               redirect_to transportations_path
@@ -311,7 +320,7 @@ class TransportationsController < ApplicationController
           flash[:success] = "Ваша ставка принята."
         else
           @title = "Error"
-          flash[:error] = "Ошибка сохранения сообщите об этом разработчикам (transp_contr:204)."
+          flash[:error] = "Ошибка сохранения. Сообщите об этом разработчикам (transp_contr:204)."
         end
         redirect_to transportations_path
       end 
