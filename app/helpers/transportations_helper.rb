@@ -91,7 +91,7 @@ module TransportationsHelper
     end
 
     def upper_limit
-        return MyBlog::Application.config.upper_limit.to_i
+        return MyBlog::Application.config.upper_limit.to_d
     end
 
     def end_ext_time
