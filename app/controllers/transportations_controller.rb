@@ -253,12 +253,14 @@ class TransportationsController < ApplicationController
         
         return if !check_captcha
         
-        if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1) 
+        trade_status = check_time(@transportation.get_time) #check it's only one time
+
+        if (!@transportation.is_today?) and (trade_status == -1) 
           flash[:error] = "Торги еще не открыты!"
           redirect_to transportations_path
           return
         end
-        if (check_time(@transportation.get_time) == 1) and (@transportation.is_busy?)#Если вермя больше 15 
+        if (trade_status == 1) and (@transportation.is_busy?)#Если вермя больше 15 
           #проверим не продленно ли время по заявке
           #if !is_ext_time?(Time.zone.now.localtime, (@transportation.get_time+14400))
             #проверяем нельзя ли использовать расширенное время
@@ -288,7 +290,7 @@ class TransportationsController < ApplicationController
           params_summa = 0
         end
           
-        if (params_summa == 0) and (check_time(@transportation.get_time) == 1)
+        if (params_summa == 0) and (trade_status == 1)
           flash[:error] = "Ошибка в указанной сумме"
           redirect_to transportations_path
           return
@@ -301,7 +303,7 @@ class TransportationsController < ApplicationController
         end
 
 
-        if (params_summa == 0) and (check_time(@transportation.get_time) == 0)
+        if trade_status == 0
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
             
