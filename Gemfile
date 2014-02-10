@@ -17,7 +17,7 @@ gem 'jquery-ui-rails'
 gem 'rails-asset-jqueryui'
 gem 'stamp'
 gem 'spreadsheet'
-gem 'to_xls', :git => "https://github.com/dblock/to_xls.git", :branch => "to-xls-on-models"
+gem 'to_xls', :github => "dblock/to_xls" #, :branch => "to-xls-on-models"
 #gem "galetahub-simple_captcha", :require => "simple_captcha"
 gem 'recaptcha', :require => "recaptcha/rails"
 group   :production do

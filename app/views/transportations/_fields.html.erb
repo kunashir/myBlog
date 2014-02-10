@@ -12,19 +12,19 @@
   </div>
   <div class="field">
     <%= f.label :area, "Склад погрузки" %><br />
-    <% #f.text_field :storage_source 
+    <% #f.text_field :storage_source
     %>
-    <%= #select_tag :area_id, options_for_select(Area.get_selector,  !@transportation.area.nil? ? @transportation.get_area: 1) 
+    <%= #select_tag :area_id, options_for_select(Area.get_selector,  !@transportation.area.nil? ? @transportation.get_area: 1)
     %>
-        <%= f.collection_select :area_id, Area.all, :id, :name %> 
+        <%= f.collection_select :area_id, Area.all, :id, :name %>
   </div>
   <div class="field">
     <%= f.label :client, "Клиент:" %><br />
-    <%= f.collection_select :client_id, Client.all, :id, :name %> 
+    <%= f.collection_select :client_id, Client.all, :id, :name %>
   </div>
   <div class="field">
     <%= f.label :storage_dist, "Склад доставки:" %><br />
-   <%= f.collection_select :storage_id, Storage.where("client_id=?", ( @transportation.client.nil? ? 1 : @transportation.client)), :id, :name %> 
+   <%= f.collection_select :storage_id, Storage.where("client_id=?", ( @transportation.client.nil? ? 1 : @transportation.client)), :id, :name %>
   </div>
   <div class="field">
     <%= f.label :comment, "Комментарий:" %><br />
@@ -55,11 +55,10 @@
     <%= f.label :cur_sum, "Лучшее предложение:" %><br />
     <%= f.text_field :cur_sum %>
   </div>
-  <% if !@transportation.company.nil? %>
-    <div class="field">
-      <%= f.label :company, "Текущая компания:" %><br />
-      <%= f.collection_select :company_id, Company.all, :id, :name %> 
-    </div>
-  <% end %>
-  
+  <div class="field">
+    <%= f.label :company, "Текущая компания:" %><br />
+    <%= f.select(:company_id, options_from_collection_for_select(Company.company_list, :id, :name)) %>
+  </div>
+
+
 

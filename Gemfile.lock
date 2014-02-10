@@ -1,7 +1,6 @@
 GIT
-  remote: https://github.com/dblock/to_xls.git
-  revision: c7ef31174947b7b1459b0bb7bda3dd43f83aaa64
-  branch: to-xls-on-models
+  remote: git://github.com/dblock/to_xls.git
+  revision: f828d64efe65ec581f355241cbc900f58fe7f8ec
   specs:
     to_xls (1.0.0)
       spreadsheet (> 0)

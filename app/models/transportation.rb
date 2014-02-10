@@ -5,25 +5,27 @@
 
 
 class Transportation < ActiveRecord::Base
-  #apply_simple_captcha  
-  attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume, :client_id, :storage_id, :abort_company, :area_id
-  
+  #apply_simple_captcha
+  attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment,
+    :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
+    :client_id, :storage_id, :abort_company, :area_id, :company
+
   belongs_to  :user
   belongs_to  :company
   belongs_to  :avto
-  belongs_to   :driver
+  belongs_to  :driver
   belongs_to  :client
   belongs_to  :storage
   belongs_to  :area
   belongs_to  :rate
-  
+
   #validates :user_id, :presence => true
   validates :date,            :presence => true
   validates :carcase,         :presence => true
   validates :step,            :presence => true
- 
+
   default_scope               :order  =>  'transportations.id  DESC' #сортировка по уменьшению ид
-  
+
   before_save   :logging
   before_save    :set_rate
   before_save   :set_time
@@ -32,9 +34,9 @@ class Transportation < ActiveRecord::Base
 
 #=======================================================================
   def get_area
-    
+
     return storage_source if area.nil?
-    
+
     return area.name
   end
 
@@ -55,7 +57,7 @@ class Transportation < ActiveRecord::Base
 #=======================================================================
 def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
   return Transportation.paginate(:page =>  page, :per_page => per_page) if show_all
-    
+
   request_text = "date = ?"
   request_date = date
   if date.nil? or date.empty?
@@ -72,12 +74,12 @@ def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
   end
   Transportation.where(request_text, request_date).paginate(:page =>  page, :per_page => per_page)
 end
-  
+
 #=======================================================================
   def self.only_active
     Transportation.where("date >= ?", Date.current)
   end
-  
+
 #=======================================================================
   def self.format_date(dd)
     if /([0-9]{2}).([0-9]{2}).([0-9]{2})/ =~ dd
@@ -96,7 +98,7 @@ end
       client        = Client.find_by_name(data_array[2])
       dist_storage  = Storage.client_storage(client,data_array[4])
       my_storage    = data_array[5]
-      
+
       tr            = Transportation.new
       tr.num        = data_array[3]
       tr.date       = format_date(data_array[0])
@@ -130,7 +132,7 @@ end
       tr.save!
     end
   end
-  
+
 #=======================================================================
   def self.test_loading(filename)
     lines = File.readlines(filename)
@@ -139,14 +141,14 @@ end
     end
     return arr
   end
-  
+
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
     if self.date >= Date.current()
       return true
     end
     return false
   end
-  
+
 #=======================================================================
   def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
     if ( !self.avto_id.nil? and !self.driver_id.nil?)
@@ -154,17 +156,17 @@ end
     end
     return false
   end
-  
+
 #=======================================================================
   def is_busy? #заявка занята, когда есть данные по перевозчике
-    return  self.company.nil? ? false : true
+    return  !self.company.nil?  # ? false : true
   end
-  
+
 #=======================================================================
   def is_today? #это сегодняшняя заявка
-    return true if self.date == Date.current()
+    return self.date == Date.current() #true if
   end
-  
+
 #=======================================================================
   def logging
     if !self.id.nil?
@@ -185,10 +187,10 @@ end
         Log.save_log_record(self, @cur_user, key, old_attr_hash[key],'edit record', @cur_user.company)
       end
     end
-    
-    
+
+
   end
-  
+
 #=======================================================================
   def logging_new
     if !@new_rec
@@ -218,7 +220,7 @@ end
 
 #=======================================================================
   def have_spec_price?
-    return  (specprice.nil? or !specprice ) ? false : true
+    return  !(specprice.nil? or !specprice ) # ? false : true
   end
 
 #=======================================================================
@@ -231,38 +233,38 @@ end
     else
         volume_text = self.volume.to_s + " куб. м."
     end
-    
+
     volume_text
   end
-          
+
 #=======================================================================
   def rate_summa
-    self.start_sum 
+    self.start_sum
   end
 
 #=======================================================================
   def set_rate
     #если нач. сумма уже есть, ничего не делаем
     #для ручного редактирования
-    return true if !self.start_sum.nil? 
-      
+    return true if !self.start_sum.nil?
+
     if self.area.nil? or self.storage.nil?
       return true
     end
     temp = Rate.find_rate(self.area.city, self.storage.city, self.carcase.downcase)
-    
+
     return true if temp.nil?
-    
+
     self.rate = temp
     self.start_sum = temp.get_summa
     return true
-  end  
+  end
 
   #=======================================================================
   def set_time
     self.time_last_action =  Time.now
   end
- 
+
   #=======================================================================
   def get_time
     if self.time_last_action.nil?
@@ -280,7 +282,7 @@ end
   #=======================================================================
   def is_close?
     return true if (Time.now > get_time)
-      
+
     return false
   end
 

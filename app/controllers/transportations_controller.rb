@@ -15,12 +15,12 @@ class TransportationsController < ApplicationController
 #=====================================================================
   def new
     if (!manager?) and (!is_admin?)
-      flash[:error] = "Вы не создавать заявки"
+      flash[:error] = "Вы не можете создавать заявки!!!"
       redirect_to transportations_path
     end
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
-    if !params[:id].nil? #ввод копированием 
+    if !params[:id].nil? #ввод копированием
       transportation_source = Transportation.find(params[:id])
       @transportation.client       = transportation_source.client
       @transportation.storage_source   = transportation_source.storage_source
@@ -40,12 +40,12 @@ class TransportationsController < ApplicationController
       @filter_text = ""
       begin
         @day = parameters[:datepicker]
-        
+
       rescue
        @day = Date.current
       end
       hide_today = false
-      if is_trade? 
+      if is_trade?
         hide_today = true
       end
       @title = "Список заявок:"  + @day.to_s
@@ -55,7 +55,7 @@ class TransportationsController < ApplicationController
         storage_source = ""
       else
         storage_source = parameters[:area]
-        area_name = storage_source.nil? ? "": Area.find(storage_source).name 
+        area_name = storage_source.nil? ? "": Area.find(storage_source).name
       end
       @filter_text = @day.to_s + " " + area_name
       @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today, parameters[:page], 50) #.paginate(:page =>  parameters[:page], :per_page => 50)
@@ -72,8 +72,8 @@ class TransportationsController < ApplicationController
   end
 
   #=====================================================================
-  def index 
-    
+  def index
+
     # if signed_in? #and !current_user.was_login?
     #   sign_out
     #   redirect_to root_path
@@ -83,7 +83,7 @@ class TransportationsController < ApplicationController
     if is_block_user?
       flash[:error] = "У Вас нет прав для просмотра заявок!"
       redirect_back_or current_user
-      return 
+      return
     end
 
     if current_user.show_reg?
@@ -94,7 +94,7 @@ class TransportationsController < ApplicationController
     get_list_transp(params)
     @cur = 1
   end
-  #=====================================================================  
+  #=====================================================================
   def create
     if (!manager?) and (!is_admin?)
       flash[:error] = "Вы не можете редактировать данную заявку"
@@ -112,7 +112,7 @@ class TransportationsController < ApplicationController
     # @transportation.num = ls + 1
     if @transportation.save
       # Обработка успешного сохранения.
-     
+
       flash[:success] = "Заявка успешно добавлена"
       redirect_to :index
     else
@@ -121,7 +121,7 @@ class TransportationsController < ApplicationController
       render 'new'
     end
   end
-    
+
   #=====================================================================
   def show
     @transportation   = Transportation.find(params[:id])
@@ -142,8 +142,8 @@ class TransportationsController < ApplicationController
     end
     @title = "Изменить заявку "
   end
-  
-#=====================================================================  
+
+#=====================================================================
   def check_captcha
     #if !simple_captcha_valid?
     if !verify_recaptcha
@@ -162,9 +162,9 @@ class TransportationsController < ApplicationController
 
         @transportation = Transportation.lock.find(params[:id])
         @transportation.set_user(current_user)
-  
+
         return if  !check_captcha
-        
+
         if percent_spec_price == 0 or @transportation.abort_company
           flash[:error] = "Спец. цена не активна!"
           redirect_to transportations_path
@@ -178,7 +178,7 @@ class TransportationsController < ApplicationController
           redirect_to transportations_path
           return
         end
-        
+
         #if !@transportation.is_today? and Time.zone.now.localtime.hour < TransportationsController.trad_start_time()
         if (!@transportation.is_today?) and (check_time(@transportation.get_time) == -1)
           flash[:error] = "Торги еще не открыты!"
@@ -192,10 +192,10 @@ class TransportationsController < ApplicationController
           return
         end
 
-        
+
         @transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
-        
-        
+
+
         if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
           flash[:error] = "К сожалению, заявку уже забрали!!!"
           redirect_to transportations_path
@@ -203,7 +203,7 @@ class TransportationsController < ApplicationController
         end
         @transportation.specprice = true
         @transportation.company = current_user.company
-    
+
         if @transportation.save!
           flash[:success] = "Поздравляем данная перевозка уже ваша."
         else
@@ -228,7 +228,7 @@ class TransportationsController < ApplicationController
     @transportation = Transportation.find(params[:id])
         #redirect_to transportations_path
   end
-  
+
 #=====================================================================
   def do_spec_rate
     if percent_spec_price == 0
@@ -241,26 +241,26 @@ class TransportationsController < ApplicationController
   end
 #=====================================================================
   def update
-       
-    
+
+
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
-    
-     
+
+
       Transportation.transaction do
 
         @transportation = Transportation.lock.find(params[:id])
         @transportation.set_user(current_user)
-        
+
         return if !check_captcha
-        
+
         trade_status = check_time(@transportation.get_time) #check it's only one time
 
-        if (!@transportation.is_today?) and (trade_status == -1) 
+        if (!@transportation.is_today?) and (trade_status == -1)
           flash[:error] = "Торги еще не открыты!"
           redirect_to transportations_path
           return
         end
-        if (trade_status == 1) and (@transportation.is_busy?)#Если вермя больше 15 
+        if (trade_status == 1) and (@transportation.is_busy?)#Если вермя больше 15
           #проверим не продленно ли время по заявке
           #if !is_ext_time?(Time.zone.now.localtime, (@transportation.get_time+14400))
             #проверяем нельзя ли использовать расширенное время
@@ -270,18 +270,18 @@ class TransportationsController < ApplicationController
             return
           #end
         end
-       
+
         if @transportation.specprice #на случай, если два запроса подряд
              flash[:error] = "К сожалению, заявку уже забрали со скидкой "+ percent_spec_price.to_s + "%!!!"
              redirect_to transportations_path
              return
         end
 
-          
+
 
         @transportation.company = current_user.company
         #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
-        start_summa = (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step ): @transportation.cur_sum 
+        start_summa = (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step ): @transportation.cur_sum
         #суммы из параметров не должно быть во время основного хода торгов, и она не должна быть отрицательной
         #params_summa = 0
         begin
@@ -289,13 +289,13 @@ class TransportationsController < ApplicationController
         rescue
           params_summa = 0
         end
-          
+
         if (params_summa == 0) and (trade_status == 1)
           flash[:error] = "Ошибка в указанной сумме"
           redirect_to transportations_path
           return
         end
-        
+
         if (@transportation.abort_company == current_user.company_id)
           flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
           redirect_to transportations_path
@@ -306,7 +306,7 @@ class TransportationsController < ApplicationController
         if trade_status == 0
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
-            
+
             if (@transportation.start_sum*upper_limit < params_summa)
               flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
               redirect_to transportations_path
@@ -325,9 +325,9 @@ class TransportationsController < ApplicationController
           flash[:error] = "Ошибка сохранения. Сообщите об этом разработчикам (transp_contr:204)."
         end
         redirect_to transportations_path
-      end 
+      end
     else
-      @transportation = Transportation.find(params[:id]) 
+      @transportation = Transportation.find(params[:id])
       @transportation.set_user(current_user)
       if @transportation.update_attributes!(params[:transportation])
         flash[:success] = "Заявка обновлена."
@@ -336,11 +336,11 @@ class TransportationsController < ApplicationController
         @title = "Изменить заявку"
         render 'edit'
       end
-    end  
-  
+    end
+
   end
 
-#=====================================================================  
+#=====================================================================
   def confirmation #save transp. confimation (update)
     @transportation = Transportation.find(params[:id])
     if (params[:transportation][:avto_id].nil?) or (params[:transportation][:driver_id].nil?)
@@ -348,12 +348,12 @@ class TransportationsController < ApplicationController
       render :edit_conf
       return
     end
-    
+
     @transportation.set_user(current_user)
     @transportation.avto    = Avto.find(params[:transportation][:avto_id])
     @transportation.driver  = Driver.find(params[:transportation][:driver_id])
     @transportation.time    = params[:transportation]['time(4i)'] + ":" + params[:transportation]['time(5i)']
-    
+
     if @transportation.save!
         flash[:success] = "Подтверждение сохранено"
     else
@@ -362,7 +362,7 @@ class TransportationsController < ApplicationController
     redirect_to transportations_path
   end
 
-#=====================================================================  
+#=====================================================================
   def abort #отказ от ставки
     @transportation       = Transportation.find(params[:id])
     if current_user.company != @transportation.company
@@ -373,7 +373,7 @@ class TransportationsController < ApplicationController
     @transportation.set_user(current_user)
     @transportation.avto  = nil
     @transportation.driver  = nil
-    #Запомним последнего отказника, чтобы после окончания не смог сыграть на 
+    #Запомним последнего отказника, чтобы после окончания не смог сыграть на
     #повышение
     @transportation.abort_company = @transportation.company_id
 
@@ -389,7 +389,7 @@ class TransportationsController < ApplicationController
     # end
     company_aborting = @transportation.company
     @transportation.company =  nil
-    
+
     if @transportation.save!
       flash[:success] = "Ваша ставка отменена"
       Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
@@ -403,7 +403,7 @@ class TransportationsController < ApplicationController
     redirect_to transportations_path
   end
 
-#===================================================================== 
+#=====================================================================
   def request_abort #запрос отмены для заявок на сегодня
     @transportation       = Transportation.find(params[:id])
     @transportation.set_user(current_user)
@@ -411,14 +411,14 @@ class TransportationsController < ApplicationController
     if @transportation.save!
       flash[:success] =  "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
       UserMailer.request_abort(@transportation)
-      
+
     else
       flash[:error] = "Ошибка отмены"
     end
     redirect_to transportations_path
 
   end
-#=====================================================================  
+#=====================================================================
   def confirm_abort
     @transportation       = Transportation.find(params[:id])
     @transportation.set_user(current_user)
@@ -436,7 +436,7 @@ class TransportationsController < ApplicationController
     end
     company_aborting = @transportation.company
     @transportation.company =  nil
-         
+
     if @transportation.save!
       flash[:success] = "Отказ подтвержден"
       UserMailer.notification_to_companies(@transportation, company_aborting)
@@ -445,12 +445,12 @@ class TransportationsController < ApplicationController
     end
     redirect_to transportations_path
   end
-#=====================================================================  
+#=====================================================================
   def edit_conf #show page for edit conf
     @transportation = Transportation.find(params[:id])
   end
 
-#=====================================================================  
+#=====================================================================
   def get_storage
     if (params[:id] == -1)
       @transportation = Transportation.new()
@@ -499,9 +499,9 @@ class TransportationsController < ApplicationController
     uploaded_io = params[:file]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'w') do |file|
        text = uploaded_io.read
- 
+
             file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8"))
-      
+
     end
     #return
     #@text_of_load = "Ошибка загрузки"
@@ -512,9 +512,9 @@ class TransportationsController < ApplicationController
     else
         flash[:error] = "Ошибка загрузки"
     end
-    render packet_loading  
+    render packet_loading
   end
-  
+
 private
 
 #=====================================================================
@@ -526,7 +526,7 @@ private
     if Transportation.last().nil?
       return 0
     end
-    if Transportation.last().num.nil? 
+    if Transportation.last().num.nil?
       return 0
     else
       return Transportation.last().num
@@ -534,7 +534,7 @@ private
   end
 
   def log_do_rate
-    Log.save_log_record(Transportation.find(params[:id]), current_user, "cur_time", Time.zone.now.localtime,'Request time', current_user.company)   
-  end 
+    Log.save_log_record(Transportation.find(params[:id]), current_user, "cur_time", Time.zone.now.localtime,'Request time', current_user.company)
+  end
 
 end
