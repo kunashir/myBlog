@@ -10,17 +10,17 @@ module ApplicationHelper
 	end
 
 	def logo
-		image_tag("logo.jpg", :size => "500x105", :alt => "Лого", :class => "img-rounded")
+		image_tag("Roshen1.gif", :size => "156x50", :alt => "Лого", :class => "img-rounded")
 	end
-  
+
   def track_logo
     image_tag("tr.png", :size => "50x35", :alt => "Ваша ставка лучшая", :class => "round")
   end
-  
+
   def lock_logo
   	image_tag("lock.jpeg", :size => "25x25", :alt => "Заявка заркылась", :class => "round")
   end
-  
+
   def to_time ( m_time )
                     # => Thu Jan 18 06:10:17 CST 2007
 

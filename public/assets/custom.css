@@ -1,18 +1,15 @@
 .container {
   width: 90%;
+  padding-top: 40px;
 }
 
-body {
-  background: #cff;
-  padding: 40px;
-}
 
 header {
   padding-top: 20px;
 }
 
 header img {
-  
+
   background: #fff;
 }
 
@@ -27,29 +24,29 @@ section {
 nav {
   float: right;
   }
-  
+
 nav {
   background-color: white;
   padding: 0 0.7em;
   white-space: nowrap;
   }
-  
+
 nav ul {
   margin: 0;
   padding: 0;
   }
-  
+
 nav ul li {
   list-style-type: none;
   display: inline-block;
   padding: 0.2em 0;
   }
-  
+
 nav ul li a {
   padding: 0 5px;
   font-weight: bold;
   }
-  
+
 nav ul le a:hover {
   text-decoration: underline;
   }
@@ -120,23 +117,23 @@ table.transp  {
   width:  100%;
    border: 1px solid;
   }
-  
+
 tr.tr {
   width: 90%;
   font-size: 70%;
-  /*border: 1px solid;*/  
+  /*border: 1px solid;*/
   }
-  
+
 td.tr {
-  
+
   border: 1px solid;
   }
-  
+
 td.field_contrast {
   border: 1px solid;
   background-color: #2a2
 }
-  
+
 td.main {
   width: 70%;
   padding: 1em;
