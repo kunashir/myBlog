@@ -7,3 +7,5 @@ tmp/
 *.gz
 *.csv
 /config/database.yml
+tr.ini
+stats.txt
