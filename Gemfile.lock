@@ -42,6 +42,19 @@ GEM
     ansi (1.4.3)
     arel (3.0.2)
     builder (3.0.4)
+    capistrano (3.0.1)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 0.0.23)
+    capistrano-bundler (1.1.1)
+      capistrano (~> 3.0)
+      sshkit (>= 1.2.0)
+    capistrano-rails (1.1.0)
+      capistrano (>= 3.0.0)
+      capistrano-bundler (>= 1.0.0)
+    capistrano-rvm (0.1.0)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2.0)
     chunky_png (1.2.8)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -75,6 +88,7 @@ GEM
       railties (>= 3.1.0)
     jquery_datepicker (0.4)
     json (1.8.0)
+    kgio (2.8.1)
     libv8 (3.16.14.3)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -82,6 +96,9 @@ GEM
     mime-types (1.25)
     mini_portile (0.5.1)
     multi_json (1.8.0)
+    net-scp (1.1.2)
+      net-ssh (>= 2.6.5)
+    net-ssh (2.8.0)
     newrelic_rpm (3.5.8.72)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
@@ -143,12 +160,19 @@ GEM
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.8)
+    sshkit (1.2.0)
+      net-scp (>= 1.1.2)
+      net-ssh
+      term-ansicolor
     stamp (0.5.0)
+    term-ansicolor (1.2.2)
+      tins (~> 0.8)
     therubyracer (0.12.0)
       libv8 (~> 3.16.14.0)
       ref
     thor (0.18.1)
     tilt (1.4.1)
+    tins (0.13.1)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -156,6 +180,9 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unicorn (3.6.2)
+      kgio (~> 2.3)
+      rack
     webrat (0.7.3)
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
@@ -168,6 +195,10 @@ PLATFORMS
 DEPENDENCIES
   activerecord-postgresql-adapter
   annotate (~> 2.4.1.beta)
+  capistrano
+  capistrano-bundler
+  capistrano-rails
+  capistrano-rvm
   coffee-rails
   compass (>= 0.11.7)
   factory_girl_rails
@@ -188,5 +219,6 @@ DEPENDENCIES
   therubyracer
   to_xls!
   uglifier (>= 1.0.3)
+  unicorn
   webrat
   will_paginate (~> 3.0)

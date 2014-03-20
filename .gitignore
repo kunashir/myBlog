@@ -7,3 +7,6 @@ tmp/
 *.gz
 *.csv
 /config/database.yml
+*.ini
+/config/deploy/
+/shared/

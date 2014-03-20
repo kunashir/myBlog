@@ -24,12 +24,17 @@ group   :production do
     gem 'ps'
     gem 'activerecord-postgresql-adapter'
     gem 'newrelic_rpm'
+    gem 'unicorn'
 end
 
 group	:development do
   gem 'rspec-rails'
   gem 'annotate', '~>2.4.1.beta'
   gem 'sqlite3'
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rvm'
 end
 
 group	:test do
