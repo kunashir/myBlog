@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.17'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -10,7 +10,8 @@ gem 'rails', '3.2.13'
 
 gem 'compass', ">= 0.11.7"
 gem 'gravatar_image_tag'
-gem 'will_paginate', '~> 3.0'
+#gem 'will_paginate', '~> 3.0'
+gem 'kaminari'
 gem 'jquery_datepicker'
 gem 'jquery-rails', "2.1.4"
 gem 'jquery-ui-rails'
@@ -20,6 +21,9 @@ gem 'spreadsheet'
 gem 'to_xls', :github => "dblock/to_xls" #, :branch => "to-xls-on-models"
 #gem "galetahub-simple_captcha", :require => "simple_captcha"
 gem 'recaptcha', :require => "recaptcha/rails"
+gem 'select2-rails'
+gem 'activeadmin'
+
 group   :production do
     gem 'ps'
     gem 'activerecord-postgresql-adapter'

@@ -1,7 +1,7 @@
 #coding: utf-8
 #ecoding: utf-8
 require 'transportations_helper'
-require 'encode.rb'
+#require 'encode.rb'
 
 class TransportationsController < ApplicationController
   before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
@@ -462,6 +462,20 @@ class TransportationsController < ApplicationController
       @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.city.name+"</option>"
     end
     render :text =>@html_select_tag, :layout => false
+  end
+
+#=====================================================================
+  def get_start_sum
+    begin
+      storage = Storage.find(params[:storage])
+      area = Area.find(params[:area])
+      carcase = params[:carcase].to_s
+      render :text => Rate.find_rate.summa.to_s
+    rescue
+      render :text => '0'
+    end
+
+
   end
 
 #=====================================================================

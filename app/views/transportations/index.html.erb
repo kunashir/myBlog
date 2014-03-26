@@ -5,7 +5,7 @@
     | <div id="link_to_xls"><a href=<%=transportations_path+"/-1/export" %> >Сохранить в xls</a></div>
 
   <% end %>
-<% end %>	
+<% end %>
 <div class = "server_time" id = "server_time" ></div>
 <h1>Заявки на перевозку:<%= @filter_text %></h1>
 <%= form_tag( transportations_path, :method => "get") do %>
@@ -18,7 +18,7 @@
 	<br><%= submit_tag("Отобрать") %>
 <% end %>
 
-<%= will_paginate %>
+<%= paginate @transportations %>
 <table class="transp" border="1">
   <tr class = "tr">
     <td class = "tr">Номер распор.</td>
@@ -28,7 +28,7 @@
     <td class = "tr">Клиент</td>
     <td class = "tr">Склад выгрзуки</td>
     <td class = "tr">Тоннаж</td>
-    <td class = "tr">Объем</td>    
+    <td class = "tr">Объем</td>
     <td class = "tr">Примечание</td>
     <td class = "tr">Тип кузова</td>
     <td class = "tr">Нач. сумма (руб.)</td>
@@ -36,13 +36,13 @@
     <td class = "tr">Шаг цены </td>
     <% if manager? or is_admin? %>
       <td class = "tr">ТЭК</td>
-    <% else %>    
+    <% else %>
       <td class = "tr">Сделать ставку</td>
-    <% end %>   
+    <% end %>
   </tr>
-    
+
     <%= render @transportations %>
-  
-  
+
+
  </table>
-<%= will_paginate %>
+

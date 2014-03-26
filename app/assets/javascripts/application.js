@@ -8,15 +8,16 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.blockUI.js
+//= require select2
 
 
 //(function($) {
-//  $(document).ready(function() { 
-//      $("#datepicker").click(function() { 
-//	  $.blockUI({ message: "<H1> Are you shure?</H1>" }); 
+//  $(document).ready(function() {
+//      $("#datepicker").click(function() {
+//	  $.blockUI({ message: "<H1> Are you shure?</H1>" });
 	  //alert ("Buy buy");
-	  //setTimeout($.unblockUI(), 10000); 
-//      }); 
+	  //setTimeout($.unblockUI(), 10000);
+//      });
 //  });
 //})(jQuery);
 
@@ -25,6 +26,8 @@
     $( "#datepicker" ).datepicker({
       dateFormat: 'yy-mm-dd'
     });
+    $("#transportation_client_id").select2(); //transportation_storage_id
+    $("#transportation_storage_id").select2();
   });
 })(jQuery);
 
@@ -37,37 +40,36 @@
   })
 })(jQuery);
 
-(function($) 
+(function($)
 {
   $(document).ready(
-    function() 
+    function()
     {
-        $("#transportation_client_id").change(
-         function() 
+        $("#transportation_storage_id").change(
+         function()
          {
-              
-              $("#transportation_storage_id").html("<option>Загрзука...</option>");
-              $.ajax(
+
+            $.ajax(
+             {
+              type: "GET",
+              url:  "/transportations/-1/get_start_sum",
+              data: "storage=" + $(this).val() + ",area=" + $("#transportation_area_id").val() + ",carcase=" + $("#transportation_carcase").val(),
+              dataType: "text",
+              error:  function(XMLHttpRequest, textStatus, errorThrown)
               {
-                type: "GET",
-                url:  "/transportations/-1/get_storage",
-                data: "client=" + $(this).val(),
-                dataType: "text",
-                error:  function(XMLHttpRequest, textStatus, errorThrown)
-                {
-                  alert("Ошибка получения списка складов");
-                },
-                success:  function(result)
-                {
-                  //alert (result);
-                  $("#transportation_storage_id").html(result);
-                }
-                  
-              });
+                alert("Ошибка получения списка складов");
+              },
+              success:  function(result)
+              {
+                //alert (result);
+                $("#transportation_start_sum").val(result);
+              }
+
+            });
         });
     });
   })(jQuery);
-      
+
 (function($) {
   $(document).ready(function() {
     $("#load_tr").click(
@@ -88,12 +90,12 @@
              //alert (result);
              $("#show_res").html(result);
           }
-          
-          
+
+
         });
   });
 });
-})(jQuery);    
+})(jQuery);
 
 function add_sec(cur_time)
 {
@@ -193,12 +195,12 @@ function add_sec(cur_time)
                   //var temp = $("#server_time").text();
                   //alert (temp+"::" + result);
                   setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-		        }		
-          
-          
-        }); 	
+		        }
+
+
+        });
 });
-})(jQuery);    
+})(jQuery);
 
 
 function saveToXls ()
@@ -220,9 +222,9 @@ function saveToXls ()
                   //var temp = $("#server_time").text();
                   //alert (temp+"::" + result);
              //     setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-            }   
-          
-          
+            }
+
+
         });
   return false;
 }

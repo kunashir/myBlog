@@ -56,7 +56,8 @@ class Transportation < ActiveRecord::Base
 
 #=======================================================================
 def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
-  return Transportation.paginate(:page =>  page, :per_page => per_page) if show_all
+  return Transportation.
+page(page).per(per_page) if show_all
 
   request_text = "date = ?"
   request_date = date
@@ -70,9 +71,10 @@ def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
   end
   if !source_storage.nil? and !source_storage.empty?
     request_text += " AND area_id = ?"
-    return Transportation.where(request_text, request_date, source_storage).paginate(:page =>  page, :per_page => per_page)
+    return Transportation.where(request_text, request_date, source_storage).
+page(page).per(per_page)
   end
-  Transportation.where(request_text, request_date).paginate(:page =>  page, :per_page => per_page)
+  Transportation.where(request_text, request_date).page(page).per(per_page)
 end
 
 #=======================================================================
