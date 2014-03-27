@@ -37,7 +37,7 @@ def get_storage
   unless storage.nil?
     storage.name
   else
-    city.name
+    city.name unless city.nil?
   end
 end
 
