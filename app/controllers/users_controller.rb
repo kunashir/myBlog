@@ -97,7 +97,7 @@ class UsersController < ApplicationController
 
   def index
     @title  = "Все пользователи системы"
-    @users  = User.paginate(:page =>  params[:page])
+    @users  = User.page(params[:page])
   end
 
   def read_reg

@@ -8,6 +8,7 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.blockUI.js
+//= require transportation
 //= require select2
 
 
@@ -27,7 +28,7 @@
       dateFormat: 'yy-mm-dd'
     });
     $("#transportation_client_id").select2(); //transportation_storage_id
-    $("#transportation_storage_id").select2();
+    $("#transportation_city_id").select2();
   });
 })(jQuery);
 
@@ -45,7 +46,7 @@
   $(document).ready(
     function()
     {
-        $("#transportation_storage_id").change(
+        $("#transportation_city_id").change(
          function()
          {
 
@@ -53,7 +54,7 @@
              {
               type: "GET",
               url:  "/transportations/-1/get_start_sum",
-              data: "storage=" + $(this).val() + ",area=" + $("#transportation_area_id").val() + ",carcase=" + $("#transportation_carcase").val(),
+              data: {"storage" : $(this).val(),"area" : $("#transportation_area_id").val(),"carcase" : $("#transportation_carcase").val()},
               dataType: "text",
               error:  function(XMLHttpRequest, textStatus, errorThrown)
               {

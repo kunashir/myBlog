@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140326101436) do
+ActiveRecord::Schema.define(:version => 20140327103307) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20140326101436) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",     :default => false
   end
 
   create_table "clients", :force => true do |t|
@@ -134,7 +135,7 @@ ActiveRecord::Schema.define(:version => 20140326101436) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "company_id"
-    t.decimal  "volume"
+    t.string   "volume"
     t.integer  "avto_id"
     t.integer  "driver_id"
     t.integer  "client_id"
@@ -147,6 +148,7 @@ ActiveRecord::Schema.define(:version => 20140326101436) do
     t.datetime "time_last_action"
     t.boolean  "complex_direction"
     t.integer  "extra_pay",         :default => 0
+    t.integer  "city_id"
   end
 
   add_index "transportations", ["id"], :name => "index_transportations_on_id"

@@ -467,10 +467,10 @@ class TransportationsController < ApplicationController
 #=====================================================================
   def get_start_sum
     begin
-      storage = Storage.find(params[:storage])
+      storage = City.find(params[:storage])
       area = Area.find(params[:area])
       carcase = params[:carcase].to_s
-      render :text => Rate.find_rate.summa.to_s
+      render :text => Rate.find_rate(area, storage, carcase).summa.to_s
     rescue
       render :text => '0'
     end

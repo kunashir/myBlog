@@ -6,9 +6,9 @@
 
 class Transportation < ActiveRecord::Base
   #apply_simple_captcha
-  attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment,
+  attr_accessible  :num, :date, :time, :comment,
     :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
-    :client_id, :storage_id, :abort_company, :area_id, :company
+    :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
 
   belongs_to  :user
   belongs_to  :company
@@ -18,6 +18,7 @@ class Transportation < ActiveRecord::Base
   belongs_to  :storage
   belongs_to  :area
   belongs_to  :rate
+  belongs_to  :city # March 2014 - new relation
 
   #validates :user_id, :presence => true
   validates :date,            :presence => true
@@ -31,6 +32,14 @@ class Transportation < ActiveRecord::Base
   before_save   :set_time
   after_save    :logging_new
   @cur_user = nil
+
+def get_storage
+  unless storage.nil?
+    storage.name
+  else
+    city.name
+  end
+end
 
 #=======================================================================
   def get_area
@@ -227,21 +236,16 @@ end
 
 #=======================================================================
   def get_volume
-    volume_text = ""
-    if (self.volume == 32)
-        volume_text = "32 поддона"
-    elsif (self.volume == 14)
-        volume_text = "14 поддонов"
-    else
-        volume_text = self.volume.to_s + " куб. м."
-    end
-
-    volume_text
+   volume
   end
 
 #=======================================================================
   def rate_summa
-    self.start_sum
+    sum = start_sum
+    if complex_direction
+      sum += extra_pay
+    end
+    return sum
   end
 
 #=======================================================================
