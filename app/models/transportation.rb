@@ -104,10 +104,10 @@ end
     lines = File.readlines(filename)
     lines.each do |line|
       # Обрабатываем одну перевозку, надо найти клиента, склад
-      # остальное прочто текст/число
+      # остальное проcто текст/число
       data_array    = line.split(";")
       client        = Client.find_by_name(data_array[2])
-      dist_storage  = Storage.client_storage(client,data_array[4])
+      #dist_storage  = Storage.client_storage(client,data_array[4])
       my_storage    = data_array[5]
 
       tr            = Transportation.new
@@ -115,9 +115,10 @@ end
       tr.date       = format_date(data_array[0])
       tr.time       = data_array[11]
       tr.client     = client
-      tr.storage    = dist_storage
-      area        = Area.find_by_name(my_storage)
-      tr.area    = area
+      #tr.storage    = dist_storage
+      tr.city       = City.find_city(data_array[4])
+      area          = Area.find_by_name(my_storage)
+      tr.area       = area
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]
@@ -131,16 +132,16 @@ end
         comment   = comment_text
       end
       tr.comment  = comment_text
-    if area.nil? or dist_storage.nil?
-      tr.rate = nil
-    else
-      tr.rate    = Rate.find_rate(area.city, dist_storage.city, carcase)
-    end
+      if area.nil? or tr.city.nil?
+        tr.rate = nil
+      else
+        tr.rate    = Rate.find_rate(area.city, tr.city, carcase)
+      end
       tr.carcase  = carcase
-      tr.start_sum  =  tr.rate_summa #data_array[10].sub(" ", "")
+      tr.start_sum  =  tr.rate.summa unless tr.rate.nil? #data_array[10].sub(" ", "")
       tr.step       = 500
       tr.user       = manager unless manager.nil?
-      tr.save!
+      tr.save
     end
   end
 

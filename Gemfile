@@ -23,6 +23,7 @@ gem 'to_xls', :github => "dblock/to_xls" #, :branch => "to-xls-on-models"
 gem 'recaptcha', :require => "recaptcha/rails"
 gem 'select2-rails'
 gem 'activeadmin'
+gem 'capybara'
 
 group   :production do
     gem 'ps'

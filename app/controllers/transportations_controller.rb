@@ -512,9 +512,8 @@ class TransportationsController < ApplicationController
     #  end
     uploaded_io = params[:file]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'w') do |file|
-       text = uploaded_io.read
-
-            file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8", undef: :replace))
+      text = uploaded_io.read
+      file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8", undef: :replace))
 
     end
     #return

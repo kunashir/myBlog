@@ -21,9 +21,7 @@ module SessionsHelper
   end
 
   def signed_in?
-    puts "============SIGNED IN? #{current_user}"
     !current_user.nil?
-
   end
 
   def deny_access
@@ -78,7 +76,6 @@ private
   end
 
   def remember_token
-    puts "REM TOKEN #{cookies.signed[:remember_token] || [nil, nil]}"
     cookies.signed[:remember_token] || [nil, nil]
   end
 
