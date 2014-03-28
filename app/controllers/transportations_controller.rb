@@ -456,10 +456,10 @@ class TransportationsController < ApplicationController
       @transportation = Transportation.new()
     end
     client = Client.find(params[:client])
-    list_storage = Storage.where("client_id=?", client);
+    list_storage = City.cities_for(client) #Storage.where("client_id=?", client);
     @html_select_tag = ""
     list_storage.each do |storage|
-      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.city.name+"</option>"
+      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.name+"</option>"
     end
     render :text =>@html_select_tag, :layout => false
   end

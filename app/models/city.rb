@@ -15,4 +15,9 @@ class City < ActiveRecord::Base
 	def self.find_city(some_name)
 		where("name LIKE ?", "#{some_name}%").first
 	end
+
+	def self.cities_for(client)
+		#Find all cities for current client
+		City.find_all_by_id(Storage.select(:id).where(:client_id => client))
+	end
 end

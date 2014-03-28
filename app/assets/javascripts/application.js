@@ -28,7 +28,7 @@
       dateFormat: 'yy-mm-dd'
     });
     $("#transportation_client_id").select2(); //transportation_storage_id
-    $("#transportation_city_id").select2();
+   // $("#transportation_city_id").select2();
   });
 })(jQuery);
 
@@ -41,62 +41,7 @@
   })
 })(jQuery);
 
-(function($)
-{
-  $(document).ready(
-    function()
-    {
-        $("#transportation_city_id").change(
-         function()
-         {
 
-            $.ajax(
-             {
-              type: "GET",
-              url:  "/transportations/-1/get_start_sum",
-              data: {"storage" : $(this).val(),"area" : $("#transportation_area_id").val(),"carcase" : $("#transportation_carcase").val()},
-              dataType: "text",
-              error:  function(XMLHttpRequest, textStatus, errorThrown)
-              {
-                alert("Ошибка получения списка складов");
-              },
-              success:  function(result)
-              {
-                //alert (result);
-                $("#transportation_start_sum").val(result);
-              }
-
-            });
-        });
-    });
-  })(jQuery);
-
-(function($) {
-  $(document).ready(function() {
-    $("#load_tr").click(
-      function()
-      {
-        $.ajax(
-        {
-          type: "GET",
-          url:  "/transportations/-1/load",
-          data: "file=" + $("#user_file").val(),
-          dataType: "text",
-          error: function(XMLHttpRequest, textStatus, errorThrown)
-          {
-            $("#show_res").html("ОШИБКА: загрзука завершилась аварийно!")
-          },
-          success:  function(result)
-          {
-             //alert (result);
-             $("#show_res").html(result);
-          }
-
-
-        });
-  });
-});
-})(jQuery);
 
 function add_sec(cur_time)
 {
