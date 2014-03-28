@@ -10,3 +10,4 @@ tmp/
 *.ini
 /config/deploy/
 /shared/
+*.txt

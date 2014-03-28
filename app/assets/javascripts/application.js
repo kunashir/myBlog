@@ -8,15 +8,17 @@
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require jquery.blockUI.js
+//= require transportation
+//= require select2
 
 
 //(function($) {
-//  $(document).ready(function() { 
-//      $("#datepicker").click(function() { 
-//	  $.blockUI({ message: "<H1> Are you shure?</H1>" }); 
+//  $(document).ready(function() {
+//      $("#datepicker").click(function() {
+//	  $.blockUI({ message: "<H1> Are you shure?</H1>" });
 	  //alert ("Buy buy");
-	  //setTimeout($.unblockUI(), 10000); 
-//      }); 
+	  //setTimeout($.unblockUI(), 10000);
+//      });
 //  });
 //})(jQuery);
 
@@ -25,6 +27,8 @@
     $( "#datepicker" ).datepicker({
       dateFormat: 'yy-mm-dd'
     });
+    $("#transportation_client_id").select2(); //transportation_storage_id
+   // $("#transportation_city_id").select2();
   });
 })(jQuery);
 
@@ -37,63 +41,7 @@
   })
 })(jQuery);
 
-(function($) 
-{
-  $(document).ready(
-    function() 
-    {
-        $("#transportation_client_id").change(
-         function() 
-         {
-              
-              $("#transportation_storage_id").html("<option>Загрзука...</option>");
-              $.ajax(
-              {
-                type: "GET",
-                url:  "/transportations/-1/get_storage",
-                data: "client=" + $(this).val(),
-                dataType: "text",
-                error:  function(XMLHttpRequest, textStatus, errorThrown)
-                {
-                  alert("Ошибка получения списка складов");
-                },
-                success:  function(result)
-                {
-                  //alert (result);
-                  $("#transportation_storage_id").html(result);
-                }
-                  
-              });
-        });
-    });
-  })(jQuery);
-      
-(function($) {
-  $(document).ready(function() {
-    $("#load_tr").click(
-      function()
-      {
-        $.ajax(
-        {
-          type: "GET",
-          url:  "/transportations/-1/load",
-          data: "file=" + $("#user_file").val(),
-          dataType: "text",
-          error: function(XMLHttpRequest, textStatus, errorThrown)
-          {
-            $("#show_res").html("ОШИБКА: загрзука завершилась аварийно!")
-          },
-          success:  function(result)
-          {
-             //alert (result);
-             $("#show_res").html(result);
-          }
-          
-          
-        });
-  });
-});
-})(jQuery);    
+
 
 function add_sec(cur_time)
 {
@@ -193,12 +141,12 @@ function add_sec(cur_time)
                   //var temp = $("#server_time").text();
                   //alert (temp+"::" + result);
                   setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-		        }		
-          
-          
-        }); 	
+		        }
+
+
+        });
 });
-})(jQuery);    
+})(jQuery);
 
 
 function saveToXls ()
@@ -220,9 +168,9 @@ function saveToXls ()
                   //var temp = $("#server_time").text();
                   //alert (temp+"::" + result);
              //     setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-            }   
-          
-          
+            }
+
+
         });
   return false;
 }

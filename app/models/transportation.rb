@@ -6,9 +6,9 @@
 
 class Transportation < ActiveRecord::Base
   #apply_simple_captcha
-  attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment,
+  attr_accessible  :num, :date, :time, :comment,
     :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
-    :client_id, :storage_id, :abort_company, :area_id, :company
+    :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
 
   belongs_to  :user
   belongs_to  :company
@@ -18,6 +18,7 @@ class Transportation < ActiveRecord::Base
   belongs_to  :storage
   belongs_to  :area
   belongs_to  :rate
+  belongs_to  :city # March 2014 - new relation
 
   #validates :user_id, :presence => true
   validates :date,            :presence => true
@@ -31,6 +32,14 @@ class Transportation < ActiveRecord::Base
   before_save   :set_time
   after_save    :logging_new
   @cur_user = nil
+
+def get_storage
+  unless storage.nil?
+    storage.name
+  else
+    city.name unless city.nil?
+  end
+end
 
 #=======================================================================
   def get_area
@@ -56,7 +65,8 @@ class Transportation < ActiveRecord::Base
 
 #=======================================================================
 def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
-  return Transportation.paginate(:page =>  page, :per_page => per_page) if show_all
+  return Transportation.
+page(page).per(per_page) if show_all
 
   request_text = "date = ?"
   request_date = date
@@ -70,9 +80,10 @@ def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
   end
   if !source_storage.nil? and !source_storage.empty?
     request_text += " AND area_id = ?"
-    return Transportation.where(request_text, request_date, source_storage).paginate(:page =>  page, :per_page => per_page)
+    return Transportation.where(request_text, request_date, source_storage).
+page(page).per(per_page)
   end
-  Transportation.where(request_text, request_date).paginate(:page =>  page, :per_page => per_page)
+  Transportation.where(request_text, request_date).page(page).per(per_page)
 end
 
 #=======================================================================
@@ -93,10 +104,10 @@ end
     lines = File.readlines(filename)
     lines.each do |line|
       # Обрабатываем одну перевозку, надо найти клиента, склад
-      # остальное прочто текст/число
+      # остальное проcто текст/число
       data_array    = line.split(";")
       client        = Client.find_by_name(data_array[2])
-      dist_storage  = Storage.client_storage(client,data_array[4])
+      #dist_storage  = Storage.client_storage(client,data_array[4])
       my_storage    = data_array[5]
 
       tr            = Transportation.new
@@ -104,9 +115,10 @@ end
       tr.date       = format_date(data_array[0])
       tr.time       = data_array[11]
       tr.client     = client
-      tr.storage    = dist_storage
-      area        = Area.find_by_name(my_storage)
-      tr.area    = area
+      #tr.storage    = dist_storage
+      tr.city       = City.find_city(data_array[4])
+      area          = Area.find_by_name(my_storage)
+      tr.area       = area
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]
@@ -120,16 +132,16 @@ end
         comment   = comment_text
       end
       tr.comment  = comment_text
-    if area.nil? or dist_storage.nil?
-      tr.rate = nil
-    else
-      tr.rate    = Rate.find_rate(area.city, dist_storage.city, carcase)
-    end
+      if area.nil? or tr.city.nil?
+        tr.rate = nil
+      else
+        tr.rate    = Rate.find_rate(area.city, tr.city, carcase)
+      end
       tr.carcase  = carcase
-      tr.start_sum  =  tr.rate_summa #data_array[10].sub(" ", "")
+      tr.start_sum  =  tr.rate.summa unless tr.rate.nil? #data_array[10].sub(" ", "")
       tr.step       = 500
       tr.user       = manager unless manager.nil?
-      tr.save!
+      tr.save
     end
   end
 
@@ -225,21 +237,16 @@ end
 
 #=======================================================================
   def get_volume
-    volume_text = ""
-    if (self.volume == 32)
-        volume_text = "32 поддона"
-    elsif (self.volume == 14)
-        volume_text = "14 поддонов"
-    else
-        volume_text = self.volume.to_s + " куб. м."
-    end
-
-    volume_text
+   volume
   end
 
 #=======================================================================
   def rate_summa
-    self.start_sum
+    sum = start_sum
+    if complex_direction
+      sum += extra_pay
+    end
+    return sum
   end
 
 #=======================================================================

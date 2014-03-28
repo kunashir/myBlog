@@ -1,7 +1,7 @@
 #coding: utf-8
 #ecoding: utf-8
 require 'transportations_helper'
-require 'encode.rb'
+#require 'encode.rb'
 
 class TransportationsController < ApplicationController
   before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
@@ -456,12 +456,26 @@ class TransportationsController < ApplicationController
       @transportation = Transportation.new()
     end
     client = Client.find(params[:client])
-    list_storage = Storage.where("client_id=?", client);
+    list_storage = City.cities_for(client) #Storage.where("client_id=?", client);
     @html_select_tag = ""
     list_storage.each do |storage|
-      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.city.name+"</option>"
+      @html_select_tag = @html_select_tag +"<option value="+storage.id.to_s+">"+storage.name+"</option>"
     end
     render :text =>@html_select_tag, :layout => false
+  end
+
+#=====================================================================
+  def get_start_sum
+    begin
+      storage = City.find(params[:storage])
+      area = Area.find(params[:area])
+      carcase = params[:carcase].to_s
+      render :text => Rate.find_rate(area, storage, carcase).summa.to_s
+    rescue
+      render :text => '0'
+    end
+
+
   end
 
 #=====================================================================
@@ -498,9 +512,8 @@ class TransportationsController < ApplicationController
     #  end
     uploaded_io = params[:file]
     File.open(Rails.root.join('public', 'uploads', uploaded_io.original_filename),'w') do |file|
-       text = uploaded_io.read
-
-            file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8"))
+      text = uploaded_io.read
+      file.write(text.force_encoding("WINDOWS-1251").encode("UTF-8", undef: :replace))
 
     end
     #return

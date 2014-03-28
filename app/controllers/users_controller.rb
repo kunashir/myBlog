@@ -5,19 +5,19 @@ class UsersController < ApplicationController
   before_filter :correсt_user,  :only => [:edit, :update]
   before_filter :admin_user,    :only => [:destroy ]
   #after_filter  :admin_user,    :only => [:update ]
-  
+
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "Пользователь удален"
     redirect_to users_path
   end
-  
+
   def new
     @user   = User.new
     @title  = "Регистрация"
-  #  save_location #сохраним локация из которой вызов на создание 
+  #  save_location #сохраним локация из которой вызов на создание
   end
-  
+
   def show
     if !signed_in?
       deny_access
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
-  
+
   def edit
     @user = User.find(params[:id])
     if @user != current_user
@@ -55,7 +55,7 @@ class UsersController < ApplicationController
     end
     @title = "Изменить профиль"
   end
-  
+
   def update
     logger.debug
     @user = User.find(params[:id])
@@ -64,11 +64,11 @@ class UsersController < ApplicationController
       if @user.toggle! :is_block
         flash[:success] = "Статус пользователя " + @user.name + " обновлен."
         redirect_to users_path
-        
+
       else
         @title = "Изменить профиль"
         render 'edit'
-        
+
       end
 
 
@@ -77,9 +77,9 @@ class UsersController < ApplicationController
     		flash[:error] = "У Вас нет прав редактировать данные другого пользователя"
     		redirect_to users_path
     		return
-    	end 
+    	end
 	    @user.save_without_callbacks false
-      
+
       # if (!is_admin?) #если не админ, то блокируем, чтобы зря не меняли данные!
       #   @user.toggle! :is_block
       # end
@@ -91,13 +91,13 @@ class UsersController < ApplicationController
         @title = "Изменить профиль"
         render 'edit'
       end
-    end 
+    end
 
   end
-  
+
   def index
     @title  = "Все пользователи системы"
-    @users  = User.paginate(:page =>  params[:page])
+    @users  = User.page(params[:page])
   end
 
   def read_reg
@@ -118,13 +118,13 @@ private
   # def authenticate
   #   deny_access unless signed_in?
   # end
-  
+
   def correсt_user
     @user = User.find(params[:id])
     redirect_to(root_path) unless (current_user?(@user) or is_admin?)
-   
+
   end
-  
+
   def admin_user
     #redirect_to(root_path) unless current_user.admin?
   end
