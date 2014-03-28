@@ -27,7 +27,7 @@
     $( "#datepicker" ).datepicker({
       dateFormat: 'yy-mm-dd'
     });
-    $("#transportation_client_id").select2(); //transportation_storage_id
+    $("#transportation_client_id").select2({ width: 'resolve' }); //transportation_storage_id
    // $("#transportation_city_id").select2();
   });
 })(jQuery);

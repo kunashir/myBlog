@@ -18,6 +18,6 @@ class City < ActiveRecord::Base
 
 	def self.cities_for(client)
 		#Find all cities for current client
-		City.find_all_by_id(Storage.select(:id).where(:client_id => client))
+		City.find_all_by_id(Storage.select(:city_id).where(:client_id => client))
 	end
 end
