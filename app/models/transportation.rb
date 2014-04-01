@@ -135,7 +135,7 @@ end
       if area.nil? or tr.city.nil?
         tr.rate = nil
       else
-        tr.rate    = Rate.find_rate(area.city, tr.city, carcase)
+        tr.rate    = Rate.find_rate(area, tr.city, carcase)
       end
       tr.carcase  = carcase
       tr.start_sum  =  tr.rate.summa unless tr.rate.nil? #data_array[10].sub(" ", "")
