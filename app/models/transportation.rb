@@ -41,6 +41,11 @@ def get_storage
   end
 end
 
+def lightcar?
+  return false if weight.nil?
+  weight.to_i < 11
+end
+
 #=======================================================================
   def get_area
 
@@ -138,7 +143,7 @@ end
         tr.rate    = Rate.find_rate(area, tr.city, carcase)
       end
       tr.carcase  = carcase
-      tr.start_sum  =  tr.rate.summa unless tr.rate.nil? #data_array[10].sub(" ", "")
+      tr.start_sum  =  tr.rate.get_summa(tr.weight) unless tr.rate.nil? #data_array[10].sub(" ", "")
       tr.step       = 500
       tr.user       = manager unless manager.nil?
       tr.save

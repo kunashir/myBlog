@@ -472,7 +472,8 @@ class TransportationsController < ApplicationController
       storage = City.find(params[:storage])
       area = Area.find(params[:area])
       carcase = params[:carcase].to_s
-      render :text => Rate.find_rate(area, storage, carcase).summa.to_s
+      weight = params[:weight].to_i
+      render :text => Rate.find_rate(area, storage, carcase).get_summa(weight)
     rescue
       render :text => '0'
     end
