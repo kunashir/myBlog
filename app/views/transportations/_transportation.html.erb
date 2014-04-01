@@ -21,7 +21,11 @@
       <%= transportation.get_storage %>
     </div>
   </td>
-  <td class = "tr"><%= transportation.weight %></td>
+  <td class = "tr">
+    <div class = <%= transportation.lightcar?  ? "lightcar" : "" %> >
+      <%= transportation.weight %>
+    </div>
+  </td>
   <td class = "tr"><%= transportation.get_volume %></td>
   <td class = "tr">
     <div class = <%= transportation.complex_direction? ? "complex_direction" : "" %> >

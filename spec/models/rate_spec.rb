@@ -17,5 +17,13 @@ describe Rate do
     @rate == Rate.find_rate(area, @rate.city, "термос")
   end
 
+  it "rate for small car" do
+    @rate.get_summa(9) == @rate.summa * 0.8
+  end
+
+  it "rate for normal car" do
+    @rate.get_summa(18) == @rate.summa
+  end
+
 
 end

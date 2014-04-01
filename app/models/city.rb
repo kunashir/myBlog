@@ -7,7 +7,10 @@ class City < ActiveRecord::Base
 	def self.load_cities(fileName)
 		lines = File.readlines(fileName)
 		lines.each do |line|
-			curCity = City.new(name: line)
+			line.strip!
+			curCity = City.find_city(line) || City.new(name: line)
+			#curCity = City.new(name: line) if curCity.nil?
+			curCity.active = true
 			curCity.save!
 		end
 	end

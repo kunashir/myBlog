@@ -15,7 +15,8 @@ class Rate < ActiveRecord::Base
 		self.area.name + " - " + self.city.name + " (" + self.carcase + ")"
 	end
 
-	def get_summa
+	def get_summa(weight)
+		return (self.summa * 0.8) if weight < 11
 		self.summa
 	end
 
