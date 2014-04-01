@@ -281,7 +281,9 @@ class TransportationsController < ApplicationController
 
         @transportation.company = current_user.company
         #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
-        start_summa = (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step ): @transportation.cur_sum
+        start_summa =
+        (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step + @transportation.extra_pay): @transportation.cur_sum
+        #start_sum += @transportation.extra_pay
         #суммы из параметров не должно быть во время основного хода торгов, и она не должна быть отрицательной
         #params_summa = 0
         begin
@@ -307,7 +309,7 @@ class TransportationsController < ApplicationController
           @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
 
-            if (@transportation.start_sum*upper_limit < params_summa)
+            if ((@transportation.start_sum + @transportation.extra_pay)*upper_limit < params_summa)
               flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
               redirect_to transportations_path
               return
