@@ -17,7 +17,7 @@ function GetStartSum()
       data: {
         "storage" : $("#transportation_city_id").val(),
         "area" : $("#transportation_area_id").val(),
-        "carcase" : $("#transportation_carcase").val()
+        "carcase" : $("#transportation_carcase").val(),
         "weight": $("#transportation_weight").val()},
       dataType: "text",
       error:  function(XMLHttpRequest, textStatus, errorThrown)
