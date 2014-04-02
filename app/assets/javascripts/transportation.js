@@ -14,7 +14,11 @@ function GetStartSum()
     {
       type: "GET",
       url:  "/transportations/-1/get_start_sum",
-      data: {"storage" : $("#transportation_city_id").val(),"area" : $("#transportation_area_id").val(),"carcase" : $("#transportation_carcase").val()},
+      data: {
+        "storage" : $("#transportation_city_id").val(),
+        "area" : $("#transportation_area_id").val(),
+        "carcase" : $("#transportation_carcase").val()
+        "weight": $("#transportation_weight").val()},
       dataType: "text",
       error:  function(XMLHttpRequest, textStatus, errorThrown)
       {
