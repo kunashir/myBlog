@@ -17,4 +17,15 @@ describe Transportation do
       @tr.extra_pay.should_not == 0
     end
   end
+
+  describe "test format date" do
+    it "reduced format" do
+      Transportation.format_date("01.01.14") == "2014-01-01"
+    end
+
+    it "full format" do
+      Transportation.format_date("01.01.2014") == "2014-01-01"
+    end
+  end
+
 end
