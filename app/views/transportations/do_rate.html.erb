@@ -2,44 +2,42 @@
 <table  class="profile" summary="Profile information">
   <tr>
     <% if check_time(@transportation.get_time) == 0 %>
-		<% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
-			<td class = "tr"><%= link_to "Отменить ставку", transportation_path(@transportation) + "/abort"  %> </td>
-		<% else %>
+    		<% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+    			<td class = "tr"><%= link_to "Отменить ставку", transportation_path(@transportation) + "/abort"  %> </td>
+    		<% else %>
 
-			<td class = "tr">
-				<%= form_tag(transportation_path(@transportation), :method => "put") do %>
+    			<td class = "tr">
+    				<%= form_tag(transportation_path(@transportation), :method => "put") do %>
+              <%= recaptcha_tags %>
+					    <%= submit_tag("-"+@transportation.step.to_s) %>
+            <% end %>
+			    </td>
+      	<% end %>
 
-          <%= recaptcha_tags %>
-					<%= submit_tag("-"+@transportation.step.to_s) %>
-				<% end %>
-			</td>
+		<% else #=============================================================================  %>
+  	  <td class = "tr">
+        <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
 
+    			<%= form_tag( @transportation, :method => "put") do %>
 
-		<% end %>
-    <% else #=============================================================================  %>
-	  <td class = "tr">
-      <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
+            <%= recaptcha_tags %>
+    				<%= label_tag(:q, "Ваше предложение:") %>
+    				<%= text_field_tag :summa, nil, :class => "datepicker" %>
+    				<%= submit_tag("Ставка") %>
+    			<% end %>
 
-			<%= form_tag( @transportation, :method => "put") do %>
+        <% elsif (check_time(@transportation.get_time) == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
 
-        <%= recaptcha_tags %>
-				<%= label_tag(:q, "Ваше предложение:") %>
-				<%= text_field_tag :summa, nil, :class => "datepicker" %>
-				<%= submit_tag("Ставка") %>
-			<% end %>
+    			<%= form_tag( @transportation, :method => "put") do %>
 
-      <% elsif (check_time(@transportation.get_time) == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
+            <%= recaptcha_tags %>
+    				<%= label_tag(:q, "Ваше предложение:") %>
+    				<%= text_field_tag :summa, nil, :class => "datepicker" %>
+    				<%= submit_tag("Ставка") %>
+    			<% end %>
 
-			<%= form_tag( @transportation, :method => "put") do %>
-
-        <%= recaptcha_tags %>
-				<%= label_tag(:q, "Ваше предложение:") %>
-				<%= text_field_tag :summa, nil, :class => "datepicker" %>
-				<%= submit_tag("Ставка") %>
-			<% end %>
-
-      <% end %>
-	  </td>
+        <% end %>
+  	  </td>
 
     <% end %>
 

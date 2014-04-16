@@ -4,8 +4,15 @@ require 'transportations_helper'
 #require 'encode.rb'
 
 class TransportationsController < ApplicationController
-  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
+  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy, :get_form]
   before_filter :log_do_rate, :only => [:update]
+
+
+  def get_form
+    @transportation = Transportation.find(params[:id])
+    render "_do_rate_form", layout: false
+  end
+
   def destroy
     Transportation.find(params[:id]).destroy
     flash[:success] = "Заявка удалена"
@@ -22,16 +29,7 @@ class TransportationsController < ApplicationController
     @transportation   = Transportation.new
     if !params[:id].nil? #ввод копированием
       transportation_source = Transportation.find(params[:id])
-      @transportation.client       = transportation_source.client
-      @transportation.storage_source   = transportation_source.storage_source
-      @transportation.storage     = transportation_source.storage
-      @transportation.weight       = transportation_source.weight
-      @transportation.date       = transportation_source.date
-      @transportation.volume       = transportation_source.volume
-      @transportation.carcase     = transportation_source.carcase
-      @transportation.start_sum     = transportation_source.start_sum
-      @transportation.step       = transportation_source.step
-      @transportation.comment      = transportation_source.comment
+      @transportation = transportation_source.dup
     end
   end
 
@@ -483,7 +481,7 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def server_time
-  render :text => Time.zone.now.localtime.to_s[11, 8]
+    render :text => Time.zone.now.localtime.to_s[11, 8]
   end
 
 #=====================================================================
