@@ -16,7 +16,11 @@ MyBlog::Application.routes.draw do
 
   resources :users
   resources :sessions, :only => [:new, :create, :destroy]
-  resources :transportations #, :only => [:new, :create, :index ]
+  resources :transportations do #, :only => [:new, :create, :index ]
+    member do
+      get 'get_form'
+    end
+  end
   resources :companies
   resources :avtos
   resources :drivers

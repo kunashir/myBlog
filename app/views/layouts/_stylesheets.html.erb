@@ -1,1 +1,9 @@
 	  <%= javascript_include_tag "application" %>
+    <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+    <script type="text/javascript">
+        function showRecaptcha() {
+           Recaptcha.create("6LeVFeASAAAAAAZhS1xtg-1Poy0O5_gyKkkcSZLg", "recaptca_div", {
+             theme: "red",
+             callback: Recaptcha.focus_response_field});
+        }
+    </script>

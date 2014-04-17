@@ -12,16 +12,6 @@
 //= require select2
 
 
-//(function($) {
-//  $(document).ready(function() {
-//      $("#datepicker").click(function() {
-//	  $.blockUI({ message: "<H1> Are you shure?</H1>" });
-	  //alert ("Buy buy");
-	  //setTimeout($.unblockUI(), 10000);
-//      });
-//  });
-//})(jQuery);
-
 (function($) {
   $(document).ready(function() {
     $( "#datepicker" ).datepicker({

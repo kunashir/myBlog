@@ -1,3 +1,23 @@
+function showPopup() {
+  if ($(".rate-popup").css("display") === "none") {
+    $(".rate-popup").show();
+  } else {
+    $(".rate-popup").hide();
+  }
+}
+
+
+// $(document).on('click', '.oper_column', function(e) {
+//   $(".rate-popup-content").children("form").attr("action", $(this).children("a").attr("href"));
+//   showPopup();
+//   return false;
+// });
+
+$(document).on('click', '.close-popup', function(e) {
+  showPopup();
+  return false;
+});
+
 function ExtraPayVisible(){
   if ($("#transportation_complex_direction").is(':checked')){
         $(".extra_fields").show();
@@ -110,3 +130,18 @@ function GetClientCities()
   });
 });
 })(jQuery);
+
+
+(function($) {
+  $(document).ready(function() {
+    $(".oper_column").on("ajax:success", function(e, data, status, xhr){
+      $(".do_rate_form").html(data);
+      showPopup();
+      showRecaptcha();
+
+    }
+      ).bind("ajax:error", function(){ alert("Error!!")});
+
+  }
+  );
+}) (jQuery);

@@ -8,3 +8,7 @@ ru:
     formats:
       short: '%d.%m.%Y'
       long: '%d.%m.%Y'
+  date:
+    formats:
+      short: '%d.%m.%Y'
+      long: '%d.%m.%Y'
