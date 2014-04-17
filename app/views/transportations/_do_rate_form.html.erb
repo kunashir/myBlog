@@ -2,7 +2,7 @@
   <div id="recaptca_div">
   </div>
 
-  <% if (check_time(@transportation.get_time) == 1) %>
+  <% if (check_time(@transportation.get_time) != 0) %>
     <%= label_tag(:q, "Ваше предложение:") %>
     <%= text_field_tag :summa, nil, :class => "datepicker" %>
   <% end %>

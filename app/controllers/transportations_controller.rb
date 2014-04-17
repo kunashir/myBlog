@@ -258,12 +258,12 @@ class TransportationsController < ApplicationController
           redirect_to transportations_path
           return
         end
-        if (trade_status == 1) and (@transportation.is_busy?)#Если вермя больше 15
+        if (trade_status != 0) and (@transportation.is_busy?)#Если вермя больше 15
           #проверим не продленно ли время по заявке
           #if !is_ext_time?(Time.zone.now.localtime, (@transportation.get_time+14400))
             #проверяем нельзя ли использовать расширенное время
             # и ставка занята, то торговатся больше нельзя
-            flash[:error] = "Торги уже закончились!"
+            flash[:error] = "В данный момент торги не проводятся и заявка уже закрыта!"
             redirect_to transportations_path
             return
           #end
