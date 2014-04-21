@@ -33,6 +33,13 @@ class Transportation < ActiveRecord::Base
   after_save    :logging_new
   @cur_user = nil
 
+#=======================================================================
+def get_num
+  num.nil? ? "без номера" : num
+end
+
+#=======================================================================
+
 def get_storage
   unless storage.nil?
     storage.name
@@ -40,6 +47,7 @@ def get_storage
     city.name unless city.nil?
   end
 end
+#=======================================================================
 
 def lightcar?
   return false if weight.nil?
