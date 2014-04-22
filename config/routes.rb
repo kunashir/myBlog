@@ -28,6 +28,7 @@ MyBlog::Application.routes.draw do
     collection do
       get 'export'
       get 'packet_loading'
+      post 'load'
     end
   end
   resources :companies
