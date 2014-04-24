@@ -84,7 +84,7 @@
     				<td class = "tr oper_column">
       				<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
       					<%= link_to "Отменить ставку", abort_transportation_path(transportation) %>
-                <% if transportation.is_close? %>
+                <% if check_time == 1 and transportation.is_close? %>
                   <%= lock_logo %>
                 <% end %>
       				<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
@@ -103,7 +103,7 @@
                   <%= link_to "Запрос на отмену ставки", request_abort_transportation_path(transportation) %>
                 <% else %>
                   <%= link_to "Отменить ставку", abort_transportation_path(transportation) %>
-                  <% if transportation.is_close? %>
+                  <% if check_time == 1 and transportation.is_close? %>
                     <%= lock_logo %>
                   <% end %>
                 <% end %>
