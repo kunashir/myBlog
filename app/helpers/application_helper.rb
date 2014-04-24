@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def remove_icon
-    image_tag("remove.png", :size => "15x15", :alt => "Удалить")
+    image_tag("grey_remove.png", :size => "15x15", :alt => "Удалить")
   end
   def to_time ( m_time )
                     # => Thu Jan 18 06:10:17 CST 2007
