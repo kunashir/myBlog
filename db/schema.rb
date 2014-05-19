@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120530064728) do
+ActiveRecord::Schema.define(:version => 20121118101630) do
+
+  create_table "areas", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "city_id"
+  end
 
   create_table "avtos", :force => true do |t|
     t.string   "model"
@@ -19,6 +26,13 @@ ActiveRecord::Schema.define(:version => 20120530064728) do
     t.string   "statenumber"
     t.string   "trailnumber"
     t.integer  "company_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "shortname"
+  end
+
+  create_table "cities", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -45,12 +59,42 @@ ActiveRecord::Schema.define(:version => 20120530064728) do
     t.datetime "updated_at"
   end
 
+  create_table "logs", :force => true do |t|
+    t.integer  "transportation_id"
+    t.integer  "user_id"
+    t.string   "attr"
+    t.string   "oldvalue"
+    t.string   "action"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "company_id"
+  end
+
+  create_table "rates", :force => true do |t|
+    t.integer  "area_id"
+    t.integer  "city_id"
+    t.string   "carcase"
+    t.integer  "summa"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "simple_captcha_data", :force => true do |t|
+    t.string   "key",        :limit => 40
+    t.string   "value",      :limit => 6
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "simple_captcha_data", ["key"], :name => "idx_key"
+
   create_table "storages", :force => true do |t|
-    t.string   "city"
     t.string   "address"
     t.integer  "client_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "city_id"
+    t.string   "name"
   end
 
   create_table "transportations", :force => true do |t|
@@ -66,7 +110,8 @@ ActiveRecord::Schema.define(:version => 20120530064728) do
     t.integer  "start_sum"
     t.integer  "cur_sum"
     t.integer  "step"
-    t.integer  "user_id"
+    t.integer  "manager_id"
+    t.integer  "carrier_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "company_id"
@@ -75,11 +120,20 @@ ActiveRecord::Schema.define(:version => 20120530064728) do
     t.integer  "driver_id"
     t.integer  "client_id"
     t.integer  "storage_id"
+    t.boolean  "specprice"
+    t.boolean  "request_abort",    :default => false
+    t.integer  "abort_company"
+    t.integer  "area_id"
+    t.integer  "rate_id"
+    t.datetime "time_last_action"
   end
+
+  add_index "transportations", ["date"], :name => "index_transportations_on_date"
 
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
+    t.string   "company"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "encrypted_password"
@@ -88,6 +142,11 @@ ActiveRecord::Schema.define(:version => 20120530064728) do
     t.boolean  "nmanager"
     t.integer  "company_id"
     t.boolean  "is_block",           :default => true
+    t.boolean  "be_notified",        :default => true
+    t.boolean  "show_reg",           :default => true
+    t.integer  "login_count",        :default => 0
   end
+
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
 
 end
