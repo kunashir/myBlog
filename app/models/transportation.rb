@@ -257,9 +257,10 @@ end
 
 #=======================================================================
   def rate_summa
-    sum = start_sum
+    sum = start_sum || 0
+    extp = extra_pay || 0
     if complex_direction
-      sum += extra_pay
+      sum += (extp || 0)
     end
     return sum
   end
