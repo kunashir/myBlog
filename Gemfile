@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.17'
+gem 'rails', '3.2.18'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
@@ -23,7 +23,7 @@ gem 'to_xls', :github => "dblock/to_xls" #, :branch => "to-xls-on-models"
 gem 'recaptcha', :require => "recaptcha/rails"
 gem 'select2-rails'
 gem 'activeadmin'
-gem 'capybara'
+gem 'capybara', "~>2.2.1"
 
 group   :production do
     gem 'ps'
