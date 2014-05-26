@@ -1,18 +1,29 @@
 env = "production"
 worker_processes 2
 
+
+deploy_to  = "/var/www/apps/transport"
+rails_root = "#{deploy_to}/current"
+pid_file   = "#{deploy_to}/tmp/pids/unicorn.pid"
+socket_file= "#{deploy_to}/tmp/ /unicorn.sock"
+log_file   = "#{rails_root}/log/unicorn.log"
+err_log    = "#{rails_root}/log/unicorn_error.log"
+old_pid    = pid_file + '.oldbin'
+
+
 working_directory "/var/www/apps/transport/current" # available in 0.94.0+
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
-listen "/var/www/apps/transport/tmp/sockets/unicorn.sock", :backlog => 64
-listen 3000, :tcp_nopush => true
+listen socket_file, :backlog => 1024
+pid pid_file
+#listen 3000, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
 
 # feel free to point this anywhere accessible on the filesystem
-pid "/var/www/apps/transport/tmp/pids/unicorn.pid"
+#pid "/var/www/apps/transport/tmp/pids/unicorn.pid"
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, ome applications/frameworks log to stderr or stdout,
@@ -25,6 +36,10 @@ stdout_path "/var/www/apps/transport/tmp/logs/unicorn.stdout.log"
 preload_app true
 GC.respond_to?(:copy_on_write_friendly=) and
   GC.copy_on_write_friendly = true
+
+before_exec do |server|
+  ENV["BUNDLE_GEMFILE"] = "#{rails_root}/Gemfile"
+end
 
 # Enable this flag to have unicorn test client connections by writing the
 # beginning of the HTTP headers before calling the application.  This
