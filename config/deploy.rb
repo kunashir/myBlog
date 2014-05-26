@@ -12,6 +12,7 @@ set :copy_exclude, [".git", "spec"]
 
 set :user,            "deployer"
 set :use_sudo,        false
+default_environment["RAILS_ENV"] = config.to_s
 
 role :web,    "deployer@10.41.64.117", :primary => true
 role :app,    "deployer@10.41.64.117"
