@@ -5,7 +5,7 @@ working_directory "/var/www/apps/transport/current" # available in 0.94.0+
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
 listen "/var/www/apps/transport/socket/.unicorn.sock", :backlog => 64
-listen 8080, :tcp_nopush => true
+listen 3000, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
@@ -39,7 +39,7 @@ before_fork do |server, worker|
 
   # the following is highly recomended for Rails + "preload_app true"
   # as there's no need for the master process to hold a connection
-  
+
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
 
