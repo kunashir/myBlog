@@ -1,4 +1,4 @@
-env = ENV["RAILS_ENV"] || "production"
+env = "production"
 worker_processes 2
 
 working_directory "/var/www/apps/transport/current" # available in 0.94.0+
