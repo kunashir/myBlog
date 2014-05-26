@@ -12,7 +12,8 @@ set :copy_exclude, [".git", "spec"]
 
 set :user,            "deployer"
 set :use_sudo,        false
-default_environment["RAILS_ENV"] = config.to_s
+set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
+set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
 
 role :web,    "deployer@10.41.64.117", :primary => true
 role :app,    "deployer@10.41.64.117"
