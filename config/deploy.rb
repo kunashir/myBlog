@@ -29,6 +29,8 @@ set :default_stage, "production"
 
 # set :linked_files, %w{config/database.yml}
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_files, %w{config/database.yml tr.ini}
+
 
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
 # set :keep_releases, 5
@@ -52,6 +54,9 @@ namespace :deploy do
     end
   end
 
+
+
   after :finishing, 'deploy:cleanup'
 
 end
+

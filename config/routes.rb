@@ -50,19 +50,14 @@ MyBlog::Application.routes.draw do
   match 'transportations/:id/get_start_sum',  	:to 	=>  'transportations#get_start_sum'
   match 'transportations/:id/get_storage',    :to   =>  'transportations#get_storage'
   match	'transportations/:id/copy',		:to	=>	'transportations#new', :as => :copy_transportation
-  #match	'transportations/:id/packet',		:to	=>	'transportations#packet_loading'
   match	'transportations/:id/load',		:to	=>	'transportations#load'
-  #match	'transportations/:id/abort',		:to	=>	'transportations#abort'
-  #match 'transportations/:id/export',		:to 	=>	'transportations#export'
   match 'transportations/:id/specprice',	:to	=>	'transportations#spec_price'
-  #match 'transportations/:id/request_abort',	:to	=>	'transportations#request_abort'
-  #match 'transportations/:id/confirm_abort',	:to	=>	'transportations#confirm_abort'
   match 'transportations/:id/server_time',	:to	=>	'transportations#server_time'
-  #match 'transportations/:id/do_rate',	:to	=>	'transportations#do_rate'
-  #match 'transportations/:id/do_spec_rate',	:to	=>	'transportations#do_spec_rate'
+
   match 'users/:id/read_reg', :to => 'users#read_reg'
   #match '/home', :to => 'pages#home'
 
+  #match "*", :to => "home#routing_error"
 
 
 end

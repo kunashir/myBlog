@@ -11,3 +11,4 @@ tmp/
 /config/deploy/
 /shared/
 *.txt
+/public/uploads
