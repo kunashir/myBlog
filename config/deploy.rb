@@ -1,3 +1,8 @@
+require "rvm/capistrano"
+require "bundler/capistrano"
+
+default_environment["RAILS_ENV"] = 'production'
+
 set :repo_url, 'git@github.com:kunashir/transport_auction'
 set :application, 'transport'
 application = 'transport'
@@ -20,6 +25,7 @@ role :app,    "deployer@10.41.64.117"
 role :db,     "deployer@10.41.64.117"
 
 set :default_stage, "production"
+
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # set :deploy_to, '/var/www/my_app'
@@ -38,6 +44,10 @@ set :linked_files, %w{config/database.yml tr.ini}
 # set :keep_releases, 5
 
 namespace :deploy do
+
+  task :precompile, :role => :app do
+    run "cd #{release_path}/ && RAILS_ENV=production rake assets:precompile --trace"
+  end
 
   desc 'Restart application'
   task :restart do
