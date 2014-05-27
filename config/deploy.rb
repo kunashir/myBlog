@@ -1,3 +1,6 @@
+require "rvm/capistrano"
+#require "bundler/capistrano"
+
 set :repo_url, 'git@github.com:kunashir/transport_auction'
 set :application, 'transport'
 application = 'transport'
@@ -13,13 +16,15 @@ set :copy_exclude, [".git", "spec"]
 set :user,            "deployer"
 set :use_sudo,        false
 set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
-set :unicorn_pid, "#{deploy_to}/shared/pids/unicorn.pid"
+set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
 
 role :web,    "deployer@10.41.64.117", :primary => true
 role :app,    "deployer@10.41.64.117"
 role :db,     "deployer@10.41.64.117"
 
 set :default_stage, "production"
+set :rvm_ruby_version, 'ruby-2.0.0-p353'
+set :rvm_type, :user
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
@@ -35,23 +40,31 @@ set :default_stage, "production"
 set :linked_files, %w{config/database.yml tr.ini}
 
 
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+set :default_env, { path: "home/deployer/.rvm/gems/ruby-2.0.0-p353/bin:/home/deployer/.rvm/gems/ruby-2.0.0-p353@global/bin:/home/deployer/.rvm/rubies/ruby-2.0.0-p353/bin:/home/deployer/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games" }
 # set :keep_releases, 5
 
 namespace :deploy do
 
   task :precompile do
-    run "cd #{release_path}/ && RAILS_ENV=production rake assets:precompile --trace"
+    on roles(:app) do
+      execute "cd #{release_path}/ && RAILS_ENV=production rake assets:precompile --trace"
+    end
   end
 
   task :restart do
-    run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -USR2 `cat #{unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn -c #{unicorn_conf} -E #{rails_env} -D; fi"
+    on roles(:app) do
+      execute "if [ -f #{:unicorn_pid} ] && [ -e /proc/$(cat #{:unicorn_pid}) ]; then kill -USR2 `cat #{:unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn -c #{:unicorn_conf} -E #{:rails_env} -D; fi"
+    end
   end
   task :start do
-    run "bundle exec unicorn -c #{unicorn_conf} -E #{rails_env} -D"
+    on roles(:app) do
+      execute "bundle exec unicorn -c #{:unicorn_conf} -E #{:rails_env} -D"
+    end
   end
   task :stop do
-    run "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -QUIT `cat #{unicorn_pid}`; fi"
+    on roles(:app) do
+      execute "if [ -f #{:unicorn_pid} ] && [ -e /proc/$(cat #{:unicorn_pid}) ]; then kill -QUIT `cat #{:unicorn_pid}`; fi"
+    end
   end
 
   after :finishing, 'deploy:cleanup'
