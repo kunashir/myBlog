@@ -6,6 +6,14 @@ GIT
       spreadsheet (> 0)
       spreadsheet
 
+GIT
+  remote: git@github.com:capistrano/rvm.git
+  revision: dc35ec5e7a74a422250bd6ff5e8885c8b742d0e5
+  specs:
+    capistrano-rvm (0.1.1)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -198,9 +206,6 @@ GEM
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
     ruby-ole (1.2.11.7)
-    rvm1-capistrano3 (1.2.2)
-      capistrano (~> 3.0)
-      sshkit (>= 1.2)
     sass (3.2.18)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
@@ -261,6 +266,7 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-rails
+  capistrano-rvm!
   capybara (~> 2.2.1)
   coffee-rails
   compass (>= 0.11.7)
@@ -276,7 +282,6 @@ DEPENDENCIES
   rails-asset-jqueryui
   recaptcha
   rspec-rails
-  rvm1-capistrano3
   sass-rails
   select2-rails
   spreadsheet

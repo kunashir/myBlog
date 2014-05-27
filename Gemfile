@@ -39,8 +39,8 @@ group	:development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-bundler'
-  gem 'rvm1-capistrano3', require: false
-  #gem 'capistrano-rvm', git: 'git@github.com:capistrano/rvm.git'
+  #gem 'rvm1-capistrano3', require: false
+  gem 'capistrano-rvm', git: 'git@github.com:capistrano/rvm.git'
 
 
   #gem 'rvm-capistrano'
