@@ -23,7 +23,7 @@ role :app,    "deployer@10.41.64.117"
 role :db,     "deployer@10.41.64.117"
 
 set :default_stage, "production"
-set :rvm1_ruby_version, '2.0.0-p481@transport'
+set :rvm1_ruby_version, '2.0.0-p353'
 set :rvm_type, :user
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
@@ -39,7 +39,7 @@ set :rvm_type, :user
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 set :linked_files, %w{config/database.yml tr.ini}
 
-set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0@global"
+set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0-p353@global"
 set :default_env, { path: "home/deployer/.rvm/gems/ruby-2.0.0-p353/bin:/home/deployer/.rvm/gems/ruby-2.0.0-p353@global/bin:/home/deployer/.rvm/rubies/ruby-2.0.0-p353/bin:/home/deployer/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games" }
 
 # set :keep_releases, 5
