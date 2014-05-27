@@ -1,5 +1,7 @@
 #require "rvm/capistrano"
 #require "bundler/capistrano"
+set :assets_role, [:web, :app]
+#load 'deploy/assets'
 
 set :repo_url, 'git@github.com:kunashir/transport_auction'
 set :application, 'transport'
@@ -23,7 +25,7 @@ role :app,    "deployer@10.41.64.117"
 role :db,     "deployer@10.41.64.117"
 
 set :default_stage, "production"
-set :rvm_ruby_version, '2.0.0-p353'
+set :rvm_ruby_version, '2.0.0-p353@global'
 set :rvm_type, :user
 
 set :default_env, { rvm_bin_path: '~/.rvm/bin' }
@@ -51,29 +53,33 @@ namespace :deploy do
 
   task :precompile do
     on roles(:app) do
-      execute "cd #{release_path}/ && RAILS_ENV=production bundle exec rake assets:precompile --trace"
+      within release_path do
+        execute :bundle, "exec rake assets:precompile RAILS_ENV=production"
+      end
     end
   end
 
   task :restart do
     on roles(:app) do
-      execute "if [ -f #{:unicorn_pid} ] && [ -e /proc/$(cat #{:unicorn_pid}) ]; then kill -USR2 `cat #{:unicorn_pid}`; else cd #{deploy_to}/current && bundle exec unicorn -c #{:unicorn_conf} -E #{:rails_env} -D; fi"
+      execute "if [ -f #{fetch(:unicorn_pid)} ] && [ -e /proc/$(cat #{fetch(:unicorn_pid)}) ]; then kill -USR2 `cat #{fetch(:unicorn_pid)}`; else cd #{fetch(:deploy_to)}/current && bundle exec unicorn -c #{fetch(:unicorn_conf)} -E #{fetch(:rails_env)} -D; fi"
     end
   end
   task :start do
     on roles(:all) do
       #execute "cd #{release_path}"
       #set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0-p353@global"
-      execute :bundle, "exec unicorn -c #{:unicorn_conf} -E #{:rails_env} -D"
+      within release_path do
+        execute :bundle, "exec unicorn -c #{fetch(:unicorn_conf)} -E #{fetch(:rails_env)} -D"
+      end
     end
   end
   task :stop do
     on roles(:all) do
-      execute "if [ -f #{:unicorn_pid} ] && [ -e /proc/$(cat #{:unicorn_pid}) ]; then kill -QUIT `cat #{:unicorn_pid}`; fi"
+      execute "if [ -f #{fetch(:unicorn_pid)} ] && [ -e /proc/$(cat #{fetch(:unicorn_pid)}) ]; then kill -QUIT `cat #{fetch(:unicorn_pid)}`; fi"
     end
   end
 
   after :finishing, 'deploy:cleanup'
-  after :deploy, 'deploy:start'
+  after :deploy, 'deploy:restart'
 end
 
