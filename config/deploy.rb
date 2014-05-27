@@ -36,7 +36,7 @@ set :rvm_type, :user
 # set :pty, true
 
 # set :linked_files, %w{config/database.yml}
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, %w{bin /home/deployer/.rvm/gems/ruby-2.0.0-p353@global}
 set :linked_files, %w{config/database.yml tr.ini}
 
 set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0-p353@global"
@@ -58,8 +58,9 @@ namespace :deploy do
     end
   end
   task :start do
-    on roles(:app) do
-      execute "bundle exec unicorn -c #{:unicorn_conf} -E #{:rails_env} -D"
+    on roles(:web) do
+      #set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0-p353@global"
+      execute "bundle exec rake unicorn -c #{:unicorn_conf} -E #{:rails_env} -D"
     end
   end
   task :stop do
