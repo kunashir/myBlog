@@ -41,7 +41,7 @@ SSHKit.config.command_map[:rake] = "#{fetch(:default_env)[:rvm_bin_path]}/rvm ru
 # set :pty, true
 
 # set :linked_files, %w{config/database.yml}
-#set :linked_dirs, %w{bin /home/deployer/.rvm/gems/ruby-2.0.0-p353@global}
+set :linked_dirs, %w{public/uploads}
 set :linked_files, %w{config/database.yml tr.ini}
 
 set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0-p353@global/bin"
