@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   include TransportationsHelper
   #include SimpleCaptcha::ControllerHelpers
   before_filter :authenticate
-  rescue_from Exception, :with => :render_404
+  #rescue_from Exception, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
   rescue_from ActionController::RoutingError, with: :render_404
   rescue_from ActionController::UnknownController, with: :render_404
