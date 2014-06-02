@@ -296,7 +296,8 @@ class TransportationsController < ApplicationController
           return
         end
 
-        if (@transportation.abort_company == current_user.company_id)
+        #if (@transportation.abort_company == current_user.company_id)
+        if Log.company_refused?(@transportation, current_user.company)
           flash[:error] = "Вы не можете играть на повышение, т.к. до этого отказались от заявки"
           redirect_to transportations_path
           return
@@ -379,16 +380,14 @@ class TransportationsController < ApplicationController
 
     old_cur_sum = @transportation.cur_sum
    # if (@transportation.have_spec_price?) or (check_time(@transportation.get_time) == 1)
-    @transportation.cur_sum = 0
-    @transportation.specprice = false
-    # else
-    #   @transportation.cur_sum = @transportation.cur_sum + @transportation.step
-    #   if @transportation.cur_sum > @transportation.start_sum
-    #       @transportation.cur_sum = @transportation.start_sum
-    #   end
-    # end
+    #try to get previous values
+    old_company = Log.prev_company(@transportation, @transportation.company)
+    old_sum = Log.prev_summa(@transportation, @transportation.company)
+
     company_aborting = @transportation.company
-    @transportation.company =  nil
+    @transportation.cur_sum = old_sum
+    @transportation.company = old_company
+    @transportation.specprice = false
 
     if @transportation.save!
       flash[:success] = "Ваша ставка отменена"

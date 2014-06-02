@@ -7,7 +7,7 @@ module TransportationsHelper
     def trad_duration
        return MyBlog::Application.config.duration.to_i #in seconds
     end
-    
+
     def trad_stop_time
 	   return Time.parse(MyBlog::Application.config.time_stop)
     end
@@ -25,7 +25,7 @@ module TransportationsHelper
 
     def last_moment
         cur_time = 300
-        IO.foreach(Rails.root.join('today_random')){|line| cur_time += line.to_i } 
+        IO.foreach(Rails.root.join('today_random')){|line| cur_time += line.to_i }
         return    cur_time
     end
 
@@ -37,8 +37,7 @@ module TransportationsHelper
     end
 
     def is_ext_time?(cur_time, end_time)
-        puts "ext_time cur_time" + cur_time.to_s
-        puts "ext_time end_time" + end_time.to_s
+
         if end_time.nil?
             return false
         end
@@ -59,14 +58,14 @@ module TransportationsHelper
         if (time_last_edit.nil?) or (time_last_edit.to_s.empty?)
             return ""
         end
-        puts ("TIME=>" + time_last_edit.to_s)
+
         cur_time    =   Time.zone.now.localtime
         if (trad_start_time <= cur_time) and (cur_time < end_ext_time)
             return time_last_edit.to_s(:time)
         end
         return "";
     end
-    
+
     def check_time(end_time = nil)
         #-1 если еще рано
         #0 если можно торговатся
@@ -81,13 +80,13 @@ module TransportationsHelper
             return 0
 	    end
 
-        #Проверим 
-        
+        #Проверим
+
         if is_ext_time?(cur_time, end_time)
             return 0;
         end
         return 1
-        
+
     end
 
     def upper_limit
@@ -103,5 +102,5 @@ module TransportationsHelper
         cur_time = Time.zone.now.localtime
         (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
     end
-    
+
 end

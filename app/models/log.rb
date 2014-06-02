@@ -5,7 +5,7 @@ class Log < ActiveRecord::Base
   belongs_to :user
   belongs_to :transportation
   belongs_to :company
-  
+
   def self.save_log_record(object, user, attr, oldvalue, action, company)
     new_rec = Log.new
     new_rec.transportation  = object
@@ -21,5 +21,29 @@ class Log < ActiveRecord::Base
     rec_in_logs = Log.where("transportation_id = ? AND company_id = ?", transp, company)
     #Если выборка не пустая значит имеет!
     !rec_in_logs.empty?
+  end
+
+  def self.company_refused?(tr, company)
+    rec_in_logs = Log.where("transportation_id = ? AND company_id = ? AND action = ?", tr, company, "abort record")
+    !rec_in_logs.empty?
+  end
+
+  def self.last_edit_from_company(tr, company)
+    Log.where("transportation_id = ? AND company_id = ? AND action = ?", tr, company, "edit record").last(2)
+  end
+
+  def self.prev_summa(tr, company)
+    Log.where("transportation_id = ? AND company_id = ? AND action = ? AND attr = ?",
+      tr, company, "edit record", "cur_sum").last.oldvalue
+  end
+
+  def self.prev_company(tr, company)
+    prev_value = Log.where("transportation_id = ? AND company_id = ? AND action = ? AND attr = ?",
+      tr, company, "edit record", "company_id").last.oldvalue
+    begin
+      Company.find(prev_value)
+    rescue
+      nil #return nil, don't call the general handler for a jump to 404
+    end
   end
 end
