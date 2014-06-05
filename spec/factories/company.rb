@@ -5,8 +5,11 @@ FactoryGirl.define do
   end
 
   factory :fr, class: Company do
-    name "transline"
+    name
     is_freighter true
+    # after :build do |fr, evaluator|
+    #     fr.users << FactoryGirl.build_list(:user, 5)
+    # end
   end
 
 end

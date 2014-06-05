@@ -15,25 +15,25 @@ class User < ActiveRecord::Base
   attr_accessor   :password
   attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
   #attr_protected :login_count
-  
+
   scope :manager, -> {where("nmanager = ?", true)}
 
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
-  
+
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  
-  
-  
+
+
+
   validates :name,    :presence => true, :length =>  { :maximum => 50}, :unless => :use_validate?
   validates :email,   :presence => true, :format =>  { :with => email_regex },
                       :uniqueness => { :case_sensitive => false }, :unless => :use_validate?
   validates :company_id, :presence => true , :unless => :use_validate?
   validates :password,  :presence => true, :confirmation  => true,
                         :length   => { :within => 6..40}, :unless => :use_validate?
-                        
+
  before_save :encrypt_password
-  
+
   def inc_login
     self.login_count = self.login_count + 1
     save_without_callbacks(true)
@@ -55,7 +55,7 @@ class User < ActiveRecord::Base
   def has_password?(submitted_password)
     encrypted_password == encrypt(submitted_password)
   end
-  
+
   def show_reg?
     self.show_reg
   end
@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
     return nil  if user.nil?
     return user if user.has_password?(submitted_password)
   end
-  
+
   def self.authenticate_with_salt(id, cookie_salt)
     user = find_by_id(id)
     (user && user.salt == cookie_salt) ? user : nil
@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   def save_without_callbacks ( use )
     @use_callback = use
   end
-  
+
   def show_save_type
     if !@use_callback
       return "Use callback"
@@ -84,20 +84,10 @@ class User < ActiveRecord::Base
 
 
   def self.carriers_email(ignore_company=0)
-      if ignore_company == 0
-          users_list = User.all
-      else
-          users_list = User.where("company_id != ? AND be_notified = ?", ignore_company, true)
-      end
-      output_array = Array.new
-      j = 0
-      for i in users_list
-          if i.company.is_freighter
-              output_array[j] = i.email
-              j = j + 1
-          end
-      end
-      output_array
+    output_array = []
+    User.includes(:company).where("companies.id <> ?", ignore_company)
+      .select("email").where("be_notified = ?", true).each{|x| output_array << x.email}
+    output_array
   end
 
   private

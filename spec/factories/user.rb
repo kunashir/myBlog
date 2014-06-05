@@ -3,7 +3,10 @@ FactoryGirl.define do
   factory :user do
     email
     password 'password'
-    association :company, factory: :fr
+    #association :company, factory: :fr
+    after :build do |fr, evaluator|
+        fr.company = FactoryGirl.create(:fr)
+    end
     name "some user"
   end
 

@@ -30,6 +30,9 @@ class UserMailer < ActionMailer::Base
 
   end
 
+  def notification_old_company(tr, old_company)
+
+  end
   def test(email)
   	mail(:to => email, :subject => "Тест")
   end

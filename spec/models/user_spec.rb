@@ -124,6 +124,15 @@ describe User do
         @user.has_password?("invalid").should be_false
       end
     end
+  end
+
+  context 'methods for mailer' do
+    it "return all email of transportation company" do
+      co = FactoryGirl.create :company
+      email_arr = Array.new
+      User.includes(:company).where("companies.id <> ?", co).select("email").each{|x| email_arr << x.email}
+      User.carriers_email(co) == email_arr
+    end
 
   end
 end

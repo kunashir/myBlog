@@ -396,6 +396,9 @@ class TransportationsController < ApplicationController
         UserMailer.notification_to_companies(@transportation, company_aborting)
         UserMailer.notificate_manager(@transportation, old_cur_sum)
       end
+      if !old_company.nil? #if return to old company - sent him notification
+        UserMailer.notification_old_company(@transportation, old_company)
+      end
     else
       flash[:error] = "Ошибка отмены"
     end

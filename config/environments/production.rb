@@ -62,13 +62,14 @@ MyBlog::Application.configure do
   config.action_mailer.delivery_method = :smtp
   # Defaults to:
   config.action_mailer.smtp_settings = {
-    :address    =>  'srv-mail',
-    :port       =>  25,
-    :domain     =>  '',
-    :user_name  =>  'robot',
-    :password   =>  '',
-    :authentication => 'login',
-    :enable_starttls_auto   => true}
+    :address    =>  MAIL_CONFIG['address'],
+    :port       =>  MAIL_CONFIG['port'],
+    :domain     =>  MAIL_CONFIG['domain'],
+    :user_name  =>  MAIL_CONFIG['user_name'],
+    :password   =>  MAIL_CONFIG['password'],
+    :authentication => MAIL_CONFIG['authentication'],
+    :enable_starttls_auto   => MAIL_CONFIG['enable_starttls_auto']
+  }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
 end

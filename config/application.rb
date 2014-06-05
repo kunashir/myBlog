@@ -15,6 +15,8 @@ if defined?(Bundler)
   Bundler.require(:default, :assets, Rails.env)
 end
 
+MAIL_CONFIG  = YAML.load(File.read(File.expand_path('../mail.yml', __FILE__)))[Rails.env]
+
 module MyBlog
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

@@ -12,3 +12,4 @@ tmp/
 /shared/
 *.txt
 /public/uploads
+*.yml
