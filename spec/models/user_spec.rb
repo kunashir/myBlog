@@ -127,12 +127,18 @@ describe User do
   end
 
   context 'methods for mailer' do
-    it "return all email of transportation company" do
+    it "return all email of transportation companies" do
       co = FactoryGirl.create :company
       email_arr = Array.new
       User.includes(:company).where("companies.id <> ?", co).select("email").each{|x| email_arr << x.email}
       User.carriers_email(co) == email_arr
     end
 
+    it "return all email of the specific company" do
+      co = FactoryGirl.create :company
+      email_arr = Array.new
+      User.includes(:company).where("companies.id = ?", co).select("email").each{|x| email_arr << x.email}
+      User.company_email(co) == email_arr
+    end
   end
 end

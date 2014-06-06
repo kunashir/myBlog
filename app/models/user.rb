@@ -90,6 +90,14 @@ class User < ActiveRecord::Base
     output_array
   end
 
+
+  def self.company_email(company=0)
+    output_array = []
+    User.includes(:company).where("companies.id = ?", company)
+      .select("email").where("be_notified = ?", true).each{|x| output_array << x.email}
+    output_array
+  end
+
   private
     def encrypt_password
      if !@use_callback
