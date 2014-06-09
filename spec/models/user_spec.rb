@@ -141,4 +141,15 @@ describe User do
       User.company_email(co) == email_arr
     end
   end
+
+  context 'relation with message' do
+    before(:each) do
+      @msg = FactoryGirl.create :message
+    end
+
+    it "can have relation with message" do
+      @user.messages<<@msg
+      @user.messages.include?(@msg)
+    end
+  end
 end

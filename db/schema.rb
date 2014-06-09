@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140417062115) do
+ActiveRecord::Schema.define(:version => 20140609110650) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
 
   create_table "areas", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "city_id"
   end
 
@@ -41,22 +41,22 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
     t.string   "statenumber"
     t.string   "trailnumber"
     t.integer  "company_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "shortname"
   end
 
   create_table "cities", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "active",     :default => false
   end
 
   create_table "clients", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "clients", ["id"], :name => "index_clients_on_id"
@@ -65,16 +65,16 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
     t.string   "name"
     t.integer  "inn"
     t.boolean  "is_freighter"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "drivers", :force => true do |t|
     t.string   "name"
     t.string   "passport"
     t.integer  "company_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "logs", :force => true do |t|
@@ -83,9 +83,15 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
     t.string   "attr"
     t.string   "oldvalue"
     t.string   "action"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "company_id"
+  end
+
+  create_table "messages", :force => true do |t|
+    t.string   "content"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "news", :force => true do |t|
@@ -102,15 +108,15 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
     t.integer  "city_id"
     t.string   "carcase"
     t.integer  "summa"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "simple_captcha_data", :force => true do |t|
     t.string   "key",        :limit => 40
     t.string   "value",      :limit => 6
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "simple_captcha_data", ["key"], :name => "idx_key"
@@ -118,8 +124,8 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
   create_table "storages", :force => true do |t|
     t.string   "address"
     t.integer  "client_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "city_id"
     t.string   "name"
   end
@@ -141,8 +147,8 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
     t.integer  "step"
     t.integer  "user_id"
     t.integer  "carrier_id"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "company_id"
     t.string   "volume"
     t.integer  "avto_id"
@@ -160,15 +166,22 @@ ActiveRecord::Schema.define(:version => 20140417062115) do
     t.integer  "city_id"
   end
 
-  add_index "transportations", ["date"], :name => "index_transportations_on_date"
   add_index "transportations", ["id"], :name => "index_transportations_on_id"
+
+  create_table "user_msgs", :force => true do |t|
+    t.boolean  "active",     :default => true
+    t.integer  "user_id"
+    t.integer  "message_id"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
     t.string   "company"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "encrypted_password"
     t.string   "salt"
     t.boolean  "admin"

@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
 
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
+  has_many   :messages, through: :user_msg
+  has_many   :user_msg
 
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 

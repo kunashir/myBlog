@@ -21,4 +21,8 @@ class Company < ActiveRecord::Base
     list = [Company.new]
     list + Company.where("id > ?",  1)
   end
+
+  def users
+    User.where("company_id = ? AND is_block = ?", self, false)
+  end
 end

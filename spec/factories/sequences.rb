@@ -7,4 +7,8 @@ FactoryGirl.define do
     "name#{n}"
   end
 
+  sequence :content do |n|
+    "Message #{n}"
+  end
+
 end

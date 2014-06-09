@@ -33,6 +33,14 @@ class Transportation < ActiveRecord::Base
   after_save    :logging_new
   @cur_user = nil
 
+def to_s
+  begin
+    "#{area.name} - #{city.name}"
+  rescue
+    "Н/д"
+  end
+end
+
 #=======================================================================
 def get_num
   num.nil? ? "без номера" : num
@@ -170,18 +178,20 @@ end
   end
 
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
-    if self.date >= Date.current()
-      return true
-    end
-    return false
+    # if self.date >= Date.current()
+    #   return true
+    # end
+    # return false
+    self.date >= Date.current()
   end
 
 #=======================================================================
   def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
-    if ( !self.avto_id.nil? and !self.driver_id.nil?)
-      return true
-    end
-    return false
+    #if
+    ( !self.avto_id.nil? and !self.driver_id.nil?)
+    #   return true
+    # end
+    # return false
   end
 
 #=======================================================================
@@ -304,9 +314,7 @@ end
   end
   #=======================================================================
   def is_close?
-    return true if (Time.now > get_time)
-
-    return false
+    Time.now > get_time
   end
 
 end
