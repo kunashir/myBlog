@@ -7,6 +7,6 @@ class UserMsg < ActiveRecord::Base
   validates :message, :presence => true
 
   def self.for_user(user)
-    UserMsg.where("user_id = ?", user)
+    UserMsg.includes(:message).where("user_id = ? and active = ?", user, true)
   end
 end

@@ -398,7 +398,12 @@ class TransportationsController < ApplicationController
       end
        if !old_company.nil? #if return to old company - sent him notification
       #   UserMailer.notification_old_company(@transportation, old_company)
-        msg = Message.new(:content => "")
+        msg = Message.new(:content => "Заявка #{@transportation.to_s} снова ваша из-за отказа другой компании!!!")
+        msg.save
+        old_company.users.each do |usr|
+          puts "SAVE MSG TO USER ================"
+          usr.messages<<msg
+        end
        end
     else
       flash[:error] = "Ошибка отмены"

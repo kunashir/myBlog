@@ -5,11 +5,22 @@ class ApplicationController < ActionController::Base
   include TransportationsHelper
   #include SimpleCaptcha::ControllerHelpers
   before_filter :authenticate
+  before_filter :show_message
   #rescue_from Exception, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
   rescue_from ActionController::RoutingError, with: :render_404
   rescue_from ActionController::UnknownController, with: :render_404
 
+  def show_message
+    if current_user
+      usr_msgs = UserMsg.for_user(current_user)
+      usr_msgs.each do |usr_msg|
+        flash[:info] = usr_msg.message.content
+        usr_msg.active = false
+        usr_msg.save!
+      end
+    end
+  end
 
   private
   def authenticate
