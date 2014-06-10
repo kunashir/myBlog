@@ -401,7 +401,6 @@ class TransportationsController < ApplicationController
         msg = Message.new(:content => "Заявка #{@transportation.to_s} снова ваша из-за отказа другой компании!!!")
         msg.save
         old_company.users.each do |usr|
-          puts "SAVE MSG TO USER ================"
           usr.messages<<msg
         end
        end
