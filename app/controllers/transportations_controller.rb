@@ -24,6 +24,7 @@ class TransportationsController < ApplicationController
     if (!manager?) and (!is_admin?)
       flash[:error] = "Вы не можете создавать заявки!!!"
       redirect_to transportations_path
+      return
     end
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
@@ -35,38 +36,37 @@ class TransportationsController < ApplicationController
 
   #=====================================================================
   def get_list_transp (parameters)
-      @filter_text = ""
-      begin
-        @day = parameters[:datepicker]
+    @filter_text = ""
+    begin
+      @day = parameters[:datepicker]
 
-      rescue
-       @day = Date.current
-      end
-      hide_today = false
-      if is_trade?
-        hide_today = true
-      end
-      @title = "Список заявок:"  + @day.to_s
-      show_all = parameters[:show_all].nil? ? false : true
-      area_name = ""
-      if parameters[:use_area].nil?
-        storage_source = ""
-      else
-        storage_source = parameters[:area]
-        area_name = storage_source.nil? ? "": Area.find(storage_source).name
-      end
-      @filter_text = @day.to_s + " " + area_name
-      @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today, parameters[:page], 50) #.paginate(:page =>  parameters[:page], :per_page => 50)
+    rescue
+     @day = Date.current
+    end
+    #hide_today = false
+    hide_today = is_trade?
+
+    @title = "Список заявок:"  + @day.to_s
+    show_all = parameters[:show_all].nil? ? false : true
+    area_name = ""
+    if parameters[:use_area].nil?
+      storage_source = ""
+    else
+      storage_source = parameters[:area]
+      area_name = storage_source.nil? ? "": Area.find(storage_source).name
+    end
+    @filter_text = @day.to_s + " " + area_name
+    @transportations  = Transportation.set_filter(@day, show_all, storage_source, hide_today, parameters[:page], 50) #.paginate(:page =>  parameters[:page], :per_page => 50)
   end
   #====================================================================
   def export
-      headers['Content-Type'] = "application/vnd.ms-excel"
-      headers['Content-Disposition'] = 'attachment; filename="report.xls"'
-      headers['Cache-Control'] = ''
-      #@transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
-      puts ("EXPORT=>" + params.to_s)
-      get_list_transp(params)
-      render :index , :layout => false
+    headers['Content-Type'] = "application/vnd.ms-excel"
+    headers['Content-Disposition'] = 'attachment; filename="report.xls"'
+    headers['Cache-Control'] = ''
+    #@transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
+    puts ("EXPORT=>" + params.to_s)
+    get_list_transp(params)
+    render :index , :layout => false
   end
 
   #=====================================================================
@@ -95,7 +95,7 @@ class TransportationsController < ApplicationController
   #=====================================================================
   def create
     if (!manager?) and (!is_admin?)
-      flash[:error] = "Вы не можете редактировать данную заявку"
+      flash[:error] = "Вы не можете создавать заявки"
       redirect_to transportations_path
     end
     ls = lastNum
@@ -115,7 +115,6 @@ class TransportationsController < ApplicationController
       redirect_to :index
     else
       flash[:error] = "Проверте данные!"
-      @title = "Добавление заявки на перевозку"
       render 'new'
     end
   end
@@ -127,12 +126,11 @@ class TransportationsController < ApplicationController
     if (!manager?) and (!is_admin?)
       flash[:error] = "Вы не можете просматривать детализация по заявке!"
       redirect_to transportations_path
-      return
     end
   end
 
   #=====================================================================
-   def edit
+  def edit
     @transportation = Transportation.find(params[:id])
     if (!manager?) and (!is_admin?)
       flash[:error] = "Вы не можете редактировать данную заявку"
@@ -270,9 +268,9 @@ class TransportationsController < ApplicationController
         end
 
         if @transportation.specprice #на случай, если два запроса подряд
-             flash[:error] = "К сожалению, заявку уже забрали со скидкой "+ percent_spec_price.to_s + "%!!!"
-             redirect_to transportations_path
-             return
+          flash[:error] = "К сожалению, заявку уже забрали со скидкой "+ percent_spec_price.to_s + "%!!!"
+          redirect_to transportations_path
+          return
         end
 
 
@@ -322,8 +320,8 @@ class TransportationsController < ApplicationController
         if @transportation.save!
           flash[:success] = "Ваша ставка принята."
         else
-          @title = "Error"
-          flash[:error] = "Ошибка сохранения. Сообщите об этом разработчикам (transp_contr:204)."
+          @title = "Ошибка"
+          flash[:error] = "Ошибка сохранения. Сообщите об этом разработчикам."
         end
         redirect_to transportations_path
       end
@@ -389,21 +387,23 @@ class TransportationsController < ApplicationController
     @transportation.company = old_company
     @transportation.specprice = false
 
-    if @transportation.save!
+    if @transportation.save
       flash[:success] = "Ваша ставка отменена"
       Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
       if (check_time(@transportation.get_time) == 1) # Если отмена после окончания отправим другим уведомление
         UserMailer.notification_to_companies(@transportation, company_aborting)
         UserMailer.notificate_manager(@transportation, old_cur_sum)
       end
-       if !old_company.nil? #if return to old company - sent him notification
-      #   UserMailer.notification_old_company(@transportation, old_company)
+      if !old_company.nil? #if return to old company - sent him notification
+        if (check_time(@transportation.get_time) == 1)
+          UserMailer.notification_old_company(@transportation, old_company)
+        end
         msg = Message.new(:content => "Заявка #{@transportation.to_s} снова ваша из-за отказа другой компании!!!")
         msg.save
         old_company.users.each do |usr|
           usr.messages<<msg
         end
-       end
+      end
     else
       flash[:error] = "Ошибка отмены"
     end
@@ -415,7 +415,7 @@ class TransportationsController < ApplicationController
     @transportation       = Transportation.find(params[:id])
     @transportation.set_user(current_user)
     @transportation.request_abort = true
-    if @transportation.save!
+    if @transportation.save
       flash[:success] =  "Запрос на отмену сохранен, свяжитесь с представителем ООО Рошен для подтверждения отказа"
       UserMailer.request_abort(@transportation)
 
@@ -482,8 +482,6 @@ class TransportationsController < ApplicationController
     rescue
       render :text => '0'
     end
-
-
   end
 
 #=====================================================================

@@ -99,8 +99,8 @@ module TransportationsHelper
     end
 
     def is_trade?
-        cur_time = Time.zone.now.localtime
-        (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
+      cur_time = Time.zone.now.localtime
+      (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
     end
 
 end

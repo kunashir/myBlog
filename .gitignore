@@ -13,3 +13,4 @@ tmp/
 *.txt
 /public/uploads
 *.yml
+dump.rdb
