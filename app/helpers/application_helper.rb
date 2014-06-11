@@ -10,7 +10,7 @@ module ApplicationHelper
 	end
 
 	def logo
-		image_tag("logo.jpg", :size => "500x105", :alt => "Лого", :class => "round")
+		image_tag("horizont_logo.png", :size => "150x50", :alt => "Лого", :class => "round")
 	end
 
   def track_logo
@@ -28,6 +28,11 @@ module ApplicationHelper
   def remove_icon
     image_tag("grey_remove.png", :size => "15x15", :alt => "Удалить")
   end
+
+  def close_icon
+    image_tag("button_grey_close.png", :size =>"25x25", :alt => "Закрыть")
+  end
+
   def to_time ( m_time )
                     # => Thu Jan 18 06:10:17 CST 2007
 

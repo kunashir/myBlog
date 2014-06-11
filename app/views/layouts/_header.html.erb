@@ -1,24 +1,30 @@
 #coding: utf-8
 <header>
-	<%= link_to logo, root_path %>
-	<nav class = "round">
-    	<ul>
-    		<li><%= link_to "Главная", root_path %></li>
-        
-         <% if signed_in? %>
-          <li><%= link_to "Заявки", transportations_path %></li>
-          <li><%= link_to "Компании", companies_path %></li>
-          <li><%= link_to "Пользователи", users_path %></li>
-          <li><%= link_to "Профиль", current_user %></li>
-          
-        <% end %>	    	
-        
-        <li><%= link_to "Помощь", help_path %></li>
-        <% if signed_in? %>
-        <li><%= link_to "Выход", signout_path, :method => :delete, :id => 'exit_link' %></li>
-        <% else %>
-        <li><%= link_to "Вход", signin_path %></li>
-        <% end %>	    	
-		</ul>
-	</nav>
+    <nav >
+      <div class = "logo">
+        <%= link_to logo, root_path %>
+      </div>
+      <div class = "server_time" id = "server_time" ></div>
+      <div class ="menu_nav">
+        <ul>
+
+          <li><%= link_to "Главная", root_path %></li>
+
+           <% if signed_in? %>
+            <li><%= link_to "Заявки", transportations_path %></li>
+            <li><%= link_to "Компании", companies_path %></li>
+            <li><%= link_to "Пользователи", users_path %></li>
+            <li><%= link_to "Профиль", current_user %></li>
+
+          <% end %>
+
+          <li><%= link_to "Помощь", help_path %></li>
+          <% if signed_in? %>
+          <li><%= link_to "Выход", signout_path, :method => :delete, :id => 'exit_link' %></li>
+          <% else %>
+          <li><%= link_to "Вход", signin_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
 </header>

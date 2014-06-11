@@ -5,7 +5,7 @@
       <%= link_to "Сохранить в xls", export_transportations_path %>
     </div>
 <% end %>
-<div class = "server_time" id = "server_time" ></div>
+
 <h1>Заявки на перевозку:<%= @filter_text %></h1>
 <%= form_tag( transportations_path, :method => "get") do %>
 	<%= label_tag(:q, "Дата для отбора:") %>
@@ -50,7 +50,7 @@
 <div class="rate-popup">
   <div class="rate-popup-content">
     <div class="close-popup">
-      <a href="">Закрыть</a>
+      <a href=""><%= close_icon %> </a>
     </div>
     <div class="do_rate_form" >
     </div>
