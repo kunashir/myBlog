@@ -1,9 +1,10 @@
 .container {
-  width: 90%;
+  width: 97%;
 }
 
 body {
-  background: #cff;
+  background: #d3d3d3;
+  /*cff;*/
 }
 
 header {
