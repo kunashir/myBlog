@@ -6,6 +6,11 @@ class Log < ActiveRecord::Base
   belongs_to :transportation
   belongs_to :company
 
+
+  def self.transp_history(tr)
+    Log.includes(:user, :company,:transportation).where("transportation_id" => tr, "attr" => "cur_sum")
+  end
+
   def self.save_log_record(object, user, attr, oldvalue, action, company)
     new_rec = Log.new
     new_rec.transportation  = object

@@ -24,6 +24,7 @@ MyBlog::Application.routes.draw do
       get 'abort'
       get 'do_spec_rate'
       get 'do_rate'
+      get 'show_history'
     end
     collection do
       get 'export'

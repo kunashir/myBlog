@@ -290,8 +290,8 @@ div.logo{
 }
 .rate-popup .rate-popup-content{
     margin:40px auto 0px auto;
-    width:350px;
-    height: 240px;
+    width:450px;
+    height: 440px;
     padding:10px;
     background-color: #c5c5c5;
     border-radius:5px;
@@ -306,4 +306,13 @@ div.logo{
 
 .close-popup{
   float: right;
+}
+
+ul .history_item{
+  display: table;
+}
+
+.item{
+  display: inline-block;
+  width: 30%;
 }

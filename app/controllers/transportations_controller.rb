@@ -4,13 +4,20 @@ require 'transportations_helper'
 #require 'encode.rb'
 
 class TransportationsController < ApplicationController
-  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy, :get_form]
+  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy, :get_form, :show_history]
   before_filter :log_do_rate, :only => [:update]
+  before_filter :manager_access, :only => [:show_history, :load, :destroy]
 
 
   def get_form
     @transportation = Transportation.find(params[:id])
     render "_do_rate_form", layout: false
+  end
+
+  def show_history
+    @transportation = Transportation.find(params[:id])
+    @logs = Log.transp_history(@transportation)
+    render "_history_form", layout: false
   end
 
   def destroy
@@ -554,6 +561,13 @@ private
 
   def log_do_rate
     Log.save_log_record(Transportation.find(params[:id]), current_user, "cur_time", Time.zone.now.localtime,'Request time', current_user.company)
+  end
+
+  def manager_access
+    if !manager?
+      flash[:error] = "Нет прав для данного действия!"
+      redirect_to transportations_path
+    end
   end
 
 end

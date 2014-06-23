@@ -7,11 +7,6 @@ function showPopup() {
 }
 
 
-// $(document).on('click', '.oper_column', function(e) {
-//   $(".rate-popup-content").children("form").attr("action", $(this).children("a").attr("href"));
-//   showPopup();
-//   return false;
-// });
 
 $(document).on('click', '.close-popup', function(e) {
   showPopup();
@@ -138,6 +133,20 @@ function GetClientCities()
       $(".do_rate_form").html(data);
       showPopup();
       showRecaptcha();
+
+    }
+      ).bind("ajax:error", function(){ alert("Error!!")});
+
+  }
+  );
+}) (jQuery);
+
+(function($) {
+  $(document).ready(function() {
+    $(".history").on("ajax:success", function(e, data, status, xhr){
+      $(".do_rate_form").html(data);
+      showPopup();
+
 
     }
       ).bind("ajax:error", function(){ alert("Error!!")});

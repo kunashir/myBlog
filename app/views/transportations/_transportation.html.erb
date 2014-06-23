@@ -5,6 +5,9 @@
     , <%= link_to copy_icon, copy_transportation_path(transportation), :title => "Копировать" %> ,
     <%= link_to remove_icon ,transportation, :method =>  :delete, :confirm => "Вы уверены?",
                                             :title  => "Удалить #{transportation.num}" %>, <%= show_close_time(transportation.close_time) %>
+      <div class = "history">
+        <%= link_to "История", show_history_transportation_path(transportation), :remote => true %>
+      </div>
     </td>
   <% else %>
     <td class = "tr">
