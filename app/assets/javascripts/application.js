@@ -26,9 +26,9 @@
   $(document).ready(function() {
     $("#datepicker").change(function(){
       //alert ("ttts");
-      $("#link_to_xls").html('<a href="transportations/-1/export?datepicker='+$("#datepicker").val() +'" >Сохранить в xls</a>');
-    })
-  })
+      $("#link_to_xls").html('<a href="transportations/export?datepicker='+$("#datepicker").val() +'" >Сохранить в xls</a>');
+    });
+  });
 })(jQuery);
 
 
@@ -114,53 +114,54 @@ function add_sec(cur_time)
 
 (function($) {
   $(document).ready(function() {
-         $.ajax(
-	     {
-         	type: "GET",
+    $.ajax(
+    {
+      type: "GET",
 			url:  "/transportations/-1/server_time",
 			data: "",
 			dataType: "text",
-			error: function(XMLHttpRequest, textStatus, errorThrown)
-         		{
-			      $("#server_time").html("ОШИБКА: не удалось получить время сервера!");
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+        $("#server_time").html("ОШИБКА: не удалось получить время сервера!");
 			},
-          		success:  function(result)
-			{
-			      //alert (result);
-			      $("#server_time").html(result);
-                  //var temp = $("#server_time").text();
-                  //alert (temp+"::" + result);
-                  setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-		        }
+      success:  function(result){
+        $("#server_time").html(result);
+        //var temp = $("#server_time").text();
+        //alert (temp+"::" + result);
+        setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
+      }
 
 
-        });
-});
+    });
+  });
 })(jQuery);
 
 
-function saveToXls ()
-{
-  $.ajax(
-       {
-          type: "POST",
-          url:  "/transportations/-1/export?datepicker=" + $("#datepicker").val(),
-          data: "",
-          dataType: "text",
-          error: function(XMLHttpRequest, textStatus, errorThrown)
-          {
-            alert ("Ошибка формирования файла xls");
-          },
-          success:  function(result)
-          {
-            //alert (result);
-            //$("#server_time").html(result);
-                  //var temp = $("#server_time").text();
-                  //alert (temp+"::" + result);
-             //     setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-            }
+// function saveToXls ()
+// {
+//   $.download(
+
+//           "/transportations/export", 'filename=mySpreadsheet&format=xls&content='
+//           //data:{datapicker: $("#datepicker").val()}
+//          // dataType: "text",
+//           // error: function(XMLHttpRequest, textStatus, errorThrown)
+//           // {
+//           //   alert ("Ошибка формирования файла xls");
+//           // },
+//           // success:  function(result)
+//           // {
+//           //   window.open("data:xls," + window.btoa(result));
+//           //   //alert (result);
+//           //   //$("#server_time").html(result);
+//           //         //var temp = $("#server_time").text();
+//           //         //alert (temp+"::" + result);
+//           //    //     setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
+//           //   }
 
 
-        });
-  return false;
-}
+//         );
+//   return false;
+// }
+
+// $(document).ready(function(){
+//   $("#link_to_xls").on('click', "a", saveToXls);
+// });

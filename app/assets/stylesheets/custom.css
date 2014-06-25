@@ -316,3 +316,7 @@ ul .history_item{
   display: inline-block;
   width: 30%;
 }
+
+#link_to_xls{
+  display: inline-block;
+}

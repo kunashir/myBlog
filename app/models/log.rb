@@ -8,7 +8,7 @@ class Log < ActiveRecord::Base
 
 
   def self.transp_history(tr)
-    Log.includes(:user, :company,:transportation).where("transportation_id" => tr, "attr" => "cur_sum")
+    Log.includes(:user, :company,:transportation).where("transportation_id" => tr, "attr" => "cur_sum").order(:transportation_id)
   end
 
   def self.save_log_record(object, user, attr, oldvalue, action, company)

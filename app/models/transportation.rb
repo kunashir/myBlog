@@ -86,7 +86,7 @@ end
 
 #=======================================================================
 def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
-  return Transportation.
+  return Transportation.includes(:area, :city, :client, :company).
 page(page).per(per_page) if show_all
 
   request_text = "date = ?"
@@ -101,10 +101,10 @@ page(page).per(per_page) if show_all
   end
   if !source_storage.nil? and !source_storage.empty?
     request_text += " AND area_id = ?"
-    return Transportation.where(request_text, request_date, source_storage).
+    return Transportation.includes(:area, :city, :client, :company).where(request_text, request_date, source_storage).
 page(page).per(per_page)
   end
-  Transportation.where(request_text, request_date).page(page).per(per_page)
+  Transportation.includes(:area, :city, :client, :company).where(request_text, request_date).page(page).per(per_page)
 end
 
 #=======================================================================

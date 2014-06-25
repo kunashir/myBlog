@@ -105,12 +105,14 @@ class TransportationsController < ApplicationController
       flash[:error] = "Вы не можете создавать заявки"
       redirect_to transportations_path
     end
-    ls = lastNum
+    #ls = lastNum
+
     @transportation = Transportation.new(params[:transportation])
+    @transportation.extra_pay = 0 if !@transportation.complex_direction
     @transportation.user = current_user
     if !@transportation.set_rate
       flash[:error] = "Не найден тариф!"
-      @title = "Добавление заявки на перевозку"
+      # @title = "Добавление заявки на перевозку"
       render 'new'
       return
     end
