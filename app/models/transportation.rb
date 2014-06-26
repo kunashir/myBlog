@@ -169,19 +169,7 @@ end
   end
 
 #=======================================================================
-  def self.test_loading(filename)
-    lines = File.readlines(filename)
-    for line in lines
-      arr = line.split(";")
-    end
-    return arr
-  end
-
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
-    # if self.date >= Date.current()
-    #   return true
-    # end
-    # return false
     self.date >= Date.current()
   end
 

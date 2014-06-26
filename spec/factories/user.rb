@@ -8,6 +8,8 @@ FactoryGirl.define do
         fr.company = FactoryGirl.create(:fr)
     end
     name "some user"
+    is_block false
+    show_reg false
   end
 
   factory :manager, class: User do

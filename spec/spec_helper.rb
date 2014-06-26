@@ -25,6 +25,7 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
+  config.include(UserHelper)
   Webrat.configure do |config|
     config.mode = :rails
   end
