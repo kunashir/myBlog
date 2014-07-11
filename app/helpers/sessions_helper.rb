@@ -1,13 +1,14 @@
 #coding: utf-8
 module SessionsHelper
 
-  def sign_in(user) #вход
-    cookies.permanent.signed[:remember_token] = [user.id, user.salt]
-    session[:id]  = [user.id, user.salt]
+  def sign_in(user, ip=nil, agent=nil) #вход
+    cookies.permanent.signed[:remember_token] = [user.id, user.salt, ip, agent] #[tk, user.salt]
+    session[:id]  = [user.id, user.salt] #[tk, user.id]
     self.current_user = user
   end
 
-  def sign_out #выход
+  def sign_out(user=nil) #выход
+
     cookies.delete(:remember_token)
     self.current_user = nil
   end
@@ -76,7 +77,7 @@ private
   end
 
   def remember_token
-    cookies.signed[:remember_token] || [nil, nil]
+    cookies.signed[:remember_token] || [nil, nil, nil, nil]
   end
 
   def store_location

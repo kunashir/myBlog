@@ -36,10 +36,12 @@ class User < ActiveRecord::Base
 
  before_save :encrypt_password
 
-  def inc_login
+  def inc_login(ip, agent)
     self.login_count = self.login_count + 1
+    self.ip = ip
+    self.agent = agent
     save_without_callbacks(true)
-    self.save!
+    self.save
   end
 
   def dec_login
@@ -68,9 +70,9 @@ class User < ActiveRecord::Base
     return user if user.has_password?(submitted_password)
   end
 
-  def self.authenticate_with_salt(id, cookie_salt)
+  def self.authenticate_with_salt(id, cookie_salt=nil, ip=nil, agent=nil)
     user = find_by_id(id)
-    (user && user.salt == cookie_salt) ? user : nil
+    (user && user.salt == cookie_salt && user.ip == ip && user.agent == agent) ? user : nil
   end
 
   def save_without_callbacks ( use )
