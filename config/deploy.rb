@@ -42,7 +42,7 @@ SSHKit.config.command_map[:rake] = "#{fetch(:default_env)[:rvm_bin_path]}/rvm ru
 
 # set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{public/uploads}
-set :linked_files, %w{config/database.yml config/app.yml config/mail.yml}
+set :linked_files, %w{config/database.yml config/app.yml config/mail.yml config/recaptcha.yml}
 
 set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.0.0-p353@global/bin"
 #set :default_env, { path: "home/deployer/.rvm/gems/ruby-2.0.0-p353/bin:/home/deployer/.rvm/gems/ruby-2.0.0-p353@global/bin:/home/deployer/.rvm/rubies/ruby-2.0.0-p353/bin:/home/deployer/.rvm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games" }

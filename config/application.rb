@@ -17,6 +17,7 @@ end
 
 MAIL_CONFIG  = YAML.load(File.read(File.expand_path('../mail.yml', __FILE__)))[Rails.env]
 APP_CONFIG = YAML.load(File.read(File.expand_path('../app.yml', __FILE__)))[Rails.env]
+RECAP_CONFIG = YAML.load(File.read(File.expand_path('../recaptcha.yml', __FILE__)))[Rails.env]
 
 module MyBlog
   class Application < Rails::Application
