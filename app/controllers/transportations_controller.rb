@@ -4,9 +4,10 @@ require 'transportations_helper'
 #require 'encode.rb'
 
 class TransportationsController < ApplicationController
-  before_filter :authenticate,  :only => [:edit, :update, :index, :destroy, :get_form, :show_history]
+  before_filter :authenticate #,  :only => [:edit, :update, :index, :destroy, :get_form, :show_history]
   before_filter :log_do_rate, :only => [:update]
-  before_filter :manager_access, :only => [:show_history, :load, :destroy]
+  before_filter :manager_access, :only => [:show_history, :load, :destroy, :create, :new, :show]
+  before_filter :check_block, :only => [:update, :index, :do_rate, :do_spec_rate]
 
 
   def get_form
@@ -28,11 +29,11 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def new
-    if (!manager?) and (!is_admin?)
-      flash[:error] = "Вы не можете создавать заявки!!!"
-      redirect_to transportations_path
-      return
-    end
+    # if (!manager?) and (!is_admin?)
+    #   flash[:error] = "Вы не можете создавать заявки!!!"
+    #   redirect_to transportations_path
+    #   return
+    # end
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
     if !params[:id].nil? #ввод копированием
@@ -71,25 +72,13 @@ class TransportationsController < ApplicationController
     headers['Content-Disposition'] = 'attachment; filename="report.xls"'
     headers['Cache-Control'] = ''
     #@transportations = Transportation.only_active.paginate(:page => params[:page], :per_page => 50)
-    puts ("EXPORT=>" + params.to_s)
+    #puts ("EXPORT=>" + params.to_s)
     get_list_transp(params)
     render :index , :layout => false
   end
 
   #=====================================================================
   def index
-
-    # if signed_in? #and !current_user.was_login?
-    #   sign_out
-    #   redirect_to root_path
-    #   return
-    # end
-
-    if is_block_user?
-      flash[:error] = "У Вас нет прав для просмотра заявок!"
-      redirect_back_or current_user
-      return
-    end
 
     if current_user.show_reg?
       flash[:error] = "Для продолжения Вам слеудет прочитать регламент"
@@ -101,10 +90,10 @@ class TransportationsController < ApplicationController
   end
   #=====================================================================
   def create
-    if (!manager?) and (!is_admin?)
-      flash[:error] = "Вы не можете создавать заявки"
-      redirect_to transportations_path
-    end
+    # if (!manager?) and (!is_admin?)
+    #   flash[:error] = "Вы не можете создавать заявки"
+    #   redirect_to transportations_path
+    # end
     #ls = lastNum
 
     @transportation = Transportation.new(params[:transportation])
@@ -568,8 +557,16 @@ private
   def manager_access
     if !manager?
       flash[:error] = "Нет прав для данного действия!"
-      redirect_to transportations_path
+      redirect_back_or current_user#transportations_path
+      false
     end
   end
 
+  def check_block
+    if is_block_user?
+      flash[:error] = "У Вас нет прав для просмотра заявок!"
+      redirect_back_or current_user
+      false
+    end
+  end
 end

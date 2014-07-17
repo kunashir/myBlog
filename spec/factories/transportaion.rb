@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :transportation do
     num "1234"
-    date "2014-01-07"
+    date Date.tomorrow
     time "09:00"
     #association :storage_source
     association :storage_dist, factory: :storage
