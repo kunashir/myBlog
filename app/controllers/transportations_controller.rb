@@ -90,11 +90,6 @@ class TransportationsController < ApplicationController
   end
   #=====================================================================
   def create
-    # if (!manager?) and (!is_admin?)
-    #   flash[:error] = "Вы не можете создавать заявки"
-    #   redirect_to transportations_path
-    # end
-    #ls = lastNum
 
     @transportation = Transportation.new(params[:transportation])
     @transportation.extra_pay = 0 if !@transportation.complex_direction
@@ -112,7 +107,7 @@ class TransportationsController < ApplicationController
       flash[:success] = "Заявка успешно добавлена"
       redirect_to :index
     else
-      flash[:error] = "Проверте данные!"
+      flash[:error] = "Проверьте данные!"
       render 'new'
     end
   end
@@ -187,15 +182,15 @@ class TransportationsController < ApplicationController
         end
 
 
-        @transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
-
-
         if (@transportation.specprice) or (!@transportation.company.nil?) #на случай, если два запроса подряд
           flash[:error] = "К сожалению, заявку уже забрали!!!"
           redirect_to transportations_path
           return
         end
-        @transportation.specprice = true
+
+        #@transportation.cur_sum = (@transportation.start_sum)*(1 - percent_spec_price/100.00)
+        @transportation.bet(percent_spec_price)
+        #@transportation.specprice = true
         @transportation.company = current_user.company
 
         if @transportation.save!
@@ -255,10 +250,6 @@ class TransportationsController < ApplicationController
           return
         end
         if (trade_status != 0) and (@transportation.is_busy?)#Если вермя больше 15
-          #проверим не продленно ли время по заявке
-          #if !is_ext_time?(Time.zone.now.localtime, (@transportation.get_time+14400))
-            #проверяем нельзя ли использовать расширенное время
-            # и ставка занята, то торговатся больше нельзя
             flash[:error] = "В данный момент торги не проводятся и заявка уже закрыта!"
             redirect_to transportations_path
             return
@@ -271,12 +262,11 @@ class TransportationsController < ApplicationController
           return
         end
 
-
-
         @transportation.company = current_user.company
         #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
-        start_summa =
-        (@transportation.cur_sum.nil? or @transportation.cur_sum == 0)  ? (@transportation.start_sum + @transportation.step + @transportation.extra_pay): @transportation.cur_sum
+        # start_summa =
+        # (@transportation.cur_sum.nil? or @transportation.cur_sum == 0) \
+        #   ? (@transportation.start_sum + @transportation.step + @transportation.extra_pay): @transportation.cur_sum
         #start_sum += @transportation.extra_pay
         #суммы из параметров не должно быть во время основного хода торгов, и она не должна быть отрицательной
         #params_summa = 0
@@ -301,10 +291,11 @@ class TransportationsController < ApplicationController
 
 
         if trade_status == 0
-          @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
+          #@transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
+          @transportation.bet
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
 
-            if ((@transportation.start_sum + @transportation.extra_pay)*upper_limit < params_summa)
+            if ((@transportation.rate_summa)*upper_limit < params_summa)
               flash[:error] = "Не стоит наглеть! Предел повышения 15% от базовых тарифов"
               redirect_to transportations_path
               return

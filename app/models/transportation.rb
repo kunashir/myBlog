@@ -1,7 +1,7 @@
 #coding: utf-8
 #require 'date'
 
-# include ActionView::Helpers
+#include ActionView::Helpers
 
 
 class Transportation < ActiveRecord::Base
@@ -32,6 +32,18 @@ class Transportation < ActiveRecord::Base
   before_save   :set_time
   after_save    :logging_new
   @cur_user = nil
+
+
+def bet(specprice=0)
+  if specprice == 0
+    start_summa = (cur_sum.nil? or cur_sum == 0) \
+          ? (rate_summa + step): cur_sum
+    self.cur_sum = start_summa - step
+  else
+    self.cur_sum = (rate_summa)*(1 - specprice/100.00)
+    self.specprice = true
+  end
+end
 
 def to_s
   begin
@@ -175,11 +187,9 @@ end
 
 #=======================================================================
   def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
-    #if
+
     ( !self.avto_id.nil? and !self.driver_id.nil?)
-    #   return true
-    # end
-    # return false
+
   end
 
 #=======================================================================

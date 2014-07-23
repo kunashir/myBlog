@@ -33,7 +33,7 @@ group   :production do
 end
 
 group	:development do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0.0.rc1'
   gem 'annotate', '~>2.4.1.beta'
   gem 'sqlite3'
   gem 'capistrano'
@@ -47,7 +47,7 @@ group	:development do
 end
 
 group	:test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0.0.rc1'
   gem 'webrat'
   gem 'factory_girl_rails'
   gem 'sqlite3'
