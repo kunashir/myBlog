@@ -263,13 +263,7 @@ class TransportationsController < ApplicationController
         end
 
         @transportation.company = current_user.company
-        #Если не было ни одной ставки, то нач. сумму увеличим на сумму шага, чтобы первая стака как раз вышла на базовую суммуы
-        # start_summa =
-        # (@transportation.cur_sum.nil? or @transportation.cur_sum == 0) \
-        #   ? (@transportation.start_sum + @transportation.step + @transportation.extra_pay): @transportation.cur_sum
-        #start_sum += @transportation.extra_pay
-        #суммы из параметров не должно быть во время основного хода торгов, и она не должна быть отрицательной
-        #params_summa = 0
+
         begin
           params_summa = params[:summa].to_i.abs
         rescue
