@@ -14,14 +14,14 @@ gem 'gravatar_image_tag'
 gem 'kaminari'
 gem 'jquery_datepicker'
 gem 'jquery-rails', "2.1.4"
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', "4.2.0"
 gem 'rails-asset-jqueryui'
 gem 'stamp'
 gem 'spreadsheet'
 gem 'to_xls', :github => "dblock/to_xls" #, :branch => "to-xls-on-models"
 #gem "galetahub-simple_captcha", :require => "simple_captcha"
 gem 'recaptcha', :require => "recaptcha/rails"
-gem 'select2-rails'
+gem 'select2-rails', "3.5.4"
 gem 'activeadmin'
 gem 'capybara', "~>2.2.1"
 
@@ -60,6 +60,7 @@ group :assets do
   gem 'coffee-rails'
   gem 'uglifier', '>= 1.0.3'
   gem 'therubyracer'
+
 end
 
 

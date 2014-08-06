@@ -6,9 +6,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require jquery.blockUI.js
-//= require transportation
 //= require select2
+//= require transportation
+
 
 
 (function($) {

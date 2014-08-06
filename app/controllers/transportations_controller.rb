@@ -4,7 +4,7 @@ require 'transportations_helper'
 #require 'encode.rb'
 
 class TransportationsController < ApplicationController
-  before_filter :authenticate #,  :only => [:edit, :update, :index, :destroy, :get_form, :show_history]
+  skip_before_filter :authenticate ,  :only => [:server_time] #:edit, :update, :index, :destroy, :get_form, :show_history]
   before_filter :log_do_rate, :only => [:update]
   before_filter :manager_access, :only => [:show_history, :load, :destroy, :create, :new, :show]
   before_filter :check_block, :only => [:update, :index, :do_rate, :do_spec_rate]
