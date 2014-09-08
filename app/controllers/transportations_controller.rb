@@ -192,8 +192,8 @@ class TransportationsController < ApplicationController
         @transportation.bet(percent_spec_price)
         #@transportation.specprice = true
         @transportation.company = current_user.company
-
-        if @transportation.save!
+        @transportation.last_bid_at = Time.now
+        if @transportation.save
           flash[:success] = "Поздравляем данная перевозка уже ваша."
         else
           @title = "Ошибка сохранения!"
@@ -300,7 +300,8 @@ class TransportationsController < ApplicationController
         #   @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
         # end
         @transportation.abort_company = nil
-        if @transportation.save!
+        @transportation.last_bid_at = Time.now
+        if @transportation.save
           flash[:success] = "Ваша ставка принята."
         else
           @title = "Ошибка"
