@@ -98,19 +98,19 @@ end
 
 #=======================================================================
 def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
-  return Transportation.includes(:area, :city, :client, :company).
-page(page).per(per_page) if show_all
+  return Transportation.includes(:area, :city, :client, :company).page(page).per(per_page) if show_all
 
   request_text = "date = ?"
   request_date = date
   if date.nil? or date.empty?
     if hide_today
-      request_text = "date > ?"
+      request_text = "date > ? AND (last_bid_at > '#{Time.now.beginning_of_day}' OR last_bid_at IS NULL)"
     else
       request_text = "date >= ?"
     end
     request_date = Date.current
   end
+  #beginning_of_day = Time.now.beginning_of_day
   if !source_storage.nil? and !source_storage.empty?
     request_text += " AND area_id = ?"
     return Transportation.includes(:area, :city, :client, :company).where(request_text, request_date, source_storage).

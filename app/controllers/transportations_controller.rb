@@ -370,7 +370,7 @@ class TransportationsController < ApplicationController
     @transportation.cur_sum = old_sum
     @transportation.company = old_company
     @transportation.specprice = false
-
+    @transportation.last_bid_at = nil
     if @transportation.save
       flash[:success] = "Ваша ставка отменена"
       Log.save_log_record(@transportation, current_user, "cur_sum", old_cur_sum,'abort record', current_user.company)
@@ -427,7 +427,7 @@ class TransportationsController < ApplicationController
     end
     company_aborting = @transportation.company
     @transportation.company =  nil
-
+    @transportation.last_bid_at = nil
     if @transportation.save!
       flash[:success] = "Отказ подтвержден"
       UserMailer.notification_to_companies(@transportation, company_aborting)
