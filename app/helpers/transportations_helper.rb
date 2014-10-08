@@ -103,4 +103,7 @@ module TransportationsHelper
       (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
     end
 
+    def was_cancel?(tr)
+      tr.abort_company && (tr.company == current_user.company ||(manager? or is_admin?)) && tr.cur_sum
+    end
 end

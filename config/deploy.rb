@@ -20,9 +20,9 @@ set :use_sudo,        false
 set :unicorn_conf, "#{deploy_to}/current/config/unicorn.rb"
 set :unicorn_pid, "#{deploy_to}/tmp/pids/unicorn.pid"
 
-role :web,    "deployer@10.41.64.117", :primary => true
-role :app,    "deployer@10.41.64.117"
-role :db,     "deployer@10.41.64.117"
+role :web,    "deployer@srv-web", :primary => true
+role :app,    "deployer@srv-web"
+role :db,     "deployer@srv-web"
 
 set :default_stage, "production"
 set :rvm_ruby_version, '2.0.0-p353@global'

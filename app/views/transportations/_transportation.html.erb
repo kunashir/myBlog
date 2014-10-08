@@ -1,4 +1,4 @@
-<tr class ="tr">
+<tr class = 'tr' >
 
   <% if manager? or is_admin? %>
     <td class = "tr"><%= link_to transportation.get_num, edit_transportation_path(transportation)  %>
@@ -42,7 +42,7 @@
   <td class = "tr"><%= transportation.carcase %></td>
   <td class = "tr"><%= transportation.rate_summa %></td>
 
-  <td class = "tr">
+  <td class = <%= was_cancel?(transportation) ? raw("abort") : 'tr'  %>>
     <%= transportation.cur_sum %>
   	<% if transportation.company == current_user.company %>
   		<%= link_to track_logo %>
