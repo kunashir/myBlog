@@ -10,3 +10,15 @@ class Driver < ActiveRecord::Base
     Driver.where("company_id = ?", company)
   end
 end
+# == Schema Information
+#
+# Table name: drivers
+#
+#  id         :integer         not null, primary key
+#  name       :string(255)
+#  passport   :string(255)
+#  company_id :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+

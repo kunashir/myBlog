@@ -21,7 +21,7 @@
      <strong>Склад погрузки:</strong>
     </td>
     <td>
-     <%= @transportation.storage_source %>
+     <%= @transportation.area %>
     </td>
   </tr>
   <tr>
@@ -37,7 +37,7 @@
      <strong>Склад доставки:</strong>
     </td>
     <td>
-     <%= @transportation.storage.name unless @transportation.storage.nil? %>
+     <%= @transportation.get_storage %>
     </td>
   </tr>
   <tr>
@@ -48,7 +48,7 @@
      <%= @transportation.comment %>
     </td>
   </tr>
-  
+
   <tr>
     <td>
      <strong>Тоннаж:</strong>
@@ -108,7 +108,7 @@
     </td>
   </tr>
 </table>
-  
-  
-  
+
+
+
 

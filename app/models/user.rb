@@ -2,19 +2,41 @@
 #
 # Table name: users
 #
-#  id         :integer         not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  company    :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  id                 :integer         not null, primary key
+#  name               :string(255)
+#  email              :string(255)
+#  company            :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(255)
+#  salt               :string(255)
+#  admin              :boolean
+#  nmanager           :boolean
+#  company_id         :integer
+#  is_block           :boolean         default(TRUE)
+#  be_notified        :boolean         default(TRUE)
+#  show_reg           :boolean         default(TRUE)
+#  login_count        :integer         default(0)
+#  role               :string(255)
 #
 
 class User < ActiveRecord::Base
+
+  ROLE = {
+    admin: "Администратор",
+    tr_manager: "Менеджер по транспорту",     #менеджер транспортного отдела
+    byuer_manager: "Менеджер по закупкам",  #выставляет лоты на покупку
+    waster_manager: "Менеджер по продажи возвратки", #выставляет лоты на продажу возвратки
+    seller: "Продавец",         #не ТЭК, но продает нам что-то
+    buyer: "Покупатель",           #пока здесь покупатели возвратных отхдов
+    freighter: "ТЭК"
+  }
   attr_accessor   :password
   attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
   #attr_protected :login_count
   
+  scope :manager, -> {where("nmanager = ?", true)}
+
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
   
@@ -54,7 +76,7 @@ class User < ActiveRecord::Base
   end
   
   def show_reg?
-    return self.show_reg
+    self.show_reg
   end
 
   def self.authenticate(email, submitted_password)
@@ -94,11 +116,11 @@ class User < ActiveRecord::Base
               j = j + 1
           end
       end
-      return output_array
+      output_array
   end
 
   private
-   def encrypt_password
+    def encrypt_password
      if !@use_callback
         self.salt = make_salt if new_record?
         return self.encrypted_password = encrypt(password)
@@ -119,6 +141,6 @@ class User < ActiveRecord::Base
     end
 
     def use_validate?
-      return @use_callback
+      @use_callback
     end
 end

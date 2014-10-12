@@ -2,47 +2,45 @@
 <table  class="profile" summary="Profile information">
   <tr>
     <% if check_time(@transportation.get_time) == 0 %>
-		<% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
-			<td class = "tr"><%= link_to "Отменить ставку", transportation_path(@transportation) + "/abort"  %> </td>
-		<% else %>
-	
-			<td class = "tr">
-				<%= form_tag(transportation_path(@transportation), :method => "put") do %>
-				
-          <%= recaptcha_tags %>
-					<%= submit_tag("-"+@transportation.step.to_s) %>
-				<% end %>
-			</td>
-	
-	
-		<% end %>
-    <% else #=============================================================================  %>
-	  <td class = "tr">
-      <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
-															 
-			<%= form_tag( @transportation, :method => "put") do %>
-				
-        <%= recaptcha_tags %>
-				<%= label_tag(:q, "Ваше предложение:") %>
-				<%= text_field_tag :summa, nil, :class => "datepicker" %>
-				<%= submit_tag("Ставка") %>
-			<% end %>
-        
-      <% elsif (check_time(@transportation.get_time) == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
-			
-			<%= form_tag( @transportation, :method => "put") do %>
-				
-        <%= recaptcha_tags %>
-				<%= label_tag(:q, "Ваше предложение:") %>
-				<%= text_field_tag :summa, nil, :class => "datepicker" %>
-				<%= submit_tag("Ставка") %>
-			<% end %>
-        
-      <% end %>
-	  </td>
+    		<% if @transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+    			<td class = "tr"><%= link_to "Отменить ставку", transportation_path(@transportation) + "/abort"  %> </td>
+    		<% else %>
+
+    			<td class = "tr">
+    				<%= form_tag(transportation_path(@transportation), :method => "put") do %>
+              <%= recaptcha_tags %>
+					    <%= submit_tag("-"+@transportation.step.to_s) %>
+            <% end %>
+			    </td>
+      	<% end %>
+
+		<% else #=============================================================================  %>
+  	  <td class = "tr">
+        <% if (@transportation.is_today? and !@transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра	%>
+
+    			<%= form_tag( @transportation, :method => "put") do %>
+
+            <%= recaptcha_tags %>
+    				<%= label_tag(:q, "Ваше предложение:") %>
+    				<%= text_field_tag :summa, nil, :class => "datepicker" %>
+    				<%= submit_tag("Ставка") %>
+    			<% end %>
+
+        <% elsif (check_time(@transportation.get_time) == 1) and (@transportation.is_active?) and (!@transportation.is_busy?) %>
+
+    			<%= form_tag( @transportation, :method => "put") do %>
+
+            <%= recaptcha_tags %>
+    				<%= label_tag(:q, "Ваше предложение:") %>
+    				<%= text_field_tag :summa, nil, :class => "datepicker" %>
+    				<%= submit_tag("Ставка") %>
+    			<% end %>
+
+        <% end %>
+  	  </td>
 
     <% end %>
-		
+
   </tr>
   <tr>
     <td>
@@ -65,7 +63,7 @@
      <strong>Склад погрузки:</strong>
     </td>
     <td>
-     <%= @transportation.storage_source %>
+     <%= @transportation.area.name %>
     </td>
   </tr>
   <tr>
@@ -81,7 +79,7 @@
      <strong>Склад доставки:</strong>
     </td>
     <td>
-     <%= @transportation.storage.name unless @transportation.storage.nil? %>
+     <%= @transportation.get_storage %>
     </td>
   </tr>
   <tr>
@@ -92,7 +90,7 @@
      <%= @transportation.comment %>
     </td>
   </tr>
-  
+
   <tr>
     <td>
      <strong>Тоннаж:</strong>
@@ -114,7 +112,7 @@
      <strong>Нач. сумма:</strong>
     </td>
     <td>
-     <%= @transportation.start_sum %>
+     <%= @transportation.rate_summa %>
     </td>
   </tr>
   <tr>
@@ -133,9 +131,9 @@
      <%= @transportation.cur_sum %>
     </td>
   </tr>
-  
+
 </table>
-  
-  
-  
+
+
+
 

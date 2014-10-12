@@ -11,7 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121118101630) do
+ActiveRecord::Schema.define(:version => 20141012141142) do
+
+  create_table "active_admin_comments", :force => true do |t|
+    t.string   "resource_id",   :null => false
+    t.string   "resource_type", :null => false
+    t.integer  "author_id"
+    t.string   "author_type"
+    t.text     "body"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+    t.string   "namespace"
+  end
+
+  add_index "active_admin_comments", ["author_type", "author_id"], :name => "index_active_admin_comments_on_author_type_and_author_id"
+  add_index "active_admin_comments", ["namespace"], :name => "index_active_admin_comments_on_namespace"
+  add_index "active_admin_comments", ["resource_type", "resource_id"], :name => "index_admin_notes_on_resource_type_and_resource_id"
 
   create_table "areas", :force => true do |t|
     t.string   "name"
@@ -35,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20121118101630) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "active",     :default => false
   end
 
   create_table "clients", :force => true do |t|
@@ -42,6 +58,8 @@ ActiveRecord::Schema.define(:version => 20121118101630) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "clients", ["id"], :name => "index_clients_on_id"
 
   create_table "companies", :force => true do |t|
     t.string   "name"
@@ -68,6 +86,28 @@ ActiveRecord::Schema.define(:version => 20121118101630) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "company_id"
+  end
+
+  create_table "lots", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.integer  "step"
+    t.integer  "start_summa"
+    t.integer  "current_summa"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "for_selling"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  create_table "news", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.date     "publish_date"
+    t.date     "end_date"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "rates", :force => true do |t|
@@ -97,6 +137,8 @@ ActiveRecord::Schema.define(:version => 20121118101630) do
     t.string   "name"
   end
 
+  add_index "storages", ["id"], :name => "index_storages_on_id"
+
   create_table "transportations", :force => true do |t|
     t.integer  "num"
     t.date     "date"
@@ -115,20 +157,24 @@ ActiveRecord::Schema.define(:version => 20121118101630) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "company_id"
-    t.decimal  "volume"
+    t.string   "volume"
     t.integer  "avto_id"
     t.integer  "driver_id"
     t.integer  "client_id"
     t.integer  "storage_id"
     t.boolean  "specprice"
-    t.boolean  "request_abort",    :default => false
+    t.boolean  "request_abort",     :default => false
     t.integer  "abort_company"
     t.integer  "area_id"
     t.integer  "rate_id"
     t.datetime "time_last_action"
+    t.boolean  "complex_direction"
+    t.integer  "extra_pay",         :default => 0
+    t.integer  "city_id"
   end
 
   add_index "transportations", ["date"], :name => "index_transportations_on_date"
+  add_index "transportations", ["id"], :name => "index_transportations_on_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"
@@ -145,6 +191,7 @@ ActiveRecord::Schema.define(:version => 20121118101630) do
     t.boolean  "be_notified",        :default => true
     t.boolean  "show_reg",           :default => true
     t.integer  "login_count",        :default => 0
+    t.string   "role"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

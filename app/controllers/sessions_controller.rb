@@ -1,15 +1,16 @@
 #coding: utf-8
 class SessionsController < ApplicationController
+  skip_before_filter :authenticate, :only => [:new, :create]
   def new
     @title = "Войти"
   end
-  
+
   def create
     user = User.authenticate(params[:session][:email],
                              params[:session][:password])
     if user.nil?
-     
-     
+
+
       flash.now[:error] = "Не верный email или пароль."
       @title = "Войти"
       render 'new'
@@ -21,19 +22,24 @@ class SessionsController < ApplicationController
         Log.save_log_record(nil, current_user, session[:id],  session[:id],'Session', current_user.company)
         redirect_back_or user
       else
-        flash.now[:error] = "У Вас уже есть подключение с другого компьютера, для входа сперва завершите его"
-        @title = "Войти"
-        render 'new'
+        unless user.admin?
+          flash.now[:error] = "У Вас уже есть подключение с другого компьютера, для входа сперва завершите его"
+          @title = "Войти"
+          render 'new'
+        else
+          sign_in user
+          redirect_to user
+        end
       end
-      #redirect_to user 
+      #redirect_to user
     end
   end
-  
+
   def destroy
     current_user.dec_login
     sign_out
     redirect_to root_path
   end
-  
+
 
 end

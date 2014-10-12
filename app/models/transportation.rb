@@ -5,47 +5,66 @@
 
 
 class Transportation < ActiveRecord::Base
-	#apply_simple_captcha  
-	attr_accessible  :num, :date, :time, :storage_source, :storage_dist, :comment, :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company, :volume, :client_id, :storage_id, :abort_company, :area_id
-  
-  belongs_to  	:user
-  belongs_to  	:company
-  belongs_to  	:avto
-  belongs_to 	:driver
-  belongs_to  	:client
-  belongs_to  	:storage
-  belongs_to  	:area
-  belongs_to	:rate
-  
+  #apply_simple_captcha
+  attr_accessible  :num, :date, :time, :comment,
+    :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
+    :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
+
+  belongs_to  :user
+  belongs_to  :company
+  belongs_to  :avto
+  belongs_to  :driver
+  belongs_to  :client
+  belongs_to  :storage
+  belongs_to  :area
+  belongs_to  :rate
+  belongs_to  :city # March 2014 - new relation
+
   #validates :user_id, :presence => true
   validates :date,            :presence => true
-  #validates :time,            :presence => true #время ставят перевозчики
-#  validates :area, 		 :presence => true
-  # validates :storage_dist,    :presence => true
-  # validates :type_transp,     :presence => true
-  #validates :weight,          :presence => true
   validates :carcase,         :presence => true
-  #validates :start_sum,       :presence => true
   validates :step,            :presence => true
+
   default_scope               :order  =>  'transportations.id  DESC' #сортировка по уменьшению ид
-  
+
   before_save   :logging
-  before_save	  :set_rate
+  before_save    :set_rate
   before_save   :set_time
   after_save    :logging_new
   @cur_user = nil
 
 #=======================================================================
+def get_num
+  num.nil? ? "без номера" : num
+end
+
+#=======================================================================
+
+def get_storage
+  unless storage.nil?
+    storage.name
+  else
+    city.name unless city.nil?
+  end
+end
+#=======================================================================
+
+def lightcar?
+  return false if weight.nil?
+  weight.to_i < 11
+end
+
+#=======================================================================
   def get_area
-    if area.nil?
-      return storage_source
-    end
+
+    return storage_source if area.nil?
+
     return area.name
   end
 
 #=======================================================================
   def set_user(user)
-	  @cur_user = user
+    @cur_user = user
   end
 
 #=======================================================================
@@ -58,36 +77,39 @@ class Transportation < ActiveRecord::Base
   end
 
 #=======================================================================
-  def self.set_filter(date, show_all, source_storage, hide_today)
-	if show_all
-		return Transportation.all
-	end
-	request_text = "date = ?"
-	request_date = date
-	if date.nil? or date.empty?
-	  if hide_today
+def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
+  return Transportation.
+page(page).per(per_page) if show_all
+
+  request_text = "date = ?"
+  request_date = date
+  if date.nil? or date.empty?
+    if hide_today
       request_text = "date > ?"
     else
       request_text = "date >= ?"
     end
-		request_date = Date.current
-	end
-	if !source_storage.nil? and !source_storage.empty?
-		request_text += " AND area_id = ?"
-		return Transportation.where(request_text, request_date, source_storage)
-	end
-	Transportation.where(request_text, request_date)
+    request_date = Date.current
   end
-	
+  if !source_storage.nil? and !source_storage.empty?
+    request_text += " AND area_id = ?"
+    return Transportation.where(request_text, request_date, source_storage).
+page(page).per(per_page)
+  end
+  Transportation.where(request_text, request_date).page(page).per(per_page)
+end
+
 #=======================================================================
   def self.only_active
     Transportation.where("date >= ?", Date.current)
   end
-  
+
 #=======================================================================
   def self.format_date(dd)
     if /([0-9]{2}).([0-9]{2}).([0-9]{2})/ =~ dd
-      return "20"+$3+"-"+$2+"-"+$1
+      return "20" + $3 + "-" + $2 + "-" + $1
+    elsif /([0-9]{2}).([0-9]{2}).([0-9]{4})/ =~ dd #format like DD.MM.YYYY
+      return $3 + "-" + $2 + "-" + $1
     end
     return dd
   end
@@ -95,22 +117,23 @@ class Transportation < ActiveRecord::Base
 #=======================================================================
   def self.load_from_file(filename, manager)
     lines = File.readlines(filename)
-    for line in lines
+    lines.each do |line|
       # Обрабатываем одну перевозку, надо найти клиента, склад
-      # остальное прочто текст/число
+      # остальное проcто текст/число
       data_array    = line.split(";")
       client        = Client.find_by_name(data_array[2])
-      dist_storage  = Storage.client_storage(client,data_array[4])
+      #dist_storage  = Storage.client_storage(client,data_array[4])
       my_storage    = data_array[5]
-      
+
       tr            = Transportation.new
       tr.num        = data_array[3]
       tr.date       = format_date(data_array[0])
       tr.time       = data_array[11]
       tr.client     = client
-      tr.storage    = dist_storage
-      area		    = Area.find_by_name(my_storage)
-      tr.area		= area
+      #tr.storage    = dist_storage
+      tr.city       = City.find_city(data_array[4])
+      area          = Area.find_by_name(my_storage)
+      tr.area       = area
       tr.weight     = data_array[6]
       tr.volume     = data_array[7]
       comment_text  = data_array[8]
@@ -124,19 +147,19 @@ class Transportation < ActiveRecord::Base
         comment   = comment_text
       end
       tr.comment  = comment_text
-		if area.nil? or dist_storage.nil?
-			tr.rate = nil
-		else
-			tr.rate	  = Rate.find_rate(area.city, dist_storage.city, carcase)
-		end
+      if area.nil? or tr.city.nil?
+        tr.rate = nil
+      else
+        tr.rate    = Rate.find_rate(area, tr.city, carcase)
+      end
       tr.carcase  = carcase
-      tr.start_sum  =  tr.rate_summa #data_array[10].sub(" ", "")
+      tr.start_sum  =  tr.rate.get_summa(tr.weight) unless tr.rate.nil? #data_array[10].sub(" ", "")
       tr.step       = 500
       tr.user       = manager unless manager.nil?
-      tr.save!
+      tr.save
     end
   end
-  
+
 #=======================================================================
   def self.test_loading(filename)
     lines = File.readlines(filename)
@@ -145,14 +168,14 @@ class Transportation < ActiveRecord::Base
     end
     return arr
   end
-  
+
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
     if self.date >= Date.current()
       return true
     end
     return false
   end
-  
+
 #=======================================================================
   def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
     if ( !self.avto_id.nil? and !self.driver_id.nil?)
@@ -160,17 +183,17 @@ class Transportation < ActiveRecord::Base
     end
     return false
   end
-  
+
 #=======================================================================
   def is_busy? #заявка занята, когда есть данные по перевозчике
-    return  self.company.nil? ? false : true
+    return  !self.company.nil?  # ? false : true
   end
-  
+
 #=======================================================================
   def is_today? #это сегодняшняя заявка
-    return true if self.date == Date.current()
+    return self.date == Date.current() #true if
   end
-  
+
 #=======================================================================
   def logging
     if !self.id.nil?
@@ -191,10 +214,10 @@ class Transportation < ActiveRecord::Base
         Log.save_log_record(self, @cur_user, key, old_attr_hash[key],'edit record', @cur_user.company)
       end
     end
-    
-    
+
+
   end
-  
+
 #=======================================================================
   def logging_new
     if !@new_rec
@@ -210,86 +233,117 @@ class Transportation < ActiveRecord::Base
 #=======================================================================
   def as_xls(option = {})
       {
-	"Rasp" 	=> num,
-	"Date"		=> date,
-	"Storage source"	=> storage_source,
-	"comment"	=> comment,
-	"Weigth"	=> weight,
-	"carcase"	=> carcase,
-	"start sum"	=> start_sum,
-	"Cur sum"	=> cur_sum,
-	"company"		=> company
+        "Rasp"   => num,
+        "Date"    => date,
+        "Storage source"  => storage_source,
+        "comment"  => comment,
+        "Weigth"  => weight,
+        "carcase"  => carcase,
+        "start sum"  => start_sum,
+        "Cur sum"  => cur_sum,
+        "company"    => company
       }
   end
 
 #=======================================================================
   def have_spec_price?
-	return  (specprice.nil? or !specprice ) ? false : true
+    return  !(specprice.nil? or !specprice ) # ? false : true
   end
 
 #=======================================================================
   def get_volume
-      volume_text = ""
-      if (self.volume == 32)
-          volume_text = "32 поддона"
-      elsif (self.volume == 14)
-          volume_text = "14 поддонов"
-      else
-          volume_text = self.volume.to_s + " куб. м."
-      end
-      return volume_text
+   volume
   end
-          
-#=======================================================================
-	def rate_summa
-		return self.start_sum 
-	end
 
 #=======================================================================
-	def set_rate
-		if !self.start_sum.nil? #если нач. сумма уже есть, ничего не делаем
-								#для ручного редактирования
-			return true
-		end
-		if self.area.nil? or self.storage.nil?
-			return true
-		end
-		temp = Rate.find_rate(self.area.city, self.storage.city, self.carcase.downcase)
-		
-		if temp.nil?
-		  return true
-		end
-		self.rate = temp
-		self.start_sum = temp.get_summa
-		return true
-	end	
+  def rate_summa
+    sum = start_sum
+    if complex_direction
+      sum += extra_pay
+    end
+    return sum
+  end
+
+#=======================================================================
+  def set_rate
+    #если нач. сумма уже есть, ничего не делаем
+    #для ручного редактирования
+    return true if !self.start_sum.nil?
+
+    if self.area.nil? or self.storage.nil?
+      return true
+    end
+    temp = Rate.find_rate(self.area.city, self.storage.city, self.carcase.downcase)
+
+    return true if temp.nil?
+
+    self.rate = temp
+    self.start_sum = temp.get_summa
+    return true
+  end
 
   #=======================================================================
   def set_time
     self.time_last_action =  Time.now
   end
- 
+
   #=======================================================================
   def get_time
     if self.time_last_action.nil?
-      return ''
+      return Time.new(1900-01-01)
     end
     return self.time_last_action.getlocal + 300
   end
   #=======================================================================
   def close_time
     if self.time_last_action.nil?
-      return ''
+      return Time.new(1900-01-01)
     end
     return self.time_last_action.getlocal + 300
   end
   #=======================================================================
   def is_close?
-    cur_time = Time.now
-    if cur_time > get_time
-      return true
-    end
+    return true if (Time.now > get_time)
+
     return false
   end
 
 end
+# == Schema Information
+#
+# Table name: transportations
+#
+#  id                :integer         not null, primary key
+#  num               :integer
+#  date              :date
+#  time              :time
+#  storage_source    :string(255)
+#  storage_dist      :string(255)
+#  comment           :string(255)
+#  type_transp       :string(255)
+#  weight            :decimal(, )
+#  carcase           :string(255)
+#  start_sum         :integer
+#  cur_sum           :integer
+#  step              :integer
+#  manager_id        :integer
+#  carrier_id        :integer
+#  created_at        :datetime
+#  updated_at        :datetime
+#  company_id        :integer
+#  volume            :string(255)
+#  avto_id           :integer
+#  driver_id         :integer
+#  client_id         :integer
+#  storage_id        :integer
+#  specprice         :boolean
+#  request_abort     :boolean         default(FALSE)
+#  abort_company     :integer
+#  area_id           :integer
+#  rate_id           :integer
+#  time_last_action  :datetime
+#  complex_direction :boolean
+#  extra_pay         :integer         default(0)
+#  city_id           :integer
+#
+

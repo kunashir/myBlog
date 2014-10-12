@@ -18,8 +18,23 @@ class Log < ActiveRecord::Base
   end
 
   def self.company_has_stake(transp, company) #Компания имеет движения по ставке
-      rec_in_logs = Log.where("transportation_id = ? AND company_id = ?", transp, company)
-      #Если выборка не пустая значит имеет!
-      !rec_in_logs.empty?
+    rec_in_logs = Log.where("transportation_id = ? AND company_id = ?", transp, company)
+    #Если выборка не пустая значит имеет!
+    !rec_in_logs.empty?
   end
 end
+# == Schema Information
+#
+# Table name: logs
+#
+#  id                :integer         not null, primary key
+#  transportation_id :integer
+#  user_id           :integer
+#  attr              :string(255)
+#  oldvalue          :string(255)
+#  action            :string(255)
+#  created_at        :datetime
+#  updated_at        :datetime
+#  company_id        :integer
+#
+

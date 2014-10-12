@@ -91,7 +91,7 @@ module TransportationsHelper
     end
 
     def upper_limit
-        return MyBlog::Application.config.upper_limit.to_i
+        return MyBlog::Application.config.upper_limit.to_d
     end
 
     def end_ext_time
@@ -99,5 +99,9 @@ module TransportationsHelper
         return Time.parse(MyBlog::Application.config.ext_stop_time)
     end
 
+    def is_trade?
+        cur_time = Time.zone.now.localtime
+        (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
+    end
     
 end

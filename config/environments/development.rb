@@ -36,7 +36,7 @@ MyBlog::Application.configure do
     :user_name  =>  'robot',
     :password   =>  'hl7kx4v',
     :authentication => 'login',
-    :enable_starttls_auto   => true}
+    :enable_starttls_auto   => false}
 config.action_mailer.perform_deliveries = true
 config.action_mailer.raise_delivery_errors = true
 end

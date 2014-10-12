@@ -17,3 +17,18 @@ private
 	def set_shortname
 		self.shortname = self.model + ", " + self.statenumber
 	end
+# == Schema Information
+#
+# Table name: avtos
+#
+#  id          :integer         not null, primary key
+#  model       :string(255)
+#  carcase     :string(255)
+#  statenumber :string(255)
+#  trailnumber :string(255)
+#  company_id  :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  shortname   :string(255)
+#
+
