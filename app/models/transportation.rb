@@ -182,7 +182,17 @@ end
 
 #=======================================================================
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
-    self.date >= Date.current()
+    return false unless self.date >= Date.current()
+    start_time_list = APP_CONFIG["time_start"].split(",")
+    start = Time.parse("#{Date.today} #{start_time_list[0]}:00")
+    p "TR:===>>#{is_busy? }"
+    p "Tr2:===>#{created_at <= start}"
+    if is_busy? && created_at >= start
+      return true
+    elsif is_busy? && created_at < start
+      return false
+    end
+    true
   end
 
 #=======================================================================

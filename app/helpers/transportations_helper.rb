@@ -1,15 +1,38 @@
 module TransportationsHelper
 
-	def trad_start_time
-	   Time.parse(APP_CONFIG["time_start"])
+	def trad_start_time(part=0)
+	   # Time.parse(APP_CONFIG["time_start"])
+       start_time_list = APP_CONFIG["time_start"].split(",")
+       Time.parse("#{Date.today} #{start_time_list[part]}:00")
 	end
 
     def trad_duration
        APP_CONFIG["duration"].to_i #in seconds
     end
 
-    def trad_stop_time
-	   Time.parse(APP_CONFIG["time_stop"])
+    def trad_stop_time(part=0)
+       #part - for multi part trade
+       # Time.parse(APP_CONFIG["time_stop"])
+       stop_time_list = APP_CONFIG["time_stop"].split(",")
+       # stop_time_list[part]
+       Time.parse("#{Date.today} #{stop_time_list[part]}:00")
+    end
+
+    def main_range?(cur_time)
+        first_part = (trad_start_time..trad_stop_time)
+        second_part = (trad_start_time(1)..trad_stop_time(1))
+        p "FIRST: #{first_part}"
+        p "SECOND: #{second_part}"
+        p "#{first_part.cover?(cur_time)}"
+        p "#{second_part.cover?(cur_time)}"
+        first_part.cover?(cur_time) || second_part.cover?(cur_time)
+    end
+
+    def extra_range?(cur_time, close_time)
+        return false if close_time.nil?
+        first_part = (trad_stop_time..close_time)
+        second_part = (trad_stop_time(1)..close_time)
+        first_part.cover?(cur_time) || second_part.cover?(cur_time)
     end
 
     def require_confirmation?
@@ -71,20 +94,23 @@ module TransportationsHelper
         #0 если можно торговатся
         #1 если уже закрылись
 
-        hour    = trad_start_time.hour
-        min     = trad_start_time.min + trad_duration
+        # hour    = trad_start_time.hour
+        # min     = trad_start_time.min + trad_duration
         cur_time    =   Time.zone.now.localtime
-        if cur_time < trad_start_time
-            return -1
-        elsif (trad_start_time <= cur_time) and (cur_time < trad_stop_time)
-            return 0
-	    end
+        return -1 if cur_time < trad_start_time
+        return 0 if main_range?(cur_time)
+        return 0 if extra_range?(cur_time, end_time)
+     #    if cur_time < trad_start_time
+     #        return -1
+     #    elsif (trad_start_time <= cur_time) and (cur_time < trad_stop_time)
+     #        return 0
+	    # end
 
         #Проверим
 
-        if is_ext_time?(cur_time, end_time)
-            return 0;
-        end
+        # if is_ext_time?(cur_time, end_time)
+        #     return 0;
+        # end
         return 1
 
     end
@@ -100,7 +126,8 @@ module TransportationsHelper
 
     def is_trade?
       cur_time = Time.zone.now.localtime
-      (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
+      # (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
+      main_range?(cur_time)
     end
 
     def was_cancel?(tr)
