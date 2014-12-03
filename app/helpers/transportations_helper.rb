@@ -125,9 +125,9 @@ module TransportationsHelper
     end
 
     def is_trade?
-      cur_time = Time.zone.now.localtime
+      # cur_time = Time.zone.now.localtime
       # (trad_start_time <= cur_time) and (cur_time <= end_ext_time)
-      main_range?(cur_time)
+      check_time == 0
     end
 
     def was_cancel?(tr)
