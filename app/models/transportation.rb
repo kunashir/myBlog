@@ -184,12 +184,18 @@ end
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
     return false unless self.date >= Date.current()
     start_time_list = APP_CONFIG["time_start"].split(",")
-    start = Time.parse("#{Date.today} #{start_time_list[0]}:00")
-    p "TR:===>>#{is_busy? }"
-    p "Tr2:===>#{created_at <= start}"
-    if is_busy? && created_at >= start
+    start2 = Time.parse("#{Date.today} #{start_time_list[1]}:00")
+    start1 = Time.parse("#{Date.today} #{start_time_list[0]}:00")
+    cur_time    =   Time.zone.now.localtime
+    if !is_busy? && created_at < start1
+      #не закрытая заявка, созданная до первого старта
       return true
-    elsif is_busy? && created_at < start
+    elsif !is_busy? && created_at > start1 && cur_time < start2
+      #заявка созданая после первых торгов
+      return false
+    elsif is_busy? && created_at >= start1
+      return true
+    elsif is_busy? && created_at < start1
       return false
     end
     true
