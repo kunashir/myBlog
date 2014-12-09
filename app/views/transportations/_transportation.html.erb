@@ -114,7 +114,9 @@
               </td>
             <% elsif transportation.company.nil?  #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
               <td class = "tr oper_column">
-                <%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+                <% if transportation.is_active? %>
+                  <%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+                <% end %>
               </td>
 
     	    	<% else %>
