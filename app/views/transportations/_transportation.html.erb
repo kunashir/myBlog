@@ -65,7 +65,8 @@
 		  <% end %>
 	  </td>
   <% else %>
-      <% if transportation.is_active? #Если дата меньше текущей - заявка не активна %>
+      <% p "OBSOLETE?====>#{transportation.is_obsolete?}" %>
+      <% if !transportation.is_obsolete? #Если дата меньше текущей - заявка не активна %>
 
         <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра%>
            <td class = "tr oper_column">
