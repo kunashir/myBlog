@@ -84,7 +84,7 @@
             <td class = "tr">
               Торги начнуться в <%= trad_start_time.to_s(:time) %> МСК
             </td>
-    			<% elsif  check_time(transportation.get_time) == 0  #Штатаный ход торгов %>
+    			<% elsif  check_time(transportation.get_time) == 0 && transportation.is_active? #Штатаный ход торгов %>
     				<td class = "tr oper_column">
       				<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
       					<%= link_to "Отменить ставку", abort_transportation_path(transportation) %>
