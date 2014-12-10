@@ -197,9 +197,9 @@ end
     elsif !is_busy? && created_at > start1 && cur_time < start2
       #заявка созданая после первых торгов
       return false
-    elsif is_busy? && created_at >= start1
+    elsif is_busy? && created_at >= start1 && cur_time < start2
       return true
-    elsif is_busy? && created_at < start1
+    elsif is_busy? && created_at < start1 && cur_time < start2
       return false
     end
     true
