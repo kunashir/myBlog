@@ -21,10 +21,10 @@ module TransportationsHelper
     def main_range?(cur_time)
         first_part = (trad_start_time..trad_stop_time)
         second_part = (trad_start_time(1)..trad_stop_time(1))
-        p "FIRST: #{first_part}"
-        p "SECOND: #{second_part}"
-        p "#{first_part.cover?(cur_time)}"
-        p "#{second_part.cover?(cur_time)}"
+        # p "FIRST: #{first_part}"
+        # p "SECOND: #{second_part}"
+        # p "#{first_part.cover?(cur_time)}"
+        # p "#{second_part.cover?(cur_time)}"
         first_part.cover?(cur_time) || second_part.cover?(cur_time)
     end
 

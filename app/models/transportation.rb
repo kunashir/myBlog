@@ -181,27 +181,33 @@ end
   end
 
 #=======================================================================
+def is_obsolete?
+  self.date < Date.current()
+end
+#=======================================================================
   def is_active? #заявка активна если дата заявки не меньше текущей даты!
     return false unless self.date >= Date.current()
     start_time_list = APP_CONFIG["time_start"].split(",")
+    stop_time_list = APP_CONFIG["time_stop"].split(",")
     start2 = Time.parse("#{Date.today} #{start_time_list[1]}:00")
     start1 = Time.parse("#{Date.today} #{start_time_list[0]}:00")
+    stop1 = Time.parse"#{Date.today} #{stop_time_list[0]}:00")
     cur_time    =   Time.zone.now.localtime
     if !is_busy? && created_at < start1
       #не закрытая заявка, созданная до первого старта
       return true
-    elsif !is_busy? && created_at > start1 && cur_time < start2
+    elsif !is_busy? && created_at > start1 
       #заявка созданая после первых торгов
-      return false
-    elsif is_busy? && created_at >= start1
       return true
-    elsif is_busy? && created_at < start1
+    elsif is_busy? && created_at >= start1 && cur_time < start2
+      return true
+    elsif is_busy? && created_at < start1 && cur_time < stop1
       return false
     end
     true
   end
 
-#=======================================================================
+#=======================================================================#=======================================================================
   def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
 
     ( !self.avto_id.nil? and !self.driver_id.nil?)

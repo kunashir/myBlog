@@ -65,7 +65,8 @@
 		  <% end %>
 	  </td>
   <% else %>
-      <% if transportation.is_active? #Если дата меньше текущей - заявка не активна %>
+      <% p "OBSOLETE?====>#{transportation.is_obsolete?}" %>
+      <% if !transportation.is_obsolete? #Если дата меньше текущей - заявка не активна %>
 
         <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра%>
            <td class = "tr oper_column">
@@ -83,7 +84,7 @@
             <td class = "tr">
               Торги начнуться в <%= trad_start_time.to_s(:time) %> МСК
             </td>
-    			<% elsif  check_time(transportation.get_time) == 0  #Штатаный ход торгов %>
+    			<% elsif  check_time(transportation.get_time) == 0 && transportation.is_active? #Штатаный ход торгов %>
     				<td class = "tr oper_column">
       				<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
       					<%= link_to "Отменить ставку", abort_transportation_path(transportation) %>
@@ -113,7 +114,9 @@
               </td>
             <% elsif transportation.company.nil?  #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
               <td class = "tr oper_column">
-                <%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+                <% if transportation.is_active? %>
+                  <%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+                <% end %>
               </td>
 
     	    	<% else %>
