@@ -1,91 +1,131 @@
-<tr class ="tr">
-  
+<tr class = 'tr' >
+
   <% if manager? or is_admin? %>
-    <td class = "tr"><%= link_to transportation.num.nil? ? "без номера" : transportation.num, edit_transportation_path(transportation)  %> 
-    , <%= link_to "Копировать", transportation_path(transportation) + "/copy" %> , <%= show_close_time(transportation.close_time) %> </td> 
+    <td class = "tr"><%= link_to transportation.get_num, edit_transportation_path(transportation)  %>
+    , <%= link_to copy_icon, copy_transportation_path(transportation), :title => "Копировать" %> ,
+    <%= link_to remove_icon ,transportation, :method =>  :delete, :confirm => "Вы уверены?",
+                                            :title  => "Удалить #{transportation.num}" %>, <%= show_close_time(transportation.close_time) %>
+      <div class = "history">
+        <%= link_to "История", show_history_transportation_path(transportation), :remote => true %>
+      </div>
+    </td>
   <% else %>
-    <td class = "tr"><%=  @cur.to_s + "; " + show_close_time(transportation.close_time) %>  </td>
+    <td class = "tr">
+      <%=  @cur.to_s + "; " + show_close_time(transportation.close_time) %>
+    </td>
     <% @cur = @cur + 1 %>
   <% end %>
-  
-  <td class = "tr"><%= transportation.date %></td> 
-  <td class = "tr"><%= to_time(transportation.time) %></td> 
-  <td class = "tr"><%= transportation.get_area %></td> 
-  <td class = "tr"><%= transportation.client.name if !transportation.client.nil? %></td> 
-  <td class = "tr"><%= transportation.storage.name if !transportation.storage.nil? %></td> 
-  <td class = "tr"><%= transportation.weight %></td> 
-  <td class = "tr"><%= transportation.get_volume %></td> 
-  <td class = "tr"><%= transportation.comment %></td> 
-  <td class = "tr"><%= transportation.carcase %></td> 
-  <td class = "tr"><%= transportation.rate_summa %></td> 
-  
-  <td class = "tr"><%= transportation.cur_sum %>
-	<% if transportation.company == current_user.company %>
-		<%= link_to track_logo %>
-  <% elsif manager? or is_admin? %>
-    <% if check_time == 1 and transportation.is_close? %>
-      <%= lock_logo %>
-    <% end %>
-	<% end %>
-  </td> 
-  
-  <td class = "tr"><%= transportation.step %></td> 
-  
+
+  <td class = "tr"><%= transportation.date %></td>
+  <td class = "tr"><%= to_time(transportation.time) %></td>
+  <td class = "tr"><%= transportation.get_area %></td>
+  <td class = "tr">
+      <%= transportation.client.name if !transportation.client.nil? %>
+  </td>
+  <td class = "tr">
+    <div class = <%= transportation.complex_direction? ? "complex_direction" : "" %> >
+      <%= transportation.get_storage %>
+    </div>
+  </td>
+  <td class = "tr">
+    <div class = <%= transportation.lightcar?  ? "lightcar" : "" %> >
+      <%= transportation.weight %>
+    </div>
+  </td>
+  <td class = "tr"><%= transportation.get_volume %></td>
+  <td class = "tr">
+    <div class = <%= transportation.complex_direction? ? "complex_direction" : "" %> >
+      <%= transportation.comment %>
+    </div>
+  </td>
+
+  <td class = "tr"><%= transportation.carcase %></td>
+  <td class = "tr"><%= transportation.rate_summa %></td>
+
+  <td class = <%= was_cancel?(transportation) ? raw("abort") : 'tr'  %>>
+    <%= transportation.cur_sum %>
+  	<% if transportation.company == current_user.company %>
+  		<%= link_to track_logo %>
+    <% elsif manager? or is_admin? %>
+      <% if check_time == 1 and transportation.is_close? %>
+        <%= lock_logo %>
+      <% end %>
+  	<% end %>
+  </td>
+
+  <td class = "tr">
+    <%= transportation.step %>
+  </td>
+
   <% if manager? or is_admin? %>
 	  <td class = "tr">
 		  <%= transportation.company.nil? ? "" : transportation.company.name %>
 		  <% if transportation.request_abort %>
-			  <br><%= link_to "Подтвердить отказ", transportation_path(transportation) + "/confirm_abort"  %> 
+			  <br><%= link_to "Подтвердить отказ", confirm_abort_transportation_path(transportation) %>
 		  <% end %>
 	  </td>
   <% else %>
       <% if transportation.is_active? #Если дата меньше текущей - заявка не активна %>
-        
-        <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра%>
-           <td class = "tr"> <%= link_to "Сделать ставку", transportation_path(transportation) + "/do_rate" %> </td>
-        <% elsif transportation.is_today? and transportation.is_busy? #от перевозки на текущую дату еще можно отказаться %>
-    		<% if transportation.company == current_user.company %>
-	    		<td class = "tr"> <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> </td> 
-	    	<% end %>
-        <% else #здесь ставки на завтра, т.е. обычные %>
-            
-			<% if check_time(transportation.get_time) == -1 %>
-              		<td class = "tr">Торги начнуться в <%= trad_start_time.to_s(:time) %> МСК</td>
-			<% elsif  check_time(transportation.get_time) == 0  #Штатаный ход торгов %>
-				<td class = "tr">
-				<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
-					<%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %> 
-				<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
-					<%= link_to "Сделать ставку", transportation_path(transportation) + "/do_rate" %>
-					<% if (transportation.cur_sum.nil? or transportation.cur_sum == 0) and (percent_spec_price != 0) #Если текущая сумма еще пустая, можно забрать сразу %>
-						<br><%= link_to "Спец. цена", transportation_path(transportation) + "/do_spec_rate" %>
-					<% end %>
-				<% end %>
-				</td>
-			<% end %>
-            <% if check_time(transportation.get_time) == 1 %>
-              <% if transportation.company == current_user.company %>
-                <td class = "tr"><%= link_to "Подтвердить заявку", transportation_path(transportation) + "/edit_conf"  %> 
-                    <br>
-                 <% if require_confirmation? %>
-                    <%= link_to "Запрос на отмену ставки", transportation_path(transportation) + "/request_abort"  %> 
-                 <% else %>
-                    <%= link_to "Отменить ставку", transportation_path(transportation) + "/abort"  %>
-                  <% end %>
-                </td>
-              <% elsif transportation.company.nil? #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
-                 <td class = "tr"><%= link_to "Сделать ставку", transportation_path(transportation) + "/do_rate" %></td>
 
-	    	<% else %>
-		    	<td class = "tr"></td>
-		    <% end %>
-                
-              
+        <% if (transportation.is_today? and !transportation.is_busy?) #завки не разобранные вчера на сегодня активны с утра%>
+           <td class = "tr oper_column">
+            <%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+          </td>
+        <% elsif transportation.is_today? and transportation.is_busy? #от перевозки на текущую дату еще можно отказаться %>
+    		  <% if transportation.company == current_user.company %>
+	    		  <td class = "tr">
+              <%= link_to "Запрос на отмену ставки", request_abort_transportation_path(transportation) %>
+            </td>
+	    	  <% end %>
+        <% else #здесь ставки на завтра, т.е. обычные %>
+
+    			<% if check_time(transportation.get_time) == -1 %>
+            <td class = "tr">
+              Торги начнуться в <%= trad_start_time.to_s(:time) %> МСК
+            </td>
+    			<% elsif  check_time(transportation.get_time) == 0  #Штатаный ход торгов %>
+    				<td class = "tr oper_column">
+      				<% if transportation.company == current_user.company #Если переовзка уже компании можно сделать отказ %>
+      					<%= link_to "Отменить ставку", abort_transportation_path(transportation) %>
+                <% if check_time == 1 and transportation.is_close? %>
+                  <%= lock_logo %>
+                <% end %>
+      				<% elsif !transportation.have_spec_price? #Если забрали по спец. цене - убрать из торгов %>
+      					<%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+      					<% if (transportation.cur_sum.nil?) and (percent_spec_price != 0) #Если текущая сумма еще пустая, можно забрать сразу %>
+      						<br><%= link_to "Спец. цена", do_spec_rate_transportation_path(transportation) %>
+      					<% end %>
+      				<% end %>
+    				</td>
+    			<% end %>
+
+          <% if check_time(transportation.get_time) == 1 %>
+            <% if transportation.company == current_user.company %>
+              <td class = "tr">
+                <% if require_confirmation? %>
+                  <%= link_to "Запрос на отмену ставки", request_abort_transportation_path(transportation) %>
+                <% else %>
+                  <%= link_to "Отменить ставку", abort_transportation_path(transportation) %>
+                  <% if check_time == 1 and transportation.is_close? %>
+                    <%= lock_logo %>
+                  <% end %>
+                <% end %>
+              </td>
+            <% elsif transportation.company.nil?  #Если после 15 никто не взял перевозку, предлагаем ехать за их цену%>
+              <td class = "tr oper_column">
+                <%= link_to "Сделать ставку", get_form_transportation_path(transportation), :remote => true %>
+              </td>
+
+    	    	<% else %>
+    		    	<td class = "tr"></td>
+    		    <% end %>
+
+
             <% end %>
         <% end %>
       <% else %>
         <td class = "tr"> </td>
       <% end %>
-      
-  <% end %>	  
-</tr>  
+
+  <% end %>
+</tr>

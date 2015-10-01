@@ -4,3 +4,11 @@
 en:
   hello: "Hello world"
 ru:
+  time:
+    formats:
+      short: '%d.%m.%Y'
+      long: '%d.%m.%Y'
+  date:
+    formats:
+      short: '%d.%m.%Y'
+      long: '%d.%m.%Y'

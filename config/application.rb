@@ -15,6 +15,10 @@ if defined?(Bundler)
   Bundler.require(:default, :assets, Rails.env)
 end
 
+MAIL_CONFIG  = YAML.load(File.read(File.expand_path('../mail.yml', __FILE__)))[Rails.env]
+APP_CONFIG = YAML.load(ERB.new(File.read(File.expand_path('../app.yml', __FILE__))).result)[Rails.env]
+RECAP_CONFIG = YAML.load(File.read(File.expand_path('../recaptcha.yml', __FILE__)))[Rails.env]
+
 module MyBlog
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -50,5 +54,6 @@ module MyBlog
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    Date::DATE_FORMATS[:default] = "%d.%m.%Y"
   end
 end

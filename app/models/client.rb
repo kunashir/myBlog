@@ -7,12 +7,12 @@ class Client < ActiveRecord::Base
 	default_scope	:order => 'clients.name  ASC'
   
   def storages
-    Storage.where("client_id=?", self)
+    Storage.where("client_id = ?", self)
   end
   
   def self.add_storages(client, storages_arr)
     print(client)
-    for storage in storages_arr
+    storages_arr.each do |storage|
       st = Storage.where("(client_id = ?) and (name Like ?)", client, "#{storage}%").first
       if st.nil?
         st = Storage.new do |s|
@@ -34,7 +34,7 @@ class Client < ActiveRecord::Base
   def self.load_from_file(filename)
     lines = File.readlines(filename)
     m_hash = Hash.new
-    for line in lines
+    lines.each do |line|
       /(\W+),(\W+)\s/ =~ line
       client_name  = $1
       city_storage = $2
@@ -46,11 +46,11 @@ class Client < ActiveRecord::Base
         end
       end
     end
-    keys = m_hash.keys
-    for key in keys
-      client = Client.where("name=?", key)
+    
+    m_hash.keys.each do |key|
+      client = Client.where("name = ?", key)
       if (client.empty?) #create client
-        client = Client.new({:name => key})
+        client = Client.new(:name => key)
         client.save!
       end
       add_storages(client, m_hash[key])

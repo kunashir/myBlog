@@ -1,5 +1,9 @@
-		<%= stylesheet_link_tag   'blueprint/screen.css',	:media	=> 'screen' %>
-		<%= stylesheet_link_tag   'blueprint/print.css',	:media	=> 'print' %>
-    <%= stylesheet_link_tag  "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" %>
-		<%= javascript_include_tag "application" %>
-    <%= stylesheet_link_tag   'custom.css',	:media	=> 'screen' %>
+	  <%= javascript_include_tag "application" %>
+    <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
+    <script type="text/javascript">
+        function showRecaptcha() {
+           Recaptcha.create('<%= RECAP_CONFIG['public'] %>', "recaptca_div", {
+             theme: "red",
+             callback: Recaptcha.focus_response_field});
+        }
+    </script>

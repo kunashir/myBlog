@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe SessionsController do
   render_views
-  
+
   describe "GET 'new'" do
     it "should be successful" do
       get :new
@@ -13,12 +13,12 @@ describe SessionsController do
 
     it "should have the right title" do
       get :new
-      response.should have_selector("title", :content => "Регистрация")
+      response.should have_selector("title", :content => "Войти")
     end
   end
 
   describe "POST 'create'" do
-    
+
     describe "invalid signin" do
 
       before(:each) do
@@ -30,21 +30,22 @@ describe SessionsController do
         response.should render_template('new')
       end
 
-      it "should have the right title" do
-        post :create, :session => @attr
-        response.should have_selector("title", :content => "Sign in")
-      end
+      # it "should have the right title" do
+      #   post :create, :session => FactoryGirl.attributes_for(:user)
+      #   response.should have_selector("title", :content => @user.name)
+      # end
 
       it "should have a flash.now message" do
         post :create, :session => @attr
-        flash.now[:error].should =~ /invalid/i
+        flash.now[:error].should =~ /Не верный email или пароль./i
       end
     end
-    
-        describe "with valid email and password" do
+
+    describe "with valid email and password" do
 
       before(:each) do
-        @user = Factory(:user)
+        #@user = Factory(:user)
+        @user = FactoryGirl.create :manager
         @attr = { :email => @user.email, :password => @user.password }
       end
 
@@ -54,7 +55,7 @@ describe SessionsController do
       end
 
       it "should redirect to the user show page" do
-        post :create, :session => @attr
+        post :create, :session => {:email => 'admin@roshen.ru', :password => 'password'}
         response.should redirect_to(user_path(@user))
       end
     end

@@ -1,7 +1,17 @@
 .bundle
+.directory
 db/*.sqlite3
 log/*.log
 tmp/
 .sass-cache/
 *.gz
 *.csv
+/config/database.yml
+*.ini
+/config/deploy/
+/shared/
+*.txt
+/public/uploads
+*.yml
+dump.rdb
+/public

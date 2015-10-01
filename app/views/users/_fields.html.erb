@@ -3,7 +3,7 @@
     <%= f.label :company, "Компания (выберите из списка или добавте новую):" %><br />
     <%= f.collection_select :company_id, Company.all, :id, :name %> <li><%= link_to "Добавить компанию", new_company_path %></li>
   </div>
-  
+
   <div class="field">
     <%= f.label :name, "Имя(логин):" %><br />
     <%= f.text_field :name %>
@@ -16,12 +16,12 @@
     <%= f.check_box :be_notified %><%= f.label :be_notified, "Получать уведомления на почту об откзаных заявках" %>
   </div>
   <div class="field">
-    <%= f.label :password, "Пароль:" %><br />
+    <%= f.label :password, "Пароль (не менее 6 симоволов):" %><br />
     <%= f.password_field :password %>
   </div>
   <div class="field">
     <%= f.label :password_confirmation, "Подтверждение пароля:" %><br />
     <%= f.password_field :password_confirmation %>
   </div>
-  
+
 

@@ -1,48 +1,59 @@
-<% if manager? %>
+<% if manager? or is_admin? %>
   <%= link_to "Добавить заявку", new_transportation_path %>
-  <% if manager? or is_admin? %>
-    | <%= link_to "Пакетная загрузка", transportations_path+"/-1/packet" %>
-    | <div id="link_to_xls"><a href=<%=transportations_path+"/-1/export" %> >Сохранить в xls</a></div>
+  | <%= link_to "Пакетная загрузка", packet_loading_transportations_path %>
+  | <div id="link_to_xls">
+      <%= link_to "Сохранить в xls", export_transportations_path %>
+    </div>
+<% end %>
 
-  <% end %>
-<% end %>	
-<div class = "server_time" id = "server_time" ></div>
 <h1>Заявки на перевозку:<%= @filter_text %></h1>
 <%= form_tag( transportations_path, :method => "get") do %>
 	<%= label_tag(:q, "Дата для отбора:") %>
 	<%= text_field_tag :datepicker, nil, :class => "datepicker" %>
-	<br><%= label_tag(:q, "Показать все заявки (по-умолчанию только активные):") %>
+	<br><%= label_tag(:q, "Показать все заявки (по умолчанию только активные):") %>
 	<%= check_box_tag :show_all, 1 %>
 	<br><%= label_tag(:q, "Склад погрузки:") %>
 	<%= select_tag :area, options_for_select(Area.get_selector) %>Вкл. в отбор <%= check_box_tag :use_area, 1 %>
 	<br><%= submit_tag("Отобрать") %>
 <% end %>
 
-<%= will_paginate %>
+<%= paginate @transportations %>
 <table class="transp" border="1">
   <tr class = "tr">
     <td class = "tr">Номер распор.</td>
     <td class = "tr">Дата рейса</td>
-    <td class = "tr">Время подачи ТС под погрузку</td>
+    <td class = "tr">Время погрузки</td>
     <td class = "tr">Склад погрузки</td>
     <td class = "tr">Клиент</td>
     <td class = "tr">Склад выгрзуки</td>
     <td class = "tr">Тоннаж</td>
-    <td class = "tr">Объем</td>    
+    <td class = "tr">Объем</td>
     <td class = "tr">Примечание</td>
     <td class = "tr">Тип кузова</td>
     <td class = "tr">Нач. сумма (руб.)</td>
     <td class = "tr">Лучшее предложение (руб.)</td>
     <td class = "tr">Шаг цены </td>
-    <% if manager? or is_admin? %>
-      <td class = "tr">ТЭК</td>
-    <% else %>	  
-      <td class = "tr">Сделать ставку</td>
-    <% end %>	  
+    <td class = "tr">
+      <% if manager? or is_admin? %>
+        ТЭК
+      <% else %>
+        Сделать ставку
+      <% end %>
+    </td>
   </tr>
-    
+
     <%= render @transportations %>
-  
-  
+
+
  </table>
-<%= will_paginate %>
+
+<div class="rate-popup">
+  <div class="rate-popup-content">
+    <div class="close-popup">
+      <a href=""><%= close_icon %> </a>
+    </div>
+    <div class="do_rate_form" >
+    </div>
+  </div>
+</div>
+

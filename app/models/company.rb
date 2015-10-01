@@ -1,12 +1,12 @@
 #coding: utf-8
 class Company < ActiveRecord::Base
   attr_accessible :name, :inn, :is_freighter
-  
+
   has_many  :users
   has_many  :transportations
   has_many  :avto
   has_many  :drivers
-  
+
   validates :name,    :presence => true
 
   def self.get_main_company
@@ -15,5 +15,14 @@ class Company < ActiveRecord::Base
   	rescue
   		return "Заведите основную компанию(она должена быть первой)"
   	end
+  end
+
+  def self.company_list #except main
+    list = [Company.new]
+    list + Company.where("id > ?",  1)
+  end
+
+  def users
+    User.where("company_id = ? AND is_block = ?", self, false)
   end
 end

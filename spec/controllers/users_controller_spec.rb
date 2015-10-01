@@ -4,12 +4,12 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
-  describe "GET 'new'" do
-  
+  describe "GET 'new'"   do
+
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
-    
+
    it "should be successful" do
       get :new
       response.should be_success
@@ -19,11 +19,26 @@ describe UsersController do
       get :new
       response.should have_selector("title", :content => "Регистрация")
     end
+
+    it "signs me in" do
+      get '/signin'
+      within("#session") do
+        fill_in 'E-mail:', :with => @user.email
+        fill_in 'Пароль', :with => 'password'
+      end
+      click_link 'Вход'
+      expect(page).to have_content 'Success'
+    end
+
   end
 
   describe "GET 'show'" do
-    
-    it "should have the right title" do
+
+    before(:each) do
+      @user = FactoryGirl.create(:user)
+    end
+
+    it "should have the right title with reg users" do
       get :show, :id => @user
       response.should have_selector("title", :content => @user.name)
     end
@@ -63,7 +78,7 @@ describe UsersController do
         response.should render_template('new')
       end
     end
-  
+
     describe "success" do
 
       before(:each) do

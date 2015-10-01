@@ -11,30 +11,37 @@
 #
 
 class User < ActiveRecord::Base
+
   attr_accessor   :password
   attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
   #attr_protected :login_count
-  
+
+  scope :manager, -> {where("nmanager = ?", true)}
+
   has_many   :transportations #Пользователь может иметь много заявок на перевозку
   belongs_to :company         #но он может работать только на одну фирму
-  
+  has_many   :messages, through: :user_msg
+  has_many   :user_msg
+
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  
-  
-  
+
+
+
   validates :name,    :presence => true, :length =>  { :maximum => 50}, :unless => :use_validate?
   validates :email,   :presence => true, :format =>  { :with => email_regex },
                       :uniqueness => { :case_sensitive => false }, :unless => :use_validate?
   validates :company_id, :presence => true , :unless => :use_validate?
   validates :password,  :presence => true, :confirmation  => true,
                         :length   => { :within => 6..40}, :unless => :use_validate?
-                        
+
  before_save :encrypt_password
-  
-  def inc_login
+
+  def inc_login(ip, agent)
     self.login_count = self.login_count + 1
+    self.ip = ip
+    self.agent = agent
     save_without_callbacks(true)
-    self.save!
+    self.save
   end
 
   def dec_login
@@ -52,9 +59,9 @@ class User < ActiveRecord::Base
   def has_password?(submitted_password)
     encrypted_password == encrypt(submitted_password)
   end
-  
+
   def show_reg?
-    return self.show_reg
+    self.show_reg
   end
 
   def self.authenticate(email, submitted_password)
@@ -62,16 +69,16 @@ class User < ActiveRecord::Base
     return nil  if user.nil?
     return user if user.has_password?(submitted_password)
   end
-  
-  def self.authenticate_with_salt(id, cookie_salt)
+
+  def self.authenticate_with_salt(id, cookie_salt=nil, ip=nil, agent=nil)
     user = find_by_id(id)
-    (user && user.salt == cookie_salt) ? user : nil
+    (user && user.salt == cookie_salt && user.ip == ip && user.agent == agent) ? user : nil
   end
 
   def save_without_callbacks ( use )
     @use_callback = use
   end
-  
+
   def show_save_type
     if !@use_callback
       return "Use callback"
@@ -81,24 +88,22 @@ class User < ActiveRecord::Base
 
 
   def self.carriers_email(ignore_company=0)
-      if ignore_company == 0
-          users_list = User.all
-      else
-          users_list = User.where("company_id != ? AND be_notified = ?", ignore_company, true)
-      end
-      output_array = Array.new
-      j = 0
-      for i in users_list
-          if i.company.is_freighter
-              output_array[j] = i.email
-              j = j + 1
-          end
-      end
-      return output_array
+    output_array = []
+    User.includes(:company).where("companies.id <> ?", ignore_company)
+      .select("email").where("be_notified = ?", true).each{|x| output_array << x.email}
+    output_array
+  end
+
+
+  def self.company_email(company=0)
+    output_array = []
+    User.includes(:company).where("companies.id = ?", company)
+      .select("email").where("be_notified = ?", true).each{|x| output_array << x.email}
+    output_array
   end
 
   private
-   def encrypt_password
+    def encrypt_password
      if !@use_callback
         self.salt = make_salt if new_record?
         return self.encrypted_password = encrypt(password)
@@ -119,6 +124,6 @@ class User < ActiveRecord::Base
     end
 
     def use_validate?
-      return @use_callback
+      @use_callback
     end
 end
