@@ -1,5 +1,5 @@
 class Avto < ActiveRecord::Base
-  attr_accessible :model, :carcase, :statenumber, :trailnumber
+  # attr_accessible :model, :carcase, :statenumber, :trailnumber
   
   validates :statenumber, :presence => true, :length => {:minimum => 6}
   

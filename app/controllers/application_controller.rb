@@ -23,9 +23,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  
   def authenticate
     unless signed_in?
-      flash[:error] = "Для доступа к этому разделу спрева авторизируйтесь!!!"
+      flash[:error] = "Для доступа к этому разделу сперва авторизируйтесь!!!"
       redirect_to signin_path
     end
   end

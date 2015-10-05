@@ -1,6 +1,6 @@
 #coding: utf-8
 class Company < ActiveRecord::Base
-  attr_accessible :name, :inn, :is_freighter
+  # attr_accessible :name, :inn, :is_freighter
 
   has_many  :users
   has_many  :transportations
@@ -22,7 +22,7 @@ class Company < ActiveRecord::Base
     list + Company.where("id > ?",  1)
   end
 
-  def users
-    User.where("company_id = ? AND is_block = ?", self, false)
-  end
+  # def users
+  #   User.where("company_id = ? AND is_block = ?", self, false)
+  # end
 end

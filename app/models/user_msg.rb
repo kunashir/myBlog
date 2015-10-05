@@ -1,5 +1,6 @@
 class UserMsg < ActiveRecord::Base
-  attr_accessible :active
+  # attr_accessible :active
+  
   belongs_to :user
   belongs_to :message
 

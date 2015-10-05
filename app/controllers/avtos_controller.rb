@@ -6,23 +6,28 @@ class AvtosController < ApplicationController
    
   end
   
-   def create
-    @avto = Avto.new(params[:avto])
+  def create
+    @avto = Avto.new(avots_params)
     @avto.company = current_user.company
     if @avto.save!
       # Обработка успешного сохранения.
-      #sign_in @user   #автоматический вход
       flash[:success] = "Новая машина добавлена!"
-      redirect_to avtos_path #пока возвращаемся к пользователю, потом передалать к списку машин
+      redirect_to avtos_path 
     else
       @title = "Добвление нового авто"
       render 'new'
     end
   end
   
-   def index
+  def index
     @title  = "Подвижной парк"
     @avtos  = Avto.company_avto(current_user.company).paginate(:page =>  params[:page])
+  end
+
+private
+
+  def avots_params
+    params.require(:avto).permit(:model, :carcase, :statenumber, :trailnumber)
   end
 
 end

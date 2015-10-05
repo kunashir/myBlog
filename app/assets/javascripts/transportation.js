@@ -28,7 +28,7 @@ function GetStartSum()
   $.ajax(
     {
       type: "GET",
-      url:  "/transportations/-1/get_start_sum",
+      url:  "/transportations/get_start_sum",
       data: {
         "storage" : $("#transportation_city_id").val(),
         "area" : $("#transportation_area_id").val(),
@@ -61,7 +61,7 @@ function GetClientCities()
       $.ajax(
         {
           type: "GET",
-          url:  "/transportations/-1/get_storage",
+          url:  "/transportations/get_storage",
           data: {"client" : $(this).val()},
           dataType: "text",
           error:  function(XMLHttpRequest, textStatus, errorThrown)

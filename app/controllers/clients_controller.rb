@@ -7,7 +7,7 @@ class ClientsController < ApplicationController
   end
 
   def create
-    @client = Client.new(params[:client])
+    @client = Client.new(client_params)
     if @client.save!
       flash[:success] = "Новый клиент добавлен!"
       redirect_to clients_path
@@ -32,5 +32,10 @@ class ClientsController < ApplicationController
     @client   = Client.find(params[:id])
     @title  = @client.name
     set_cur_client(@client)
+  end
+
+private
+  def client_params
+    params.require(:client).permit(:name, :city, :client)
   end
 end

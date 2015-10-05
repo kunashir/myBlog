@@ -4,7 +4,7 @@ require File.expand_path('../boot', __FILE__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-require "active_resource/railtie"
+# require "active_resource/railtie"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
@@ -19,7 +19,7 @@ MAIL_CONFIG  = YAML.load(File.read(File.expand_path('../mail.yml', __FILE__)))[R
 APP_CONFIG = YAML.load(ERB.new(File.read(File.expand_path('../app.yml', __FILE__))).result)[Rails.env]
 RECAP_CONFIG = YAML.load(File.read(File.expand_path('../recaptcha.yml', __FILE__)))[Rails.env]
 
-module MyBlog
+module LogisticTender
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

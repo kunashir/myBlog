@@ -5,19 +5,21 @@
 // the compiled file.
 //
 //= require jquery
-//= require jquery_ujs
+//= require jquery.turbolinks
 //= require jquery-ui
-//= require jquery.blockUI.js
+//= require jquery_ujs
+//= require turbolinks
 //= require select2
 //= require transportation
+//= require jquery-ui/datepicker-ru
 
 
 
 (function($) {
   $(document).ready(function() {
-    $( "#datepicker" ).datepicker({
-      dateFormat: 'yy-mm-dd'
-    });
+    // $( "#datepicker" ).datepicker({
+    //   dateFormat: 'yy-mm-dd'
+    // });
     $("#transportation_client_id").select2({ width: 'resolve' }); //transportation_storage_id
    // $("#transportation_city_id").select2();
   });
@@ -33,6 +35,16 @@
 })(jQuery);
 
 
+function InitDatepeicker () {
+  $(".datepicker").datepicker({
+      format: 'dd.mm.yy', 
+      region: "ru", 
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-1:+0"
+    }
+  );
+}
 
 function add_sec(cur_time)
 {
@@ -106,19 +118,19 @@ function add_sec(cur_time)
     return time[0]+":"+time[1]+":"+time[2];
 }
 
-/*(function($) {
+(function($) {
   $(document).ready(function() {
-   setInterval(function() {$("#server_time").html( add_sec($("#server_time").val()) ); },1000);
+    InitDatepeicker();
   });
 })(jQuery);
-*/
+
 
 (function($) {
   $(document).ready(function() {
     $.ajax(
     {
       type: "GET",
-			url:  "/transportations/-1/server_time",
+			url:  "/transportations/server_time",
 			data: "",
 			dataType: "text",
 			error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -135,34 +147,3 @@ function add_sec(cur_time)
     });
   });
 })(jQuery);
-
-
-// function saveToXls ()
-// {
-//   $.download(
-
-//           "/transportations/export", 'filename=mySpreadsheet&format=xls&content='
-//           //data:{datapicker: $("#datepicker").val()}
-//          // dataType: "text",
-//           // error: function(XMLHttpRequest, textStatus, errorThrown)
-//           // {
-//           //   alert ("Ошибка формирования файла xls");
-//           // },
-//           // success:  function(result)
-//           // {
-//           //   window.open("data:xls," + window.btoa(result));
-//           //   //alert (result);
-//           //   //$("#server_time").html(result);
-//           //         //var temp = $("#server_time").text();
-//           //         //alert (temp+"::" + result);
-//           //    //     setInterval(function() {$("#server_time").html( add_sec( $("#server_time").text() ) ); },1000);
-//           //   }
-
-
-//         );
-//   return false;
-// }
-
-// $(document).ready(function(){
-//   $("#link_to_xls").on('click', "a", saveToXls);
-// });

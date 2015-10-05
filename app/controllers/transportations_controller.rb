@@ -29,11 +29,6 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def new
-    # if (!manager?) and (!is_admin?)
-    #   flash[:error] = "Вы не можете создавать заявки!!!"
-    #   redirect_to transportations_path
-    #   return
-    # end
     @title = "Добавление заявки на перевозку"
     @transportation   = Transportation.new
     if !params[:id].nil? #ввод копированием
@@ -91,7 +86,7 @@ class TransportationsController < ApplicationController
   #=====================================================================
   def create
 
-    @transportation = Transportation.new(params[:transportation])
+    @transportation = Transportation.new(tender_params)
     @transportation.extra_pay = 0 if !@transportation.complex_direction
     @transportation.user = current_user
     if !@transportation.set_rate
@@ -125,7 +120,7 @@ class TransportationsController < ApplicationController
   #=====================================================================
   def edit
     @transportation = Transportation.find(params[:id])
-    if (!manager?) and (!is_admin?)
+    if (!manager?) && (!is_admin?)
       flash[:error] = "Вы не можете редактировать данную заявку"
       redirect_to transportations_path
     end
@@ -231,9 +226,7 @@ class TransportationsController < ApplicationController
 #=====================================================================
   def update
 
-
     if (!manager? and !is_admin?) #если не менеджер и не админ занчит делали ставку
-
 
       Transportation.transaction do
 
@@ -285,7 +278,6 @@ class TransportationsController < ApplicationController
 
 
         if trade_status == 0
-          #@transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
           @transportation.bet
         else #Случай, когда сумма задана в параметре (обычно это после торгов идет)
 
@@ -296,10 +288,6 @@ class TransportationsController < ApplicationController
             end
             @transportation.cur_sum = params_summa
         end
-        # rescue
-        #   @transportation.cur_sum = start_summa - @transportation.step #params[:cur_sum]
-        # end
-        @transportation.abort_company = nil
         @transportation.last_bid_at = Time.now
         if @transportation.save
           flash[:success] = "Ваша ставка принята."
@@ -312,7 +300,7 @@ class TransportationsController < ApplicationController
     else
       @transportation = Transportation.find(params[:id])
       @transportation.set_user(current_user)
-      if @transportation.update_attributes!(params[:transportation])
+      if @transportation.update_attributes!(tender_params)
         flash[:success] = "Заявка обновлена."
         redirect_to transportations_path #при сохранение сразу на список
       else
@@ -443,9 +431,9 @@ class TransportationsController < ApplicationController
 
 #=====================================================================
   def get_storage
-    if (params[:id] == -1)
-      @transportation = Transportation.new()
-    end
+    # if (params[:id] == -1)
+    #   @transportation = Transportation.new()
+    # end
     client = Client.find(params[:client])
     list_storage = City.cities_for(client) #Storage.where("client_id=?", client);
     @html_select_tag = ""
@@ -519,6 +507,13 @@ class TransportationsController < ApplicationController
   end
 
 private
+
+  def tender_params
+    params.require(:transportation).permit(:num, :date, :time, :comment,
+     :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
+     :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
+    )
+  end
 
 #=====================================================================
   def authenticate

@@ -1,13 +1,13 @@
 #coding: utf-8
 class DriversController < ApplicationController
- def new
+  def new
     @driver = Driver.new
     @title = "Добвление нового водителя"
    
   end
   
-   def create
-    @driver = Driver.new(params[:driver])
+  def create
+    @driver = Driver.new(driver_params)
     @driver.company = current_user.company
     if @driver.save!
       # Обработка успешного сохранения.
@@ -19,9 +19,14 @@ class DriversController < ApplicationController
     end
   end
   
-   def index
+  def index
     @title  = "Водители"
     @drivers  = Driver.company_driver(current_user.company).paginate(:page =>  params[:page])
+  end
+
+private
+  def driver_params
+    params.require(:driver).permit(:name, :passport)
   end
 
 end

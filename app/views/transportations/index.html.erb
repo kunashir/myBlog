@@ -17,35 +17,39 @@
 	<br><%= submit_tag("Отобрать") %>
 <% end %>
 
-<%= paginate @transportations %>
-<table class="transp" border="1">
-  <tr class = "tr">
-    <td class = "tr">Номер распор.</td>
-    <td class = "tr">Дата рейса</td>
-    <td class = "tr">Время погрузки</td>
-    <td class = "tr">Склад погрузки</td>
-    <td class = "tr">Клиент</td>
-    <td class = "tr">Склад выгрзуки</td>
-    <td class = "tr">Тоннаж</td>
-    <td class = "tr">Объем</td>
-    <td class = "tr">Примечание</td>
-    <td class = "tr">Тип кузова</td>
-    <td class = "tr">Нач. сумма (руб.)</td>
-    <td class = "tr">Лучшее предложение (руб.)</td>
-    <td class = "tr">Шаг цены </td>
-    <td class = "tr">
-      <% if manager? or is_admin? %>
-        ТЭК
-      <% else %>
-        Сделать ставку
-      <% end %>
-    </td>
-  </tr>
+<% if @transportations %>
+  <%= (paginate @transportations) %>
+  <table class="transp" border="1">
+    <tr class = "tr">
+      <td class = "tr">Номер распор.</td>
+      <td class = "tr">Дата рейса</td>
+      <td class = "tr">Время погрузки</td>
+      <td class = "tr">Склад погрузки</td>
+      <td class = "tr">Клиент</td>
+      <td class = "tr">Склад выгрзуки</td>
+      <td class = "tr">Тоннаж</td>
+      <td class = "tr">Объем</td>
+      <td class = "tr">Примечание</td>
+      <td class = "tr">Тип кузова</td>
+      <td class = "tr">Нач. сумма (руб.)</td>
+      <td class = "tr">Лучшее предложение (руб.)</td>
+      <td class = "tr">Шаг цены </td>
+      <td class = "tr">
+        <% if manager? or is_admin? %>
+          ТЭК
+        <% else %>
+          Сделать ставку
+        <% end %>
+      </td>
+    </tr>
 
-    <%= render @transportations %>
+      <%= render @transportations %>
 
 
- </table>
+   </table>
+<% else %>
+  <div class='no-data'> Нет заявок! </div>
+<% end %>
 
 <div class="rate-popup">
   <div class="rate-popup-content">

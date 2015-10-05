@@ -1,7 +1,7 @@
 #coding: utf-8
 
 class Rate < ActiveRecord::Base
-	attr_accessible	:area_id, :city_id, :carcase, :summa
+	# attr_accessible	:area_id, :city_id, :carcase, :summa
 
 	belongs_to	:area,	:class_name => "City", :foreign_key => "area_id"
 	belongs_to	:city

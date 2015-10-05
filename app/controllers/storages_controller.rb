@@ -19,5 +19,10 @@ class StoragesController < ApplicationController
     end
   end
   
+private
+
+  def storage_params
+    params.require(:storage).permit(:city, :address)
+  end
   
 end

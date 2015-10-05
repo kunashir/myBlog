@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-MyBlog::Application.load_tasks
+LogisticTender::Application.load_tasks

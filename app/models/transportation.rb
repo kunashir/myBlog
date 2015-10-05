@@ -6,11 +6,11 @@
 
 class Transportation < ActiveRecord::Base
   #apply_simple_captcha
-  attr_accessible  :num, :date, :time, :comment,
-    :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
-    :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
+  # attr_accessible  :num, :date, :time, :comment,
+  #   :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
+  #   :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
 
-  belongs_to  :user
+  belongs_to  :user, :foreign_key => "manager_id"
   belongs_to  :company
   belongs_to  :avto
   belongs_to  :driver
@@ -25,7 +25,7 @@ class Transportation < ActiveRecord::Base
   validates :carcase,         :presence => true
   validates :step,            :presence => true
 
-  default_scope               :order  =>  'transportations.id  DESC' #сортировка по уменьшению ид
+  default_scope {order('transportations.id  DESC')} #сортировка по уменьшению ид
 
   before_save   :logging
   before_save    :set_rate
@@ -185,27 +185,37 @@ def is_obsolete?
   self.date < Date.current()
 end
 #=======================================================================
-  def is_active? #заявка активна если дата заявки не меньше текущей даты!
-    return false unless self.date >= Date.current()
-    start_time_list = APP_CONFIG["time_start"].split(",")
-    stop_time_list = APP_CONFIG["time_stop"].split(",")
-    start2 = Time.parse("#{Date.today} #{start_time_list[1]}:00")
-    start1 = Time.parse("#{Date.today} #{start_time_list[0]}:00")
-    stop1 = Time.parse"#{Date.today} #{stop_time_list[0]}:00")
-    cur_time    =   Time.zone.now.localtime
-    if !is_busy? && created_at < start1
-      #не закрытая заявка, созданная до первого старта
-      return true
-    elsif !is_busy? && created_at > start1 
-      #заявка созданая после первых торгов
-      return true
-    elsif is_busy? && created_at >= start1 && cur_time < start2
-      return true
-    elsif is_busy? && created_at < start1 && cur_time < stop1
-      return false
-    end
-    true
-  end
+  
+def is_active? #заявка активна если дата заявки не меньше текущей даты!
+  # if self.date >= Date.current()
+  #   return true
+  # end
+  # return false
+  self.date >= Date.current()
+end
+
+
+  # def is_active? #заявка активна если дата заявки не меньше текущей даты!
+  #   return false unless self.date >= Date.current()
+  #   start_time_list = APP_CONFIG["time_start"].split(",")
+  #   stop_time_list = APP_CONFIG["time_stop"].split(",")
+  #   start2 = Time.parse("#{Date.today} #{start_time_list[1]}:00")
+  #   start1 = Time.parse("#{Date.today} #{start_time_list[0]}:00")
+  #   stop1 = Time.parse("#{Date.today} #{stop_time_list[0]}:00")
+  #   cur_time    =   Time.zone.now.localtime
+  #   if !is_busy? && created_at < start1
+  #     #не закрытая заявка, созданная до первого старта
+  #     return true
+  #   elsif !is_busy? && created_at > start1 
+  #     #заявка созданая после первых торгов
+  #     return true
+  #   elsif is_busy? && created_at >= start1 && cur_time < start2
+  #     return true
+  #   elsif is_busy? && created_at < start1 && cur_time < stop1
+  #     return false
+  #   end
+  #   true
+  # end
 
 #=======================================================================#=======================================================================
   def is_confirm? #заявка подтверждена, когда есть данные по машине и водителю
@@ -215,7 +225,7 @@ end
   end
 
 #=======================================================================
-  def is_busy? #заявка занята, когда есть данные по перевозчике
+  def is_busy? #заявка занята, когда есть данные по перевозчику
     return  !self.company.nil?  # ? false : true
   end
 

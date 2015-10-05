@@ -12,7 +12,7 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    @company = Company.new(params[:company])
+    @company = Company.new(company_params)
     if @company.save
       # Обработка успешного сохранения.
 
@@ -29,5 +29,7 @@ class CompaniesController < ApplicationController
 
 
 private
-
+  def company_params
+    params.require(:company).permit(:name, :inn, :is_freighter)
+  end
 end

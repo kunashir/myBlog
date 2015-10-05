@@ -19,20 +19,22 @@ module TransportationsHelper
     end
 
     def main_range?(cur_time)
+        # byebug
         first_part = (trad_start_time..trad_stop_time)
-        second_part = (trad_start_time(1)..trad_stop_time(1))
+        # second_part = (trad_start_time(1)..trad_stop_time(1))
         # p "FIRST: #{first_part}"
         # p "SECOND: #{second_part}"
         # p "#{first_part.cover?(cur_time)}"
         # p "#{second_part.cover?(cur_time)}"
-        first_part.cover?(cur_time) || second_part.cover?(cur_time)
+        first_part.cover?(cur_time) 
+        # || second_part.cover?(cur_time)
     end
 
     def extra_range?(cur_time, close_time)
         return false if close_time.nil?
         first_part = (trad_stop_time..close_time)
-        second_part = (trad_stop_time(1)..close_time)
-        first_part.cover?(cur_time) || second_part.cover?(cur_time)
+        # second_part = (trad_stop_time(1)..close_time)
+        first_part.cover?(cur_time) #|| second_part.cover?(cur_time)
     end
 
     def require_confirmation?

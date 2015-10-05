@@ -1,22 +1,24 @@
 class Client < ActiveRecord::Base
-  attr_accessible :name, :city, :client
+  # attr_accessible :name, :city, :client
+  
   has_many  :storages
   has_many  :transportations
   
   validates :name, :presence  => true
-	default_scope	:order => 'clients.name  ASC'
+	default_scope	{ order('clients.name  ASC') }
   
-  def storages
-    Storage.where("client_id = ?", self)
-  end
+  # def storages
+  #   Storage.where("client_id = ?", self)
+  # end
   
   def self.add_storages(client, storages_arr)
-    print(client)
+    # print(client)
+    client = Client.find(client)
     storages_arr.each do |storage|
       st = Storage.where("(client_id = ?) and (name Like ?)", client, "#{storage}%").first
       if st.nil?
         st = Storage.new do |s|
-          s.client  = Client.find(client)
+          s.client  = client
           city    = City.where("name LIKE ?", "#{storage}%").first
           if city.nil?
             city  = City.new(:name => storage)

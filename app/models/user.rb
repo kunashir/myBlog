@@ -13,7 +13,7 @@
 class User < ActiveRecord::Base
 
   attr_accessor   :password
-  attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
+  # attr_accessible :name, :email, :company_id, :password, :password_confirmation, :be_notified, :login_count
   #attr_protected :login_count
 
   scope :manager, -> {where("nmanager = ?", true)}

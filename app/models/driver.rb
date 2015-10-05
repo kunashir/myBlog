@@ -1,5 +1,5 @@
 class Driver < ActiveRecord::Base
-  attr_accessible :name, :passport
+  # attr_accessible :name, :passport
   
   validates :name,      :presence => true
   validates :passport,  :presence => true
