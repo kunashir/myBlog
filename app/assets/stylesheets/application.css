@@ -4,7 +4,15 @@
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *= require_self
  *= require black-tie
- *= require ./blueprint/screen
- *= require custom
+ *= require bootstrap/dist/css/bootstrap.min
+ *= require metisMenu/dist/metisMenu.min
+ *= require timeline
+ *= require sb-admin-2
+ *= require morrisjs/morris
+ *= require font-awesome/css/font-awesome.min
  *= require select2
 */
+
+#link_to_xls{
+  display: inline-block;
+}

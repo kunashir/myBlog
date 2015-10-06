@@ -4,7 +4,7 @@
 // It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
 // the compiled file.
 //
-//= require jquery
+//= require jquery/dist/jquery.min
 //= require jquery.turbolinks
 //= require jquery-ui
 //= require jquery_ujs
@@ -12,16 +12,24 @@
 //= require select2
 //= require transportation
 //= require jquery-ui/datepicker-ru
+//= require bootstrap/dist/js/bootstrap
+//= require metisMenu/dist/metisMenu.min
+//= require raphael/raphael-min
+//= require morrisjs/morris.min
+//= require sb-admin-2.js
+//= require datatables/media/js/jquery.dataTables.min
+//= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min
 
 
+ $(document).ready(function() {
+      $('#dataTables-example').DataTable({
+              responsive: true
+      });
+  });
 
 (function($) {
   $(document).ready(function() {
-    // $( "#datepicker" ).datepicker({
-    //   dateFormat: 'yy-mm-dd'
-    // });
     $("#transportation_client_id").select2({ width: 'resolve' }); //transportation_storage_id
-   // $("#transportation_city_id").select2();
   });
 })(jQuery);
 

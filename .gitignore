@@ -15,3 +15,4 @@ tmp/
 *.yml
 dump.rdb
 /public
+/vendor/assets/comonents

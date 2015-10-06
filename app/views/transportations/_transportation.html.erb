@@ -16,8 +16,8 @@
     <% @cur = @cur + 1 %>
   <% end %>
 
-  <td class = "tr"><%= transportation.date %></td>
-  <td class = "tr"><%= to_time(transportation.time) %></td>
+  <td class = "tr"><%= transportation.date %> <%=to_time(transportation.time) %></td>
+  <!-- <td class = "tr"><%= to_time(transportation.time) %></td> -->
   <td class = "tr"><%= transportation.get_area %></td>
   <td class = "tr">
       <%= transportation.client.name if !transportation.client.nil? %>
@@ -29,10 +29,10 @@
   </td>
   <td class = "tr">
     <div class = <%= transportation.lightcar?  ? "lightcar" : "" %> >
-      <%= transportation.weight %>
+      <%= transportation.weight %> / <%= transportation.get_volume %>
     </div>
   </td>
-  <td class = "tr"><%= transportation.get_volume %></td>
+  <!-- <td class = "tr"><%= transportation.get_volume %></td> -->
   <td class = "tr">
     <div class = <%= transportation.complex_direction? ? "complex_direction" : "" %> >
       <%= transportation.comment %>

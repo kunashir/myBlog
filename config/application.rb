@@ -55,5 +55,9 @@ module LogisticTender
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
     Date::DATE_FORMATS[:default] = "%d.%m.%Y"
+
+    config.assets.paths << Rails.root.join('assets', 'fonts', '**')
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'components')
+    config.assets.paths << Rails.root.join('vendor', 'assets')
   end
 end
