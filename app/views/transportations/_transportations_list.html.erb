@@ -1,0 +1,29 @@
+<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+  <thead>
+    <tr >
+      <th >Номер распор.</th>
+      <th >Дата/время погрузки</th>
+      <th >Дата/Время разгрузки</th>
+      <th >Склад погрузки</th>
+      <th >Клиент</th>
+      <th >Склад выгрзуки</th>
+      <th >Тоннаж/Объем</th>
+      <!-- <th >Объем</th> -->
+      <th >Примечание</th>
+      <th >Тип кузова</th>
+      <th >Нач. сумма (руб.)</th>
+      <th >Лучшее предложение (руб.)</th>
+      <th >Шаг цены </th>
+      <th >
+        <% if manager? or is_admin? %>
+          ТЭК
+        <% else %>
+          Сделать ставку
+        <% end %>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render transportations %>
+  </tbody>
+</table>

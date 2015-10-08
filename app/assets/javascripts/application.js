@@ -24,9 +24,15 @@
 
  $(document).ready(function() {
       $('#dataTables-example').DataTable({
-              responsive: true
+        responsive: true
       });
   });
+
+ $(document).on('click', '.show-panel', function(e) {
+  parent = $(this).parents(".form-group");
+  $(parent).next().toggleClass("hidden");
+  return false;
+});
 
 (function($) {
   $(document).ready(function() {
@@ -63,6 +69,32 @@ function InitDatepeicker () {
     },
     format: 'd.m.Y H:m'
   });
+}
+
+function getDataForChart(){
+  $.ajax(
+    {
+      type: "GET",
+      url:  "/transportations/chart_data",
+      data: "",
+      dataType: "json",
+      error: function(XMLHttpRequest, textStatus, errorThrown){
+        // $("#server_time").html("ОШИБКА: не удалось получить время сервера!");
+      },
+      success:  function(result){
+        Morris.Line({
+          element: 'morris-area-chart',
+          data: result,
+          xkey: 'day',
+          ykeys: ['tarif', 'real'],
+          labels: ['Тариф', 'Реальная цена'],
+          hideHover: 'auto',
+          resize: true
+        })
+      }
+
+
+    });
 }
 
 function add_sec(cur_time)
@@ -140,6 +172,7 @@ function add_sec(cur_time)
 (function($) {
   $(document).ready(function() {
     InitDatepeicker();
+    getDataForChart(); //TODO: must be only for home page!!!
   });
 })(jQuery);
 

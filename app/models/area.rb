@@ -18,7 +18,7 @@ class Area < ActiveRecord::Base
 	end
 
 	def self.cities
-		City.find_all_by_id(Area.select(:city_id))
+		City.where(id: Area.select(:city_id))
 	end
 end
 # == Schema Information

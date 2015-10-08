@@ -1,15 +1,3 @@
-class Driver < ActiveRecord::Base
-  # attr_accessible :name, :passport
-  
-  validates :name,      :presence => true
-  validates :passport,  :presence => true
-  
-  belongs_to :company
-  
-  def self.company_driver(company)
-    Driver.where("company_id = ?", company)
-  end
-end
 # == Schema Information
 #
 # Table name: drivers
@@ -21,4 +9,17 @@ end
 #  created_at :datetime
 #  updated_at :datetime
 #
+
+class Driver < ActiveRecord::Base
+  # attr_accessible :name, :passport
+  
+  validates :name,      :presence => true
+  validates :passport,  :presence => true
+  
+  belongs_to :company
+  
+  def self.company_driver(company)
+    [Driver.new] + Driver.where("company_id = ?", company)
+  end
+end
 

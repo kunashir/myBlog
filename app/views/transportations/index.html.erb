@@ -47,47 +47,25 @@
         <!-- /.panel-heading -->
         <div class="panel-body">
           <ul class='nav nav-tabs'>
-            <li class="active">
+            <li class=<%= active_header('current-orders')%> >
               <a data-toggle="tab" href="#current-orders" aria-expanded='false'>Текущий заявки</a>
             </li>
-            <li>
+            <li class=<%= active_header('not-confirmed-orders')%> >
+              <a data-toggle="tab" href="#not-confirmed-orders" aria-expanded='false'>Не подтвержденные заявки</a>
+            </li>
+            <li class=<%= active_header('confirmed-orders')%> >
               <a data-toggle="tab" href="#confirmed-orders" aria-expanded='false'>Подтвержденные заявки</a>
             </li>
           </ul>
           <div class="tab-content">
-            <div id="current-orders" class="dataTable_wrapper tab-pane fade active in">
-              <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                <thead>
-                  <tr >
-                    <th >Номер распор.</th>
-                    <th >Дата/время погрузки</th>
-                    <th >Дата/Время разгрузки</th>
-                    <th >Склад погрузки</th>
-                    <th >Клиент</th>
-                    <th >Склад выгрзуки</th>
-                    <th >Тоннаж/Объем</th>
-                    <!-- <th >Объем</th> -->
-                    <th >Примечание</th>
-                    <th >Тип кузова</th>
-                    <th >Нач. сумма (руб.)</th>
-                    <th >Лучшее предложение (руб.)</th>
-                    <th >Шаг цены </th>
-                    <th >
-                      <% if manager? or is_admin? %>
-                        ТЭК
-                      <% else %>
-                        Сделать ставку
-                      <% end %>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <%= render @transportations %>
-                </tbody>
-              </table>
+            <div id="current-orders" class='<%= active('current-orders') %>' >
+              <%= render partial: 'transportations_list', locals: {transportations: @transportations} %>
             </div>
-            <div id="confirmed-orders" class="dataTable_wrapper tab-pane fade">
-              Нет данных
+            <div id="not-confirmed-orders" class='<%= active('not-confirmed-orders') %>' >
+              <%= render partial: 'transportations_list', locals: {transportations: @not_confirmed_orders} %>
+            </div>
+            <div id="confirmed-orders" class='<%= active('confirmed-orders')%> '>
+              <%= render partial: 'transportations_list', locals: {transportations: @confirmed_orders} %>
             </div>
           </div>
         </div>

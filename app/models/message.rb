@@ -1,9 +1,3 @@
-class Message < ActiveRecord::Base
-  # attr_accessible :content
-
-  has_many   :users, through: :user_msg
-  has_many   :user_msg
-end
 # == Schema Information
 #
 # Table name: messages
@@ -13,4 +7,11 @@ end
 #  created_at :datetime        not null
 #  updated_at :datetime        not null
 #
+
+class Message < ActiveRecord::Base
+  # attr_accessible :content
+
+  has_many   :users, through: :user_msg
+  has_many   :user_msg
+end
 

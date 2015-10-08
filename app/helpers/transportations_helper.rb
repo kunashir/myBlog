@@ -135,4 +135,16 @@ module TransportationsHelper
     def was_cancel?(tr)
       tr.abort_company && (tr.company == current_user.company ||(manager? or is_admin?)) && tr.cur_sum
     end
+
+    def active_header(tab_name)
+      return "active " if !params[:tab] && tab_name == "current-orders"
+      return " active" if tab_name == params[:tab]
+      ""
+    end
+
+    def active(tab_name)
+      return "tab-pane dataTable_wrapper fade active in" if !params[:tab] && tab_name == "current-orders"
+      return 'tab-pane dataTable_wrapper fade active in'.html_safe if tab_name == params[:tab]
+      'tab-pane dataTable_wrapper fade '.html_safe
+    end
 end

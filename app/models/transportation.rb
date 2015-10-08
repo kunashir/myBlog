@@ -33,6 +33,24 @@ class Transportation < ActiveRecord::Base
   after_save    :logging_new
   @cur_user = nil
 
+  accepts_nested_attributes_for :avto
+  accepts_nested_attributes_for :driver
+
+  scope :confirmed, ->(company){
+    if company.is_freighter?
+      where(company: company).where.not(avto: nil, driver: nil)
+    else
+      where.not(avto: nil, driver: nil, company: nil)
+    end
+  }
+  scope :not_confirmed, ->(company){
+    if company.is_freighter?
+      where(company: company, avto: nil, driver: nil)
+    else
+      where.not(company: nil).where(avto: nil, driver: nil)
+    end
+  }
+  scope :active, ->(){where("date >= '#{Date.today.strftime('%Y-%m-%d')}' AND company_id IS NULL")}
 
 def bet(specprice=0)
   if specprice == 0
@@ -99,6 +117,8 @@ end
 #=======================================================================
 def self.set_filter(date, show_all, source_storage, hide_today, page, per_page)
   return Transportation.includes(:area, :city, :client, :company).page(page).per(per_page) if show_all
+
+  return Transportation.active.page(page).per(per_page) if date.blank?
 
   request_text = "date = ?"
   request_date = date

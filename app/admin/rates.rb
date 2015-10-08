@@ -1,6 +1,8 @@
 ActiveAdmin.register Rate do
   menu parent: I18n.t('admin.rate')
 
+  permit_params :area_id, :city_id, :carcase, :summa
+  
   config.comments = false
   config.batch_actions = false
 

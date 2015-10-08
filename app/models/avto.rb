@@ -8,7 +8,7 @@ class Avto < ActiveRecord::Base
   before_save :set_shortname
   
   def self.company_avto(company)
-    Avto.where("company_id = ?", company)
+    [Avto.new] + Avto.where("company_id = ?", company)
   end
 end
 

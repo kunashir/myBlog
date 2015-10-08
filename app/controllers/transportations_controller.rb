@@ -81,6 +81,9 @@ class TransportationsController < ApplicationController
     end
 
     get_list_transp(params)
+    # company = current_user.manager? ? nil : current_user.company
+    @confirmed_orders = Transportation.confirmed(current_user.company)
+    @not_confirmed_orders = Transportation.not_confirmed(current_user.company)
     @cur = 1
   end
   #=====================================================================
@@ -314,23 +317,44 @@ class TransportationsController < ApplicationController
 #=====================================================================
   def confirmation #save transp. confimation (update)
     @transportation = Transportation.find(params[:id])
-    if (params[:transportation][:avto_id].nil?) or (params[:transportation][:driver_id].nil?)
-      flash[:error] = "Поле машина или водитель не могут быть пустыми"
-      render :edit_conf
-      return
-    end
+    
+    avto_params = confirmation_params[:avto_attributes]
+    driver_params = confirmation_params[:driver_attributes]
 
     @transportation.set_user(current_user)
-    @transportation.avto    = Avto.find(params[:transportation][:avto_id])
-    @transportation.driver  = Driver.find(params[:transportation][:driver_id])
-    @transportation.time    = params[:transportation]['time(4i)'] + ":" + params[:transportation]['time(5i)']
-
-    if @transportation.save!
-        flash[:success] = "Подтверждение сохранено"
+    if !confirmation_params[:avto_id].blank?
+      @transportation.avto    = Avto.find_by(id: params[:transportation][:avto_id])
     else
-        flash[:error] = "Ошибка сохранения"
+      avto = Avto.new(avto_params.merge({company: current_user.company}))
+      if avto.save
+        @transportation.avto = avto
+      else
+        flash[:error] = "Ошибка в данных автомобиля!"
+        render :edit_conf
+        return
+      end
     end
-    redirect_to transportations_path
+
+    if !confirmation_params[:driver_id].blank?
+      @transportation.driver    = Driver.find_by(id: params[:transportation][:driver_id])
+    else
+      driver = Driver.new(driver_params.merge({company: current_user.company}))
+      if driver.save
+        @transportation.driver = driver
+      else
+        flash[:error] = "Ошибка в данных водителя!"
+        render :edit_conf
+        return
+      end
+    end
+    
+    if @transportation.save
+      flash[:success] = "Подтверждение сохранено"
+      redirect_to transportations_path
+    else
+      flash[:error] = "Ошибка сохранения"
+      render :edit_conf
+    end
   end
 
 #=====================================================================
@@ -506,13 +530,39 @@ class TransportationsController < ApplicationController
     render packet_loading
   end
 
+  # return data for show chart
+  def chart_data
+    start_sums = Transportation.where("date > ? AND company_id IS NOT NULL", Date.today - 6.days)
+      .order(:date).group(:date).sum(:start_sum)
+    cur_sums = Transportation.where("date > ? AND company_id IS NOT NULL", Date.today - 6.days)
+      .order(:date).group(:date).sum(:cur_sum)
+    data = []
+    current_date = nil
+    start_sums.each do |k, v|
+      data << {
+        day: k,
+        tarif: v,
+        real: cur_sums[k]
+      }
+    end
+    render json: data, layout: false
+  end
+
 private
 
+  def confirmation_params
+    params.require(:transportation).permit(:avto_id, :driver_id,
+      avto_attributes: [:model, :carcase, :statenumber, :trailnumber],
+      driver_attributes: [:name, :passport]
+    )
+  end
+
+  
   def tender_params
     params.require(:transportation).permit(:num, :date, :time, :comment,
-     :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
-     :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, 
-     :extra_pay, :unloading
+      :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
+      :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, 
+      :extra_pay, :unloading
     )
   end
 

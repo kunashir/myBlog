@@ -21,8 +21,11 @@ LogisticTender::Application.routes.draw do
       get 'do_rate'
       get 'show_history'
       get 'copy', to: 'transportations#new', :as => :copy
+      patch 'confirmation'
+      get 'edit_conf'
     end
     collection do
+      get 'chart_data'
       get 'export'
       get 'packet_loading'
       post 'load'

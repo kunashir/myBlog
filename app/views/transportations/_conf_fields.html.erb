@@ -1,12 +1,39 @@
-<div class="field">
-    <%= f.label :avto, "Машина на перевозку:" %><br />
-    <%= f.collection_select :avto_id, Avto.company_avto(@transportation.company), :id, :shortname %> 
+<div class="form-group">
+  <%= f.label :avto, "Машина на перевозку:" %><br />
+  <% p "AVOT============>>>>#{f.object.avto_id}" %>
+  <%= f.collection_select :avto_id, Avto.company_avto(@transportation.company), :id, :shortname, {}, :selected => 1,  :class => 'form-control' %> 
+</div>
+<div class="form-group">
+  <label>
+    <%= link_to 'Добавить машину', "#", :class => 'show-panel' %>  
+  </label>
+</div>
+<div class="panel panel-default hidden" %>
+  <div class="panel-heading">Новая машина</div>
+  <div class="panel-body" %>
+    <!-- 
+    <% f.object.build_avto %>
+     -->
+    <%= f.fields_for :avto do |avto| %>
+      <%= render partial: 'avtos/fields', locals: {f: avto} %>
+    <% end %>
   </div>
-  <div class="field">
-    <%= f.label :driver, "Водитель на перевозку" %><br />
-    <%= f.collection_select :driver_id, Driver.company_driver(@transportation.company), :id, :name  %> 
+</div>
+<div class="form-group">
+  <%= f.label :driver, "Водитель на перевозку" %><br />
+  <%= f.collection_select :driver_id, Driver.company_driver(@transportation.company), :id, :name, {},  :class => 'form-control'  %> 
+</div>
+<div class="form-group">
+  <label>
+    <%= link_to 'Добавить водителя', "#", :class => 'show-panel' %>  
+  </label>
+</div>
+<div class="panel panel-default hidden" %>
+  <div class="panel-heading">Новый водитель</div>
+  <div class="panel-body" %>
+    <% f.object.build_driver %>
+    <%= f.fields_for :driver do |driver| %>
+      <%= render partial: 'drivers/fields', locals: {f: driver} %>
+    <% end %>
   </div>
-  <div class="field">
-    <%= f.label :time, "Время погрузки" %><br />
-    <%= f.time_select :time %>
-  </div>
+</div>

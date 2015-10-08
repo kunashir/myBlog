@@ -9,6 +9,10 @@ class Company < ActiveRecord::Base
 
   validates :name,    :presence => true
 
+  def to_param
+    "#{id}"
+  end
+
   def self.get_main_company
   	begin
   		return Company.find(1).name
