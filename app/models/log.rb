@@ -52,3 +52,18 @@ class Log < ActiveRecord::Base
     end
   end
 end
+# == Schema Information
+#
+# Table name: logs
+#
+#  id                :integer         not null, primary key
+#  transportation_id :integer
+#  user_id           :integer
+#  attr              :string(255)
+#  oldvalue          :string(255)
+#  action            :string(255)
+#  created_at        :datetime
+#  updated_at        :datetime
+#  company_id        :integer
+#
+

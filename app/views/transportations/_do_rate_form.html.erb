@@ -9,7 +9,7 @@
 
   <% if (check_time(@transportation.get_time) != 0) %>
     <%= label_tag(:q, "Ваше предложение:") %>
-    <%= text_field_tag :summa, nil, :class => "datepicker" %>
+    <%= text_field_tag :summa, nil %>
   <% end %>
   <%= submit_tag("Сделать ставку") %>
 <% end %>

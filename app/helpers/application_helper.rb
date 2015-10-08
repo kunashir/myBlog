@@ -41,4 +41,14 @@ module ApplicationHelper
     	m_time.to_formatted_s(:time)
     end
   end
+
+  def dt(date)
+    return "&mdash;".html_safe if date.nil?
+    begin
+      return date.localtime.strftime('%d.%m.%Y %H:%M') if date.is_a? Time
+      return date.strftime('%d.%m.%Y') if date.is_a? Date
+    rescue
+      return date
+    end
+  end
 end

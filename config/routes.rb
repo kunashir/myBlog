@@ -2,17 +2,8 @@ LogisticTender::Application.routes.draw do
   root :to => 'pages#home'
   ActiveAdmin.routes(self)
 
-  #get "storages/new"
-
-  #get "clients/new"
-
-  #get "drivers/new"
-
-  #get "avtos/new"
-
-  #get "companies/new"
-
-  #get "transportations/new"
+  # get "logout" => "sessions#destroy", :as => "logout"
+  # get "login" => "sessions#new", :as => "login"
 
   resources :users do
     member do 
@@ -51,7 +42,7 @@ LogisticTender::Application.routes.draw do
   get '/contact', :to => 'pages#contact'
   get '/help',    :to => 'pages#help', :as => :help
   get '/signin',  :to => 'sessions#new', :as => :signin
-  get '/signout', :to => 'sessions#destroy'
+  delete '/signout', :to => 'sessions#destroy'
   get '/index',   :to => 'transportations#index'
   #спец. роутинг для подтверждения заявки
   # match 'transportations/:id/confirmation', 	:to 	=>  'transportations#confirmation'

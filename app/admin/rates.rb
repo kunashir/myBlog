@@ -11,7 +11,7 @@ ActiveAdmin.register Rate do
     column :carcase
     column :summa
 
-    default_actions
+    actions
   end
 
   form do |f|

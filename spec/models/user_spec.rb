@@ -2,12 +2,24 @@
 #
 # Table name: users
 #
-#  id         :integer         not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  company    :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  id                 :integer         not null, primary key
+#  name               :string(255)
+#  email              :string(255)
+#  company            :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(255)
+#  salt               :string(255)
+#  admin              :boolean
+#  nmanager           :boolean
+#  company_id         :integer
+#  is_block           :boolean         default("t")
+#  be_notified        :boolean         default("t")
+#  show_reg           :boolean         default("t")
+#  login_count        :integer         default("0")
+#  role               :string(255)
+#  ip                 :string(255)
+#  agent              :string(255)
 #
 
 require 'spec_helper'

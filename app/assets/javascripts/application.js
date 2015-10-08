@@ -19,6 +19,7 @@
 //= require sb-admin-2.js
 //= require datatables/media/js/jquery.dataTables.min
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min
+//= require datetimepicker/jquery.datetimepicker
 
 
  $(document).ready(function() {
@@ -52,6 +53,16 @@ function InitDatepeicker () {
       yearRange: "-1:+0"
     }
   );
+
+  $(".datetimepicker").datetimepicker({
+    lang: "ru",
+    i18n:{
+      ru:{
+        months:['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']
+      }
+    },
+    format: 'd.m.Y H:m'
+  });
 }
 
 function add_sec(cur_time)

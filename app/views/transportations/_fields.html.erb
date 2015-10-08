@@ -11,6 +11,10 @@
     <%= f.text_field :time %>
   </div>
   <div class="field">
+    <%= f.label :unloading, "Дата время разгрузки:" %><br />
+    <%= f.text_field :unloading, :class => 'datetimepicker' %>
+  </div>
+  <div class="field">
     <%= f.label :area, "Склад погрузки" %><br />
     <%= f.collection_select :area_id, Area.all, :id, :name %>
   </div>

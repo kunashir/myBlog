@@ -1,7 +1,7 @@
 #coding: utf-8
 class UsersController < ApplicationController
   #before_filter :authenticate,  :only => [:edit, :update, :index, :destroy]
-  skip_before_filter :authenticate, :only => [:new, :create]
+  skip_before_filter :require_login, :only => [:new, :create]
   before_filter :correсt_user,  :only => [:edit, :update]
   before_filter :admin_user,    :only => [:destroy ]
   #after_filter  :admin_user,    :only => [:update ]
@@ -19,11 +19,11 @@ class UsersController < ApplicationController
   end
 
   def show
-    if !signed_in?
-      deny_access
-      #redirect_to root_path
-      return
-    end
+    # if current_user
+    #   deny_access
+    #   #redirect_to root_path
+    #   return
+    # end
     @user   = User.find(params[:id])
     @title  = @user.name
     if ((!manager?) or (!is_admin? )) and (@user != current_user)
@@ -35,10 +35,11 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     if @user.save
       # Обработка успешного сохранения.
-      sign_in @user   #автоматический вход
+      # sign_in @user   #автоматический вход
+      auto_login(@user)
       flash[:success] = "Добро пожаловать!"
       redirect_to @user
     else
@@ -57,10 +58,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    logger.debug
+    # logger.debug
     @user = User.find(params[:id])
     if (@user != current_user) and (is_admin? )
-      @user.save_without_callbacks true
+      # @user.save_without_callbacks true
       if @user.toggle! :is_block
         flash[:success] = "Статус пользователя " + @user.name + " обновлен."
         redirect_to users_path
@@ -78,7 +79,7 @@ class UsersController < ApplicationController
     		redirect_to users_path
     		return
     	end
-	    @user.save_without_callbacks false
+	    # @user.save_without_callbacks false
 
       # if (!is_admin?) #если не админ, то блокируем, чтобы зря не меняли данные!
       #   @user.toggle! :is_block
@@ -115,6 +116,9 @@ class UsersController < ApplicationController
   end
 private
 
+  def user_params
+    params.require(:user).permit(:email, :password, :password_confirmation, :name, :be_notified, :company_id)
+  end
   # def authenticate
   #   deny_access unless signed_in?
   # end

@@ -1,9 +1,10 @@
 function showPopup() {
-  if ($(".rate-popup").css("display") === "none") {
-    $(".rate-popup").show();
-  } else {
-    $(".rate-popup").hide();
-  }
+  $(".popup").toggleClass("hidden");
+  // if ($(".popup").css("display") === "none") {
+  //   $(".popup").show();
+  // } else {
+  //   $(".popup").hide();
+  // }
 }
 
 

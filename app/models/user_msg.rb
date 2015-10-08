@@ -11,3 +11,15 @@ class UserMsg < ActiveRecord::Base
     UserMsg.includes(:message).where("user_id = ? and active = ?", user, true)
   end
 end
+# == Schema Information
+#
+# Table name: user_msgs
+#
+#  id         :integer         not null, primary key
+#  active     :boolean         default("t")
+#  user_id    :integer
+#  message_id :integer
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
+

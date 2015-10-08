@@ -8,6 +8,10 @@
     <%= f.label :password, "Пароль:" %><br />
     <%= f.password_field :password %>
   </div>
+  <div class="field">
+    <%= f.label :remember_me, "Запомнить меня:" %><br />
+    <%= f.check_box :remember_me %>
+  </div>
   <div class="actions">
     <%= f.submit "Вход" %>
   </div>

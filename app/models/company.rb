@@ -26,3 +26,15 @@ class Company < ActiveRecord::Base
   #   User.where("company_id = ? AND is_block = ?", self, false)
   # end
 end
+# == Schema Information
+#
+# Table name: companies
+#
+#  id           :integer         not null, primary key
+#  name         :string(255)
+#  inn          :integer
+#  is_freighter :boolean
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+

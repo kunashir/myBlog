@@ -4,8 +4,9 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include TransportationsHelper
   #include SimpleCaptcha::ControllerHelpers
-  before_filter :authenticate
-  before_filter :show_message
+  # before_filter :authenticate
+  # before_filter :show_message
+  before_action :require_login
   #rescue_from Exception, :with => :render_404
   rescue_from ActiveRecord::RecordNotFound, with: :render_404
   rescue_from ActionController::RoutingError, with: :render_404
@@ -23,6 +24,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def not_authenticated
+    redirect_to signin_path, :alert => t("session.must_logged")
+  end
+
+  def access_denied(exception)
+    redirect_to signin_path, alert: exception.message
+  end
   
   def authenticate
     unless signed_in?

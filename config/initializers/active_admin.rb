@@ -55,7 +55,7 @@ ActiveAdmin.setup do |config|
   #
   # This setting changes the method which Active Admin calls
   # within the controller.
-  config.authentication_method = :signed_in?
+  config.authentication_method = :logged_in?
 
   config.authorization_adapter = "OnlyAdmins"
 

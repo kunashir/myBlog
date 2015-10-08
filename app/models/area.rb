@@ -21,3 +21,14 @@ class Area < ActiveRecord::Base
 		City.find_all_by_id(Area.select(:city_id))
 	end
 end
+# == Schema Information
+#
+# Table name: areas
+#
+#  id         :integer         not null, primary key
+#  name       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#  city_id    :integer
+#
+

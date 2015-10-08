@@ -4,3 +4,13 @@ class Message < ActiveRecord::Base
   has_many   :users, through: :user_msg
   has_many   :user_msg
 end
+# == Schema Information
+#
+# Table name: messages
+#
+#  id         :integer         not null, primary key
+#  content    :string(255)
+#  created_at :datetime        not null
+#  updated_at :datetime        not null
+#
+

@@ -15,3 +15,16 @@ private
     self.name ||= city.name
   end
 end
+# == Schema Information
+#
+# Table name: storages
+#
+#  id         :integer         not null, primary key
+#  address    :string(255)
+#  client_id  :integer
+#  created_at :datetime
+#  updated_at :datetime
+#  city_id    :integer
+#  name       :string(255)
+#
+

@@ -511,7 +511,8 @@ private
   def tender_params
     params.require(:transportation).permit(:num, :date, :time, :comment,
      :type_transp, :weight, :carcase, :start_sum, :cur_sum, :step, :company_id, :volume,
-     :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, :extra_pay
+     :client_id, :storage_id, :abort_company, :area_id, :company, :city_id, :complex_direction, 
+     :extra_pay, :unloading
     )
   end
 
@@ -537,7 +538,7 @@ private
 
   def manager_access
     if !manager?
-      flash[:error] = "Нет прав для данного действия!"
+      flash[:danger] = "Нет прав для данного действия!"
       redirect_back_or current_user#transportations_path
       false
     end
@@ -545,7 +546,7 @@ private
 
   def check_block
     if is_block_user?
-      flash[:error] = "У Вас нет прав для просмотра заявок!"
+      flash[:danger] = "У Вас нет прав для просмотра заявок!"
       redirect_back_or current_user
       false
     end

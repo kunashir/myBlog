@@ -24,3 +24,14 @@ class City < ActiveRecord::Base
 		City.where(id: Storage.select(:city_id).where(:client_id => client))
 	end
 end
+# == Schema Information
+#
+# Table name: cities
+#
+#  id         :integer         not null, primary key
+#  name       :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#  active     :boolean         default("f")
+#
+

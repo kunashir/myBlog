@@ -64,3 +64,16 @@ private
 	end
 
 end
+# == Schema Information
+#
+# Table name: rates
+#
+#  id         :integer         not null, primary key
+#  area_id    :integer
+#  city_id    :integer
+#  carcase    :string(255)
+#  summa      :integer
+#  created_at :datetime
+#  updated_at :datetime
+#
+

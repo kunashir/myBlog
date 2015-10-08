@@ -11,6 +11,8 @@
  *= require morrisjs/morris
  *= require font-awesome/css/font-awesome.min
  *= require select2
+ *= require datetimepicker/jquery.datetimepicker
+ *= require popup
 */
 
 #link_to_xls{

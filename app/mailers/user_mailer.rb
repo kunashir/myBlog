@@ -40,4 +40,23 @@ class UserMailer < ActionMailer::Base
   def test(email)
   	mail(:to => email, :subject => "Тест")
   end
+
+  def reset_password_email(user)
+    @user_name = user.name
+    @url  = edit_password_reset_url(user.reset_password_token)
+    mail(to: user.email, subject: t("mailer.subject.reset_password"))
+  end
+
+  def activation_needed_email(user)
+    @user = user
+    @url  =  activate_url(user.activation_token) # "#{profile_url}/#{user.activation_token}/activate"
+    mail(:to => user.email,
+         :subject => t("mailer.subject.confirm_email"))
+  end
+
+  def new_user_registered(user)
+    @user = user
+    admin_emails = User.admins.pluck(:email)
+    mail(to: admin_emails, subject: t("mailer.subject.new_user_registered"))
+  end
 end
