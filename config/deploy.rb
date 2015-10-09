@@ -42,7 +42,7 @@ SSHKit.config.command_map[:rake] = "#{fetch(:default_env)[:rvm_bin_path]}/rvm ru
 # set :pty, true
 
 # set :linked_files, %w{config/database.yml}
-set :linked_dirs, %w{public/uploads}
+set :linked_dirs, %w{public/uploads vendor/assets/components}
 set :linked_files, %w{config/database.yml config/app.yml config/mail.yml config/recaptcha.yml}
 
 set :bundle_dir, "/home/deployer/.rvm/gems/ruby-2.2.2-p95@global/bin"
@@ -112,7 +112,16 @@ namespace :deploy do
     end
   end
 
+  task :bower do
+    on roles(:app) do
+      # upload!('.bowerrc', ".bowerrc")
+      upload!('bower.json', "#{deploy_to}/bower.json")
+      execute "bower install"
+    end
+  end
+
   after :finishing, 'deploy:cleanup'
   after :deploy, 'deploy:restart'
+  # before :deploy, 'deploy:bower'
 end
 

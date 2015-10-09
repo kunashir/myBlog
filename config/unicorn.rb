@@ -2,10 +2,10 @@ env = "production"
 worker_processes 2
 
 
-deploy_to  = "/var/www/apps/logist_tender"
+deploy_to  = "/home/deployer/apps/logist_tender"
 rails_root = "#{deploy_to}/current"
-pid_file   = "#{deploy_to}/tmp/pids/unicorn.pid"
-socket_file= "#{deploy_to}/tmp/unicorn.sock"
+pid_file   = "#{deploy_to}/socket/unicorn.pid"
+socket_file= "#{deploy_to}/socket/unicorn.sock"
 log_file   = "#{rails_root}/log/unicorn.log"
 err_log    = "#{rails_root}/log/unicorn_error.log"
 old_pid    = pid_file + '.oldbin'
