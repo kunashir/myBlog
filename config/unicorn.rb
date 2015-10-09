@@ -11,7 +11,7 @@ err_log    = "#{rails_root}/log/unicorn_error.log"
 old_pid    = pid_file + '.oldbin'
 
 
-working_directory "/var/www/apps/logist_tender/current" # available in 0.94.0+
+working_directory "#{deploy_to}/current" # available in 0.94.0+
 
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
