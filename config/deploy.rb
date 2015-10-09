@@ -27,6 +27,7 @@ role :db,     "deployer@185.5.251.44"
 set :default_stage, "production"
 set :rvm_ruby_version, '2.2.2-p95@global'
 set :rvm_type, :user
+set :pty, true
 
 set :default_env, { rvm_bin_path: '~/.rvm/bin' }
 SSHKit.config.command_map[:rake] = "#{fetch(:default_env)[:rvm_bin_path]}/rvm ruby-#{fetch(:rvm_ruby_version)} do bundle exec rake"
