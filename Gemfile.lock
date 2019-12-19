@@ -168,7 +168,7 @@ GEM
       activerecord (>= 3.0)
     ps (0.0.8)
       ansi
-    rack (1.6.4)
+    rack (1.6.12)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.0)
